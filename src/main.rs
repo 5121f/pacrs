@@ -7,5 +7,6 @@ fn main() {
     let args = Args::parse();
     match args {
         Args::List => pacrs::list(),
+        Args::Install { packages } => pacrs::install(packages),
     }
 }

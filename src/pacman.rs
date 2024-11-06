@@ -14,6 +14,11 @@ impl Pacman {
         self
     }
 
+    pub fn install(&mut self, packages: Vec<String>) -> &mut Self {
+        self.command.arg("-S").args(packages);
+        self
+    }
+
     pub fn run(&mut self) {
         let output = self.command.output().unwrap();
         std::io::stdout().write_all(&output.stdout).unwrap();

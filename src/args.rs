@@ -4,4 +4,5 @@ use clap::Parser;
 pub enum Args {
     List,
     Install { packages: Vec<String> },
+    CheckForUpdates,
 }

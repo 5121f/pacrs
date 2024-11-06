@@ -3,6 +3,25 @@
 version = 3
 
 [[package]]
+name = "alpm"
+version = "4.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c02d4b4d6bc861451437cdbd7feb35385874ff4cc449ace8e793fe8c30533240"
+dependencies = [
+ "alpm-sys",
+ "bitflags",
+]
+
+[[package]]
+name = "alpm-sys"
+version = "4.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ad5eb56a41bf4f036c600aa1ddff354971926dd8ea29a3fb6589c6c375bf918b"
+dependencies = [
+ "pkg-config",
+]
+
+[[package]]
 name = "anstream"
 version = "0.6.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -50,6 +69,12 @@ dependencies = [
  "anstyle",
  "windows-sys",
 ]
+
+[[package]]
+name = "bitflags"
+version = "2.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b048fb63fd8b5923fc5aa7b340d8e156aec7ec02f0c78fa8a6ddc2613f6f71de"
 
 [[package]]
 name = "clap"
@@ -113,8 +138,15 @@ checksum = "7943c866cc5cd64cbc25b2e01621d07fa8eb2a1a23160ee81ce38704e97b8ecf"
 name = "pacrs"
 version = "0.1.0"
 dependencies = [
+ "alpm",
  "clap",
 ]
+
+[[package]]
+name = "pkg-config"
+version = "0.3.31"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "953ec861398dccce10c670dfeaf3ec4911ca479e9c02154b3a215178c5f566f2"
 
 [[package]]
 name = "proc-macro2"

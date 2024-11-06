@@ -1,11 +1,11 @@
 mod pacman;
 
-use pacman::Pacman;
+use pacman::Paru;
 
 pub fn list() {
-    Pacman::new().list().run();
+    Paru::new().list().run();
 }
 
 pub fn install(packages: Vec<String>) {
-    Pacman::new().install(packages).run()
+    Paru::new().install(packages).run()
 }

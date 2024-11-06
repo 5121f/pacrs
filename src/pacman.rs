@@ -1,11 +1,11 @@
 use std::{io::Write, process::Command};
 
-pub struct Pacman {
+pub struct Paru {
     command: Command,
 }
-impl Pacman {
+impl Paru {
     pub fn new() -> Self {
-        let command = Command::new("pacman");
+        let command = Command::new("paru");
         Self { command }
     }
 

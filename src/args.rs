@@ -13,5 +13,8 @@ pub enum Args {
         /// Packages to install with upgrade
         packages: Vec<String>,
     },
+    Info {
+        package: String,
+    },
     CheckForUpdates,
 }

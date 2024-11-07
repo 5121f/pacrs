@@ -10,8 +10,9 @@ fn main() -> anyhow::Result<()> {
     match args {
         Args::List => pacman::list()?,
         Args::Install { packages } => pacman::install(packages)?,
-        Args::CheckForUpdates => pacman::check_for_updates()?,
         Args::Upgrade { packages } => pacman::upgrade(packages)?,
+        Args::Info { package } => pacman::info(package)?,
+        Args::CheckForUpdates => pacman::check_for_updates()?,
     }
     Ok(())
 }

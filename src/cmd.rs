@@ -1,4 +1,9 @@
-use std::{error::Error, fmt::Display, io, process::Command};
+use std::{
+    error::Error,
+    fmt::Display,
+    io,
+    process::{Command, ExitStatus, Stdio},
+};
 
 pub fn execute(cmd: &mut Command) -> Result<(), RunProgramError> {
     let mut child = cmd
@@ -8,6 +13,14 @@ pub fn execute(cmd: &mut Command) -> Result<(), RunProgramError> {
         .wait()
         .map_err(|source| RunProgramError::new(cmd, source))?;
     Ok(())
+}
+
+pub fn ignure_error(cmd: &mut Command) -> Result<ExitStatus, RunProgramError> {
+    cmd.stderr(Stdio::null())
+        .spawn()
+        .map_err(|source| RunProgramError::new(cmd, source))?
+        .wait()
+        .map_err(|source| RunProgramError::new(cmd, source))
 }
 
 pub fn execute_without_output(cmd: &mut Command) -> Result<(), RunProgramError> {

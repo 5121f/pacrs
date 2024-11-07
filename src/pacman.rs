@@ -1,5 +1,7 @@
 use core::str;
-use std::{error::Error, fmt::Display, fs, io, path::Path, process::Command};
+use std::{fs, path::Path, process::Command};
+
+use crate::cmd::{execute, execute_without_output};
 
 use alpm::Alpm;
 use alpm_utils::DbListExt;
@@ -70,45 +72,10 @@ fn update_temp_db() -> anyhow::Result<()> {
 
     let mut cmd = Command::new("fakeroot");
     cmd.args(["--", "pacman", "-Sy", "--dbpath", TEMP_DB_PATH]);
-    execute(&mut cmd)?;
+    execute_without_output(&mut cmd)?;
     Ok(())
 }
 
 fn paru() -> Command {
     Command::new("paru")
 }
-
-pub fn execute(cmd: &mut Command) -> Result<(), RunProgramError> {
-    let mut child = cmd
-        .spawn()
-        .map_err(|source| RunProgramError::new(cmd, source))?;
-    child
-        .wait()
-        .map_err(|source| RunProgramError::new(cmd, source))?;
-    Ok(())
-}
-
-#[derive(Debug)]
-pub struct RunProgramError {
-    command_name: Option<String>,
-    source: io::Error,
-}
-impl RunProgramError {
-    fn new(command: &Command, source: io::Error) -> Self {
-        let command_name = command.get_program().to_str().map(ToOwned::to_owned);
-        Self {
-            command_name,
-            source,
-        }
-    }
-}
-impl Display for RunProgramError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        const ERROR: &str = "failed to run program";
-        if let Some(program) = &self.command_name {
-            write!(f, "{program}:")?;
-        }
-        write!(f, "{ERROR}: {source}", source = self.source)
-    }
-}
-impl Error for RunProgramError {}

@@ -1,4 +1,5 @@
 mod args;
+mod cmd;
 mod pacman;
 
 use crate::args::Args;

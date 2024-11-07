@@ -28,17 +28,12 @@ fn alpm() -> Alpm {
     alpm_utils::alpm_with_conf(&conf).unwrap()
 }
 
-fn package_was_updated_in_db(pkg: &str) -> bool {
+fn package_was_updated_in_db(package: &str) -> bool {
     let alpm = alpm();
-    let dbs = alpm.syncdbs();
-    let alpm_temp = alpm_with_db_path(TEMP_DB_PATH);
-    let dbs_temp = alpm_temp.syncdbs();
-    let pkg_tmp = dbs_temp.pkg(pkg).unwrap();
-    let pkg = dbs.pkg(pkg).unwrap();
-    if pkg.version() < pkg_tmp.version() {
-        return true;
-    }
-    false
+    let alpm_tmp = alpm_with_db_path(TEMP_DB_PATH);
+    let pkg = alpm.syncdbs().pkg(package).unwrap();
+    let pkg_tmp = alpm_tmp.syncdbs().pkg(package).unwrap();
+    pkg.version() < pkg_tmp.version()
 }
 
 pub fn install(packages: Vec<String>) -> anyhow::Result<()> {

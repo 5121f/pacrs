@@ -49,6 +49,13 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
+pub fn upgrade() -> anyhow::Result<()> {
+    let mut pacman = Command::new("paru");
+    pacman.arg("-Syu");
+    execute(&mut pacman)?;
+    Ok(())
+}
+
 pub fn check_for_updates() -> anyhow::Result<()> {
     update_temp_db()?;
     let mut cmd = Command::new("pacman");

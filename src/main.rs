@@ -11,6 +11,7 @@ fn main() -> anyhow::Result<()> {
         Args::List => pacman::list()?,
         Args::Install { packages } => pacman::install(packages)?,
         Args::CheckForUpdates => pacman::check_for_updates()?,
+        Args::Upgrade => pacman::upgrade()?,
     }
     Ok(())
 }

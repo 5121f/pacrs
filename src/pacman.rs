@@ -1,15 +1,17 @@
 use core::str;
-use std::{fs, path::Path, process::Command};
+use std::{error::Error, fmt::Display, fs, io, path::Path, process::Command};
 
 use alpm::Alpm;
 use alpm_utils::DbListExt;
+use anyhow::bail;
 
 const TEMP_DB_PATH: &str = "/tmp/pacrs/db";
 
-pub fn list() {
+pub fn list() -> anyhow::Result<()> {
     let mut cmd = paru();
     cmd.arg("-Qq");
-    execute(&mut cmd)
+    execute(&mut cmd)?;
+    Ok(())
 }
 
 fn alpm_with_db_path(db_path: &str) -> Alpm {
@@ -37,27 +39,28 @@ fn package_was_updated_in_db(pkg: &str) -> bool {
     false
 }
 
-pub fn install(packages: Vec<String>) {
-    update_temp_db();
+pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
+    update_temp_db()?;
     for pkg in &packages {
         if package_was_updated_in_db(pkg) {
-            println!("One or more package you will want to install was updated in the repo. Upgrade your system befor install it.");
-            return;
+            bail!("One or more package you will want to install was updated in the repo. Upgrade your system befor install it.");
         }
     }
     let mut cmd = paru();
     cmd.arg("-S").args(packages);
-    execute(&mut cmd)
+    execute(&mut cmd)?;
+    Ok(())
 }
 
-pub fn check_for_updates() {
-    update_temp_db();
+pub fn check_for_updates() -> anyhow::Result<()> {
+    update_temp_db()?;
     let mut cmd = Command::new("pacman");
     cmd.args(["-Qu", "--dbpath", TEMP_DB_PATH]);
-    execute(&mut cmd);
+    execute(&mut cmd)?;
+    Ok(())
 }
 
-fn update_temp_db() {
+fn update_temp_db() -> anyhow::Result<()> {
     fs::create_dir_all(TEMP_DB_PATH).unwrap();
     let conf = pacmanconf::Config::new().unwrap();
     let temp_local_db = Path::new(TEMP_DB_PATH).join("local");
@@ -67,13 +70,45 @@ fn update_temp_db() {
 
     let mut cmd = Command::new("fakeroot");
     cmd.args(["--", "pacman", "-Sy", "--dbpath", TEMP_DB_PATH]);
-    execute(&mut cmd);
+    execute(&mut cmd)?;
+    Ok(())
 }
 
 fn paru() -> Command {
     Command::new("paru")
 }
 
-pub fn execute(cmd: &mut Command) {
-    cmd.spawn().unwrap().wait().unwrap();
+pub fn execute(cmd: &mut Command) -> Result<(), RunProgramError> {
+    let mut child = cmd
+        .spawn()
+        .map_err(|source| RunProgramError::new(cmd, source))?;
+    child
+        .wait()
+        .map_err(|source| RunProgramError::new(cmd, source))?;
+    Ok(())
 }
+
+#[derive(Debug)]
+pub struct RunProgramError {
+    command_name: Option<String>,
+    source: io::Error,
+}
+impl RunProgramError {
+    fn new(command: &Command, source: io::Error) -> Self {
+        let command_name = command.get_program().to_str().map(ToOwned::to_owned);
+        Self {
+            command_name,
+            source,
+        }
+    }
+}
+impl Display for RunProgramError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        const ERROR: &str = "failed to run program";
+        if let Some(program) = &self.command_name {
+            write!(f, "{program}:")?;
+        }
+        write!(f, "{ERROR}: {source}", source = self.source)
+    }
+}
+impl Error for RunProgramError {}

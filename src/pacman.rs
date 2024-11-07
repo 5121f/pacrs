@@ -50,9 +50,9 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn upgrade() -> anyhow::Result<()> {
+pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
     let mut pacman = Command::new("paru");
-    pacman.arg("-Syu");
+    pacman.arg("-Syu").args(packages);
     execute(&mut pacman)?;
     Ok(())
 }

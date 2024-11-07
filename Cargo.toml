@@ -5,5 +5,6 @@ edition = "2021"
 
 [dependencies]
 alpm = "4.0.1"
+alpm-utils = "4.0.1"
 clap = { version = "4.5.20", features = ["derive"] }
 pacmanconf = "3.0.0"

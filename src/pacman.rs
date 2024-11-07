@@ -1,4 +1,4 @@
-use std::{fs, io::Write, path::Path, process::Command};
+use std::{fs, path::Path, process::Command};
 
 pub fn list() {
     let mut cmd = paru();
@@ -37,7 +37,5 @@ fn paru() -> Command {
 }
 
 pub fn execute(cmd: &mut Command) {
-    let output = cmd.output().unwrap();
-    std::io::stdout().write_all(&output.stdout).unwrap();
-    std::io::stderr().write_all(&output.stderr).unwrap();
+    cmd.spawn().unwrap().wait().unwrap();
 }

@@ -10,7 +10,7 @@ use anyhow::bail;
 const TEMP_DB_PATH: &str = "/tmp/pacrs/db";
 
 pub fn list() -> anyhow::Result<()> {
-    let mut cmd = paru();
+    let mut cmd = Command::new("pacman");
     cmd.arg("-Qq");
     execute(&mut cmd)?;
     Ok(())
@@ -48,7 +48,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
             bail!("One or more package you will want to install was updated in the repo. Upgrade your system befor install it.");
         }
     }
-    let mut cmd = paru();
+    let mut cmd = Command::new("paru");
     cmd.arg("-S").args(packages);
     execute(&mut cmd)?;
     Ok(())
@@ -74,8 +74,4 @@ fn update_temp_db() -> anyhow::Result<()> {
     cmd.args(["--", "pacman", "-Sy", "--dbpath", TEMP_DB_PATH]);
     execute_without_output(&mut cmd)?;
     Ok(())
-}
-
-fn paru() -> Command {
-    Command::new("paru")
 }

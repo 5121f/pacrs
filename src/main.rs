@@ -3,6 +3,7 @@ mod cmd;
 mod pacman;
 
 use crate::args::Args;
+use anyhow::bail;
 use args::MarkGroup;
 use clap::Parser;
 
@@ -20,12 +21,12 @@ fn main() -> anyhow::Result<()> {
         Args::Search { package } => pacman::search(package)?,
         Args::Mark {
             packages,
-            mark_group: MarkGroup { explicit },
-        } => {
-            if explicit {
-                pacman::mark_explicit(packages)?;
-            }
-        }
+            mark_group:
+                MarkGroup {
+                    explicit,
+                    dependencie,
+                },
+        } => mark(packages, explicit, dependencie)?,
     }
     Ok(())
 }
@@ -45,4 +46,14 @@ fn list(updated: bool, orphaned: bool) -> anyhow::Result<()> {
         return pacman::orphaned_packages();
     }
     pacman::list()
+}
+
+fn mark(packages: Vec<String>, explicit: bool, dependencie: bool) -> anyhow::Result<()> {
+    if explicit {
+        return pacman::mark_explicit(packages);
+    }
+    if dependencie {
+        return pacman::mark_dep(packages);
+    }
+    bail!("No one parameter specified");
 }

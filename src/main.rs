@@ -13,11 +13,18 @@ fn main() -> anyhow::Result<()> {
             orphaned,
         } => list(upgradable, orphaned),
         Args::Install { packages } => pacman::install(packages),
-        Args::Remove { packages } => pacman::remove(packages),
+        Args::Remove { packages, orphaned } => remove(packages, orphaned),
         Args::Upgrade { packages } => pacman::upgrade(packages),
         Args::Info { package } => pacman::info(package),
         Args::Search { package } => pacman::search(package),
     }
+}
+
+fn remove(packages: Vec<String>, orphaned: bool) -> anyhow::Result<()> {
+    if orphaned {
+        return pacman::remvoe_orphaned_packages();
+    }
+    pacman::remove(packages)
 }
 
 fn list(updated: bool, orphaned: bool) -> anyhow::Result<()> {

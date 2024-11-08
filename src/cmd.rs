@@ -5,6 +5,8 @@ use std::{
     process::{Command, ExitStatus, Stdio},
 };
 
+use anyhow::Context;
+
 pub fn execute(cmd: &mut Command) -> Result<(), RunProgramError> {
     let mut child = cmd
         .spawn()
@@ -27,6 +29,20 @@ pub fn execute_without_output(cmd: &mut Command) -> Result<(), RunProgramError> 
     cmd.output()
         .map_err(|source| RunProgramError::new(cmd, source))?;
     Ok(())
+}
+
+pub fn execute_and_grub_output(cmd: &mut Command) -> anyhow::Result<String> {
+    let output = cmd
+        .stderr(std::io::stderr())
+        .output()
+        .map_err(|source| RunProgramError::new(cmd, source))?;
+    let output = String::from_utf8(output.stdout).with_context(|| {
+        format!(
+            "{}: Failed to take command output",
+            cmd.get_program().to_str().unwrap_or_default()
+        )
+    })?;
+    Ok(output.trim().to_owned())
 }
 
 #[derive(Debug)]

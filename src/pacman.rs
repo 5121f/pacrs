@@ -1,7 +1,7 @@
 use core::str;
 use std::{path::Path, process::Command};
 
-use crate::cmd::{execute, execute_without_output, ignure_error};
+use crate::cmd::{execute, execute_and_grub_output, execute_without_output, ignure_error};
 
 use alpm::{Alpm, Package};
 use alpm_utils::DbListExt;
@@ -113,6 +113,17 @@ pub fn orphaned_packages() -> anyhow::Result<()> {
     let mut cmd = Command::new(PACMAN_BIN);
     cmd.arg("-Qdtq");
     execute(&mut cmd)?;
+    Ok(())
+}
+
+pub fn remvoe_orphaned_packages() -> anyhow::Result<()> {
+    let mut cmd = Command::new(PACMAN_BIN);
+    cmd.arg("-Qdtq");
+    let orphaned_packages = execute_and_grub_output(&mut cmd)?
+        .split("\n")
+        .map(|line| line.to_owned())
+        .collect();
+    remove(orphaned_packages)?;
     Ok(())
 }
 

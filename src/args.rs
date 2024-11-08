@@ -20,6 +20,11 @@ pub enum Args {
     /// Remove packages and unneeded dependencies
     Remove {
         packages: Vec<String>,
+        /// Remove orphaned packages
+        /// (packages which not installed explicitly and on which no package depends)
+        /// For only print this packages use `pacrs list --ororphaned`
+        #[clap(long, short)]
+        orphaned: bool,
     },
     /// Upgrade the system.
     Upgrade {

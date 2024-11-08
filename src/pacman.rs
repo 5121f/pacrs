@@ -10,7 +10,7 @@ use fs_err as fs;
 
 const TEMP_DB_PATH: &str = "/tmp/pacrs/db";
 const PACMAN_BIN: &str = "pacman";
-const PARU_BIN: &str = "paaru";
+const PARU_BIN: &str = "paru";
 
 pub fn list() -> anyhow::Result<()> {
     let mut cmd = Command::new(PACMAN_BIN);

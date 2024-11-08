@@ -10,6 +10,7 @@ fn main() -> anyhow::Result<()> {
     match args {
         Args::List { updated } => list(updated)?,
         Args::Install { packages } => pacman::install(packages)?,
+        Args::Remove { packages } => pacman::remove(packages)?,
         Args::Upgrade { packages } => pacman::upgrade(packages)?,
         Args::Info { package } => pacman::info(package)?,
         Args::Search { package } => pacman::search(package)?,

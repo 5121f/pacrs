@@ -13,6 +13,10 @@ pub enum Args {
     Install {
         packages: Vec<String>,
     },
+    /// Remove packages
+    Remove {
+        packages: Vec<String>,
+    },
     /// Upgrade the system.
     Upgrade {
         /// Packages to install with upgrade

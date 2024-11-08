@@ -5,7 +5,7 @@ use crate::cmd::{execute, execute_without_output, ignure_error};
 
 use alpm::Alpm;
 use alpm_utils::DbListExt;
-use anyhow::bail;
+use anyhow::{anyhow, bail};
 use fs_err as fs;
 
 const TEMP_DB_PATH: &str = "/tmp/pacrs/db";
@@ -18,14 +18,18 @@ pub fn list() -> anyhow::Result<()> {
 }
 
 pub fn info(package: String) -> anyhow::Result<()> {
-    let mut pacman = Command::new("pacman");
+    const COMMAND: &str = "pacman";
+    let mut pacman = Command::new(COMMAND);
     pacman.args(["-Si", &package]);
     let exit_status = ignure_error(&mut pacman)?;
-    if exit_status.code().unwrap() == 0 {
+    let exit_code = exit_status
+        .code()
+        .ok_or_else(|| anyhow!("Failed to execute {COMMAND}"))?;
+    if exit_code == 0 {
         return Ok(());
     }
     eprintln!("pacman -Si ended with error maybe due to problems with ethernet. Tring to find info in local index.");
-    let mut pacman = Command::new("pacman");
+    let mut pacman = Command::new(COMMAND);
     pacman.args(["-Qi", &package]);
     execute(&mut pacman)?;
     Ok(())

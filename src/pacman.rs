@@ -5,7 +5,7 @@ use crate::cmd::{execute, execute_without_output, ignure_error};
 
 use alpm::Alpm;
 use alpm_utils::DbListExt;
-use anyhow::{anyhow, bail};
+use anyhow::{anyhow, bail, Context};
 use fs_err as fs;
 
 const TEMP_DB_PATH: &str = "/tmp/pacrs/db";
@@ -43,30 +43,35 @@ pub fn search(package: String) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn alpm_with_db_path(db_path: &str) -> Alpm {
-    let conf = pacmanconf::Config::new().unwrap();
-    let mut alpm = Alpm::new(&*conf.root_dir, db_path).unwrap();
-    alpm_utils::configure_alpm(&mut alpm, &conf).unwrap();
-    alpm
+fn pacmanconf() -> anyhow::Result<pacmanconf::Config> {
+    pacmanconf::Config::new().context("Failed to read pacmanconf")
 }
 
-fn alpm() -> Alpm {
-    let conf = pacmanconf::Config::new().unwrap();
-    alpm_utils::alpm_with_conf(&conf).unwrap()
+fn alpm_with_db_path(db_path: &str) -> anyhow::Result<Alpm> {
+    let conf = pacmanconf()?;
+    let mut alpm =
+        Alpm::new(&*conf.root_dir, db_path).context("Failed to initialize alpm connection")?;
+    alpm_utils::configure_alpm(&mut alpm, &conf).context("Failed to configure alpm")?;
+    Ok(alpm)
 }
 
-fn package_was_updated_in_db(package: &str) -> bool {
-    let alpm = alpm();
-    let alpm_tmp = alpm_with_db_path(TEMP_DB_PATH);
+fn alpm() -> anyhow::Result<Alpm> {
+    let conf = pacmanconf()?;
+    alpm_utils::alpm_with_conf(&conf).context("Failed to initialize alpm connection")
+}
+
+fn package_was_updated_in_db(package: &str) -> anyhow::Result<bool> {
+    let alpm = alpm()?;
+    let alpm_tmp = alpm_with_db_path(TEMP_DB_PATH)?;
     let pkg = alpm.syncdbs().pkg(package).unwrap();
     let pkg_tmp = alpm_tmp.syncdbs().pkg(package).unwrap();
-    pkg.version() < pkg_tmp.version()
+    Ok(pkg.version() < pkg_tmp.version())
 }
 
 pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     update_temp_db()?;
     for pkg in &packages {
-        if package_was_updated_in_db(pkg) {
+        if package_was_updated_in_db(pkg)? {
             bail!("One or more package you will want to install was updated in the repo. Upgrade your system befor install it.");
         }
     }

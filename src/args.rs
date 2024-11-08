@@ -3,7 +3,7 @@ use clap::Parser;
 #[derive(Parser)]
 pub enum Args {
     /// Print list of installed packages
-    #[clap(short_flag = 'l')]
+    #[clap(visible_alias = "l", short_flag = 'l')]
     List {
         /// Print list of packages that were updated in the repo
         /// (This does not affect the local index)
@@ -15,34 +15,34 @@ pub enum Args {
         orphaned: bool,
     },
     /// Install packages
-    #[clap(short_flag = 'i')]
+    #[clap(visible_alias = "in", short_flag = 'i')]
     Install {
         #[clap(required = true)]
         packages: Vec<String>,
     },
     /// Remove packages and unneeded dependencies
-    #[clap(short_flag = 'r')]
+    #[clap(visible_alias = "rm", short_flag = 'r')]
     Remove(#[clap(flatten)] RemoveGroup),
     /// Upgrade the system.
-    #[clap(short_flag = 'u')]
+    #[clap(visible_alias = "up", short_flag = 'u')]
     Upgrade {
         /// Packages to install with upgrade
         packages: Vec<String>,
     },
     /// Print info about package
-    #[clap(short_flag = 'n')]
+    #[clap(visible_alias = "i", short_flag = 'n')]
     Info {
         #[clap(required = true)]
         package: String,
     },
     /// Search packages
-    #[clap(short_flag = 's')]
+    #[clap(visible_alias = "se", short_flag = 's')]
     Search {
         #[clap(required = true)]
         package: String,
     },
     /// Mark packages
-    #[clap(short_flag = 'm')]
+    #[clap(visible_alias = "m", short_flag = 'm')]
     Mark {
         #[clap(required = true)]
         packages: Vec<String>,

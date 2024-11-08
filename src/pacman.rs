@@ -88,7 +88,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
 }
 
 pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
-    let mut cmd = Command::new(PARU_BIN);
+    let mut cmd = Command::new(PACMAN_BIN);
     cmd.arg("-Rs").args(packages);
     execute(&mut cmd)?;
     Ok(())

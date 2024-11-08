@@ -3,6 +3,7 @@ use clap::Parser;
 #[derive(Parser)]
 pub enum Args {
     /// Print list of installed packages
+    #[clap(short_flag = 'l')]
     List {
         /// Print list of packages that were updated in the repo
         /// (This does not affect the local index)
@@ -14,10 +15,10 @@ pub enum Args {
         orphaned: bool,
     },
     /// Install packages
-    Install {
-        packages: Vec<String>,
-    },
+    #[clap(short_flag = 'i')]
+    Install { packages: Vec<String> },
     /// Remove packages and unneeded dependencies
+    #[clap(short_flag = 'r')]
     Remove {
         packages: Vec<String>,
         /// Remove orphaned packages
@@ -27,17 +28,17 @@ pub enum Args {
         orphaned: bool,
     },
     /// Upgrade the system.
+    #[clap(short_flag = 'u')]
     Upgrade {
         /// Packages to install with upgrade
         packages: Vec<String>,
     },
-    Info {
-        package: String,
-    },
-    Search {
-        package: String,
-    },
+    #[clap(short_flag = 'n')]
+    Info { package: String },
+    #[clap(short_flag = 's')]
+    Search { package: String },
     /// Mark packages
+    #[clap(short_flag = 'm')]
     Mark {
         #[clap(required = true)]
         packages: Vec<String>,

@@ -13,7 +13,7 @@ pub enum Args {
     Install {
         packages: Vec<String>,
     },
-    /// Remove packages
+    /// Remove packages and unneeded dependencies
     Remove {
         packages: Vec<String>,
     },

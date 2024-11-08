@@ -2,18 +2,6 @@ use clap::Parser;
 
 #[derive(Parser)]
 pub enum Args {
-    /// Print list of installed packages
-    #[clap(visible_alias = "l")]
-    List {
-        /// Print list of packages that were updated in the repo
-        /// (This does not affect the local index)
-        #[clap(long, short, conflicts_with = "orphaned")]
-        upgradable: bool,
-        /// Print list of orphaned packages
-        /// (packages which not installed explicitly and on which no package depends)
-        #[clap(long, short, conflicts_with = "upgradable")]
-        orphaned: bool,
-    },
     /// Install packages
     #[clap(visible_alias = "in")]
     Install {
@@ -29,15 +17,27 @@ pub enum Args {
         /// Packages to install with upgrade
         packages: Vec<String>,
     },
-    /// Print info about package
-    #[clap(visible_alias = "i")]
-    Info {
-        #[clap(required = true)]
-        package: String,
+    /// Print list of installed packages
+    #[clap(visible_alias = "l")]
+    List {
+        /// Print list of packages that were updated in the repo
+        /// (This does not affect the local index)
+        #[clap(long, short, conflicts_with = "orphaned")]
+        upgradable: bool,
+        /// Print list of orphaned packages
+        /// (packages which not installed explicitly and on which no package depends)
+        #[clap(long, short, conflicts_with = "upgradable")]
+        orphaned: bool,
     },
     /// Search packages
     #[clap(visible_alias = "se")]
     Search {
+        #[clap(required = true)]
+        package: String,
+    },
+    /// Print info about package
+    #[clap(visible_alias = "i")]
+    Info {
         #[clap(required = true)]
         package: String,
     },

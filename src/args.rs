@@ -8,6 +8,10 @@ pub enum Args {
         /// (This does not affect the local index)
         #[clap(long, short)]
         upgradable: bool,
+        /// Print list of orphaned packages
+        /// (packages which not installed explicitly and on which no package depends)
+        #[clap(long, short)]
+        orphaned: bool,
     },
     /// Install packages
     Install {

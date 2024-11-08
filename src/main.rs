@@ -8,7 +8,10 @@ use clap::Parser;
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args {
-        Args::List { upgradable } => list(upgradable)?,
+        Args::List {
+            upgradable,
+            orphaned,
+        } => list(upgradable, orphaned)?,
         Args::Install { packages } => pacman::install(packages)?,
         Args::Remove { packages } => pacman::remove(packages)?,
         Args::Upgrade { packages } => pacman::upgrade(packages)?,
@@ -18,10 +21,12 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn list(updated: bool) -> anyhow::Result<()> {
+fn list(updated: bool, orphaned: bool) -> anyhow::Result<()> {
     if updated {
-        pacman::check_for_updates()?;
-        return Ok(());
+        return pacman::check_for_updates();
+    }
+    if orphaned {
+        return pacman::orphaned_packages();
     }
     pacman::list()
 }

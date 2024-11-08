@@ -109,6 +109,13 @@ pub fn check_for_updates() -> anyhow::Result<()> {
     Ok(())
 }
 
+pub fn orphaned_packages() -> anyhow::Result<()> {
+    let mut cmd = Command::new(PACMAN_BIN);
+    cmd.arg("-Qdtq");
+    execute(&mut cmd)?;
+    Ok(())
+}
+
 fn update_temp_db() -> anyhow::Result<()> {
     fs::create_dir_all(TEMP_DB_PATH)?;
     let conf = pacmanconf::Config::new().unwrap();

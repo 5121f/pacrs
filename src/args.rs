@@ -3,7 +3,12 @@ use clap::Parser;
 #[derive(Parser)]
 pub enum Args {
     /// Print list of installed packages
-    List,
+    List {
+        /// Print list of packages that were updated in the repo
+        /// (This does not affect the local index)
+        #[clap(long, short)]
+        updated: bool,
+    },
     /// Install packages
     Install {
         packages: Vec<String>,
@@ -19,5 +24,4 @@ pub enum Args {
     Search {
         package: String,
     },
-    CheckForUpdates,
 }

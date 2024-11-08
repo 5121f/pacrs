@@ -1,8 +1,9 @@
 mod args;
-mod cmd;
+mod command;
 mod pacman;
 
-use crate::args::Args;
+use crate::{args::Args, command::Cmd};
+
 use anyhow::bail;
 use args::MarkGroup;
 use clap::Parser;

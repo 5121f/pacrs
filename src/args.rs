@@ -68,7 +68,7 @@ pub struct MarkGroup {
     /// Mark packages as installed explicit
     #[clap(long, short)]
     pub explicit: bool,
-    /// Mark packages as dependencie
+    /// Mark packages as dependencie (non-explicit installed)
     #[clap(long, short)]
     pub dependencie: bool,
 }

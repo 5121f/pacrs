@@ -22,14 +22,7 @@ pub enum Args {
     },
     /// Remove packages and unneeded dependencies
     #[clap(short_flag = 'r')]
-    Remove {
-        packages: Vec<String>,
-        /// Remove orphaned packages
-        /// (packages which not installed explicitly and on which no package depends)
-        /// For only print this packages use `pacrs list --ororphaned`
-        #[clap(long, short)]
-        orphaned: bool,
-    },
+    Remove(#[clap(flatten)] RemoveGroup),
     /// Upgrade the system.
     #[clap(short_flag = 'u')]
     Upgrade {
@@ -56,6 +49,17 @@ pub enum Args {
         #[clap(flatten)]
         mark_group: MarkGroup,
     },
+}
+
+#[derive(Debug, Parser)]
+#[group(required = true)]
+pub struct RemoveGroup {
+    pub packages: Vec<String>,
+    /// Remove orphaned packages
+    /// (packages which not installed explicitly and on which no package depends)
+    /// For only print this packages use `pacrs list --ororphaned`
+    #[clap(long, short)]
+    pub orphaned: bool,
 }
 
 #[derive(Debug, Parser)]

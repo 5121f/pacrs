@@ -5,7 +5,7 @@ mod pacman;
 use crate::{args::Args, command::Cmd};
 
 use anyhow::bail;
-use args::MarkGroup;
+use args::{MarkGroup, RemoveGroup};
 use clap::Parser;
 
 fn main() -> anyhow::Result<()> {
@@ -16,7 +16,7 @@ fn main() -> anyhow::Result<()> {
             orphaned,
         } => list(upgradable, orphaned)?,
         Args::Install { packages } => pacman::install(packages)?,
-        Args::Remove { packages, orphaned } => remove(packages, orphaned)?,
+        Args::Remove(RemoveGroup { packages, orphaned }) => remove(packages, orphaned)?,
         Args::Upgrade { packages } => pacman::upgrade(packages)?,
         Args::Info { package } => pacman::info(package)?,
         Args::Search { package } => pacman::search(package)?,

@@ -11,14 +11,13 @@ fn main() -> anyhow::Result<()> {
         Args::List {
             upgradable,
             orphaned,
-        } => list(upgradable, orphaned)?,
-        Args::Install { packages } => pacman::install(packages)?,
-        Args::Remove { packages } => pacman::remove(packages)?,
-        Args::Upgrade { packages } => pacman::upgrade(packages)?,
-        Args::Info { package } => pacman::info(package)?,
-        Args::Search { package } => pacman::search(package)?,
+        } => list(upgradable, orphaned),
+        Args::Install { packages } => pacman::install(packages),
+        Args::Remove { packages } => pacman::remove(packages),
+        Args::Upgrade { packages } => pacman::upgrade(packages),
+        Args::Info { package } => pacman::info(package),
+        Args::Search { package } => pacman::search(package),
     }
-    Ok(())
 }
 
 fn list(updated: bool, orphaned: bool) -> anyhow::Result<()> {

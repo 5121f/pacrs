@@ -3,7 +3,7 @@ use std::{path::Path, process::Command};
 
 use crate::cmd::{execute, execute_without_output, ignure_error};
 
-use alpm::Alpm;
+use alpm::{Alpm, Package};
 use alpm_utils::DbListExt;
 use anyhow::{anyhow, bail, Context};
 use fs_err as fs;
@@ -63,9 +63,15 @@ fn alpm() -> anyhow::Result<Alpm> {
 fn package_was_updated_in_db(package: &str) -> anyhow::Result<bool> {
     let alpm = alpm()?;
     let alpm_tmp = alpm_with_db_path(TEMP_DB_PATH)?;
-    let pkg = alpm.syncdbs().pkg(package).unwrap();
-    let pkg_tmp = alpm_tmp.syncdbs().pkg(package).unwrap();
+    let pkg = syncdb_pkg(&alpm, package)?;
+    let pkg_tmp = syncdb_pkg(&alpm_tmp, package)?;
     Ok(pkg.version() < pkg_tmp.version())
+}
+
+fn syncdb_pkg<'a>(alpm: &'a Alpm, package: &str) -> anyhow::Result<&'a Package> {
+    alpm.syncdbs()
+        .pkg(package)
+        .context("Package {package} not found")
 }
 
 pub fn install(packages: Vec<String>) -> anyhow::Result<()> {

@@ -9,16 +9,18 @@ use anyhow::{anyhow, bail};
 use fs_err as fs;
 
 const TEMP_DB_PATH: &str = "/tmp/pacrs/db";
+const PACMAN_BIN: &str = "pacman";
+const PARU_BIN: &str = "paaru";
 
 pub fn list() -> anyhow::Result<()> {
-    let mut cmd = Command::new("pacman");
+    let mut cmd = Command::new(PACMAN_BIN);
     cmd.arg("-Qq");
     execute(&mut cmd)?;
     Ok(())
 }
 
 pub fn info(package: String) -> anyhow::Result<()> {
-    const COMMAND: &str = "pacman";
+    const COMMAND: &str = PACMAN_BIN;
     let mut pacman = Command::new(COMMAND);
     pacman.args(["-Qi", &package]);
     let exit_status = ignure_error(&mut pacman)?;
@@ -35,7 +37,7 @@ pub fn info(package: String) -> anyhow::Result<()> {
 }
 
 pub fn search(package: String) -> anyhow::Result<()> {
-    let mut pacman = Command::new("pacman");
+    let mut pacman = Command::new(PACMAN_BIN);
     pacman.args(["-Ss", &package]);
     execute(&mut pacman)?;
     Ok(())
@@ -68,22 +70,22 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
             bail!("One or more package you will want to install was updated in the repo. Upgrade your system befor install it.");
         }
     }
-    let mut cmd = Command::new("paru");
+    let mut cmd = Command::new(PARU_BIN);
     cmd.arg("-S").args(packages);
     execute(&mut cmd)?;
     Ok(())
 }
 
 pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
-    let mut pacman = Command::new("paru");
-    pacman.arg("-Syu").args(packages);
-    execute(&mut pacman)?;
+    let mut cmd = Command::new(PARU_BIN);
+    cmd.arg("-Syu").args(packages);
+    execute(&mut cmd)?;
     Ok(())
 }
 
 pub fn check_for_updates() -> anyhow::Result<()> {
     update_temp_db()?;
-    let mut cmd = Command::new("pacman");
+    let mut cmd = Command::new(PACMAN_BIN);
     cmd.args(["-Qu", "--dbpath", TEMP_DB_PATH]);
     execute(&mut cmd)?;
     Ok(())
@@ -98,7 +100,7 @@ fn update_temp_db() -> anyhow::Result<()> {
     }
 
     let mut cmd = Command::new("fakeroot");
-    cmd.args(["--", "pacman", "-Sy", "--dbpath", TEMP_DB_PATH]);
+    cmd.args(["--", PACMAN_BIN, "-Sy", "--dbpath", TEMP_DB_PATH]);
     execute_without_output(&mut cmd)?;
     Ok(())
 }

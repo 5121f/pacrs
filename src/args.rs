@@ -16,5 +16,8 @@ pub enum Args {
     Info {
         package: String,
     },
+    Search {
+        package: String,
+    },
     CheckForUpdates,
 }

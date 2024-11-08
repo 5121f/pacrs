@@ -12,6 +12,7 @@ fn main() -> anyhow::Result<()> {
         Args::Install { packages } => pacman::install(packages)?,
         Args::Upgrade { packages } => pacman::upgrade(packages)?,
         Args::Info { package } => pacman::info(package)?,
+        Args::Search { package } => pacman::search(package)?,
         Args::CheckForUpdates => pacman::check_for_updates()?,
     }
     Ok(())

@@ -34,6 +34,13 @@ pub fn info(package: String) -> anyhow::Result<()> {
     Ok(())
 }
 
+pub fn search(package: String) -> anyhow::Result<()> {
+    let mut pacman = Command::new("pacman");
+    pacman.args(["-Ss", &package]);
+    execute(&mut pacman)?;
+    Ok(())
+}
+
 fn alpm_with_db_path(db_path: &str) -> Alpm {
     let conf = pacmanconf::Config::new().unwrap();
     let mut alpm = Alpm::new(&*conf.root_dir, db_path).unwrap();

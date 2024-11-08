@@ -8,4 +8,4 @@
 - If you try to try to install package which updated in the repo pacrs inform you]
   (without updating the main index) what you needed to upgrade system.
 - `pacman -Si` and `pacman -Qi` merged in single `pacrs info` command which by
-  default search into internet and with an error search into local index.
+  default search into local index and with an error search into internet.

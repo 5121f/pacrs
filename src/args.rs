@@ -33,8 +33,10 @@ pub enum Args {
         /// Packages to install with upgrade
         packages: Vec<String>,
     },
+    /// Print info about package
     #[clap(short_flag = 'n')]
     Info { package: String },
+    /// Search packages
     #[clap(short_flag = 's')]
     Search { package: String },
     /// Mark packages

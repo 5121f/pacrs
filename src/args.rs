@@ -7,7 +7,7 @@ pub enum Args {
         /// Print list of packages that were updated in the repo
         /// (This does not affect the local index)
         #[clap(long, short)]
-        updated: bool,
+        upgradable: bool,
     },
     /// Install packages
     Install {

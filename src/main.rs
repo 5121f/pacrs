@@ -8,7 +8,7 @@ use clap::Parser;
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args {
-        Args::List { updated } => list(updated)?,
+        Args::List { upgradable } => list(upgradable)?,
         Args::Install { packages } => pacman::install(packages)?,
         Args::Remove { packages } => pacman::remove(packages)?,
         Args::Upgrade { packages } => pacman::upgrade(packages)?,

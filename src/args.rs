@@ -16,7 +16,10 @@ pub enum Args {
     },
     /// Install packages
     #[clap(short_flag = 'i')]
-    Install { packages: Vec<String> },
+    Install {
+        #[clap(required = true)]
+        packages: Vec<String>,
+    },
     /// Remove packages and unneeded dependencies
     #[clap(short_flag = 'r')]
     Remove {
@@ -35,10 +38,16 @@ pub enum Args {
     },
     /// Print info about package
     #[clap(short_flag = 'n')]
-    Info { package: String },
+    Info {
+        #[clap(required = true)]
+        package: String,
+    },
     /// Search packages
     #[clap(short_flag = 's')]
-    Search { package: String },
+    Search {
+        #[clap(required = true)]
+        package: String,
+    },
     /// Mark packages
     #[clap(short_flag = 'm')]
     Mark {

@@ -20,7 +20,7 @@ pub fn list() -> anyhow::Result<()> {
 pub fn info(package: String) -> anyhow::Result<()> {
     const COMMAND: &str = "pacman";
     let mut pacman = Command::new(COMMAND);
-    pacman.args(["-Si", &package]);
+    pacman.args(["-Qi", &package]);
     let exit_status = ignure_error(&mut pacman)?;
     let exit_code = exit_status
         .code()
@@ -28,9 +28,8 @@ pub fn info(package: String) -> anyhow::Result<()> {
     if exit_code == 0 {
         return Ok(());
     }
-    eprintln!("pacman -Si ended with error maybe due to problems with ethernet. Tring to find info in local index.");
     let mut pacman = Command::new(COMMAND);
-    pacman.args(["-Qi", &package]);
+    pacman.args(["-Si", &package]);
     execute(&mut pacman)?;
     Ok(())
 }

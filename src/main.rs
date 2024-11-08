@@ -3,6 +3,7 @@ mod cmd;
 mod pacman;
 
 use crate::args::Args;
+use args::MarkGroup;
 use clap::Parser;
 
 fn main() -> anyhow::Result<()> {
@@ -11,13 +12,22 @@ fn main() -> anyhow::Result<()> {
         Args::List {
             upgradable,
             orphaned,
-        } => list(upgradable, orphaned),
-        Args::Install { packages } => pacman::install(packages),
-        Args::Remove { packages, orphaned } => remove(packages, orphaned),
-        Args::Upgrade { packages } => pacman::upgrade(packages),
-        Args::Info { package } => pacman::info(package),
-        Args::Search { package } => pacman::search(package),
+        } => list(upgradable, orphaned)?,
+        Args::Install { packages } => pacman::install(packages)?,
+        Args::Remove { packages, orphaned } => remove(packages, orphaned)?,
+        Args::Upgrade { packages } => pacman::upgrade(packages)?,
+        Args::Info { package } => pacman::info(package)?,
+        Args::Search { package } => pacman::search(package)?,
+        Args::Mark {
+            packages,
+            mark_group: MarkGroup { explicit },
+        } => {
+            if explicit {
+                pacman::mark_explicit(packages)?;
+            }
+        }
     }
+    Ok(())
 }
 
 fn remove(packages: Vec<String>, orphaned: bool) -> anyhow::Result<()> {

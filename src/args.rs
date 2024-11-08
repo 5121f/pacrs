@@ -37,4 +37,19 @@ pub enum Args {
     Search {
         package: String,
     },
+    /// Mark packages
+    Mark {
+        #[clap(required = true)]
+        packages: Vec<String>,
+        #[clap(flatten)]
+        mark_group: MarkGroup,
+    },
+}
+
+#[derive(Debug, Parser)]
+#[group(required = true)]
+pub struct MarkGroup {
+    /// Mark packages as installed explicit
+    #[clap(long, short)]
+    pub explicit: bool,
 }

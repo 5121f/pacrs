@@ -127,6 +127,13 @@ pub fn remvoe_orphaned_packages() -> anyhow::Result<()> {
     Ok(())
 }
 
+pub fn mark_explicit(packages: Vec<String>) -> anyhow::Result<()> {
+    let mut cmd = Command::new(PACMAN_BIN);
+    cmd.args(["-D", "--asexplicit"]).args(packages);
+    execute(&mut cmd)?;
+    Ok(())
+}
+
 fn update_temp_db() -> anyhow::Result<()> {
     fs::create_dir_all(TEMP_DB_PATH)?;
     let conf = pacmanconf::Config::new().unwrap();

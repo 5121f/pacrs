@@ -121,7 +121,7 @@ pub fn mark_explicit(packages: Vec<String>) -> anyhow::Result<()> {
 
 pub fn mark_dep(packages: Vec<String>) -> anyhow::Result<()> {
     Cmd::new(PACMAN_BIN)
-        .args(["-S", "--asdeps"])
+        .args(["-D", "--asdeps"])
         .args(packages)
         .execute()?;
     Ok(())

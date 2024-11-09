@@ -3,7 +3,7 @@ use std::path::Path;
 
 use crate::Cmd;
 
-use alpm::{Alpm, Package};
+use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
 use anyhow::{anyhow, bail, Context};
 use fs_err as fs;
@@ -52,10 +52,9 @@ fn alpm() -> anyhow::Result<Alpm> {
     alpm_utils::alpm_with_conf(&conf).context("Failed to initialize alpm connection")
 }
 
-fn package_was_updated_in_db(package: &str) -> anyhow::Result<bool> {
-    let alpm = alpm()?;
+fn package_was_updated_in_db(alpm: &Alpm, package: &str) -> anyhow::Result<bool> {
     let alpm_tmp = alpm_with_db_path(TEMP_DB_PATH)?;
-    let pkg = syncdb_pkg(&alpm, package)?;
+    let pkg = syncdb_pkg(alpm, package)?;
     let pkg_tmp = syncdb_pkg(&alpm_tmp, package)?;
     Ok(pkg.version() < pkg_tmp.version())
 }
@@ -66,15 +65,57 @@ fn syncdb_pkg<'a>(alpm: &'a Alpm, package: &str) -> anyhow::Result<&'a Package> 
         .context("Package {package} not found")
 }
 
+fn dependencies<'a>(alpm: &'a Alpm, package: &str) -> anyhow::Result<Vec<&'a Package>> {
+    if let Ok(pkg) = alpm.syncdbs().pkg(package) {
+        let dependencies = pkg
+            .depends()
+            .into_iter()
+            .map(|dep| alpm.syncdbs().find_satisfier(dep.name()).unwrap())
+            .collect();
+        return Ok(dependencies);
+    }
+    if let Ok(grp) = group(alpm, package) {
+        return Ok(grp.packages().into_iter().collect());
+    }
+    bail!("Falied to define package type")
+}
+
+fn group<'a>(alpm: &'a Alpm, group: &str) -> alpm::Result<&'a Group> {
+    for db in alpm.syncdbs() {
+        if let Ok(grp) = db.group(group) {
+            return Ok(grp);
+        }
+    }
+    alpm.localdb().group("error")
+}
+
 pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     update_temp_db()?;
+    let alpm = alpm()?;
     for pkg in &packages {
-        if package_was_updated_in_db(pkg)? {
-            bail!("One or more package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
+        if !installed(&alpm, pkg) {
+            if package_was_updated_in_db(&alpm, pkg)? {
+                bail!("One or more package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
+            }
+            let mut deps = dependencies(&alpm, pkg)?;
+            while let Some(dep) = deps.pop() {
+                let dep_name = dep.name();
+                if !installed(&alpm, dep_name) {
+                    if package_was_updated_in_db(&alpm, dep_name)? {
+                        bail!("One or more dependencies of package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
+                    }
+                    deps.append(&mut dependencies(&alpm, dep_name)?);
+                }
+            }
         }
     }
     Cmd::new(PARU_BIN).arg("-S").args(packages).execute()?;
     Ok(())
+}
+
+fn installed(alpm: &Alpm, package: &str) -> bool {
+    let localdb = alpm.localdb();
+    localdb.pkg(package).is_ok() || localdb.group(package).is_ok()
 }
 
 pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {

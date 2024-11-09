@@ -52,8 +52,7 @@ fn alpm() -> anyhow::Result<Alpm> {
     alpm_utils::alpm_with_conf(&conf).context("Failed to initialize alpm connection")
 }
 
-fn package_was_updated_in_db(alpm: &Alpm, package: &str) -> anyhow::Result<bool> {
-    let alpm_tmp = alpm_with_db_path(TEMP_DB_PATH)?;
+fn package_was_updated_in_db(alpm: &Alpm, alpm_tmp: &Alpm, package: &str) -> anyhow::Result<bool> {
     let pkg = syncdb_pkg(alpm, package)?;
     let pkg_tmp = syncdb_pkg(&alpm_tmp, package)?;
     Ok(pkg.version() < pkg_tmp.version())
@@ -92,16 +91,17 @@ fn group<'a>(alpm: &'a Alpm, group: &str) -> alpm::Result<&'a Group> {
 pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     update_temp_db()?;
     let alpm = alpm()?;
+    let alpm_tmp = alpm_with_db_path(TEMP_DB_PATH)?;
     for pkg in &packages {
         if !installed(&alpm, pkg) {
-            if package_was_updated_in_db(&alpm, pkg)? {
+            if package_was_updated_in_db(&alpm, &alpm_tmp, pkg)? {
                 bail!("One or more package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
             }
             let mut deps = dependencies(&alpm, pkg)?;
             while let Some(dep) = deps.pop() {
                 let dep_name = dep.name();
                 if !installed(&alpm, dep_name) {
-                    if package_was_updated_in_db(&alpm, dep_name)? {
+                    if package_was_updated_in_db(&alpm, &alpm_tmp, dep_name)? {
                         bail!("One or more dependencies of package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
                     }
                     deps.append(&mut dependencies(&alpm, dep_name)?);

@@ -20,10 +20,10 @@ impl PacrsAlpm {
         Ok(Self(alpm))
     }
 
-    pub fn installed(&self, package: &str) -> bool {
-        let localdb = self.0.localdb();
-        localdb.pkg(package).is_ok() || localdb.group(package).is_ok()
-    }
+    // pub fn installed(&self, package: &str) -> bool {
+    //     let localdb = self.0.localdb();
+    //     localdb.pkg(package).is_ok() || localdb.group(package).is_ok()
+    // }
 
     pub fn package_was_updated_in_db(
         &self,

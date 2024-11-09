@@ -44,7 +44,7 @@ impl PacrsAlpm {
         let mut packages_we_already_checked = Vec::with_capacity(packages_for_check.len());
         while let Some(pkg) = packages_for_check.pop() {
             let already_checked = packages_we_already_checked.contains(&pkg);
-            if !already_checked && !self.installed(&pkg) {
+            if !already_checked {
                 if self.package_was_updated_in_db(alpm_tmp, &pkg)? {
                     return Ok(true);
                 }

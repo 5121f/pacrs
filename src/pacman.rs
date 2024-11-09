@@ -35,7 +35,10 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::new()?;
     if alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, packages.clone())? {
-        bail!("One or more package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
+        bail!(
+            "One or more package you will want to install or their dependencies was updated in \
+            the repo. Upgrade your system with 'pacrs upgrade' befor install it."
+        );
     }
     Cmd::new(PARU_BIN).arg("-S").args(packages).execute()?;
     Ok(())

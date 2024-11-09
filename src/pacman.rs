@@ -70,7 +70,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     update_temp_db()?;
     for pkg in &packages {
         if package_was_updated_in_db(pkg)? {
-            bail!("One or more package you will want to install was updated in the repo. Upgrade your system befor install it.");
+            bail!("One or more package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
         }
     }
     Cmd::new(PARU_BIN).arg("-S").args(packages).execute()?;

@@ -54,7 +54,7 @@ fn alpm() -> anyhow::Result<Alpm> {
 
 fn package_was_updated_in_db(alpm: &Alpm, alpm_tmp: &Alpm, package: &str) -> anyhow::Result<bool> {
     let pkg = syncdb_pkg(alpm, package)?;
-    let pkg_tmp = syncdb_pkg(&alpm_tmp, package)?;
+    let pkg_tmp = syncdb_pkg(alpm_tmp, package)?;
     Ok(pkg.version() < pkg_tmp.version())
 }
 

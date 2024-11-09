@@ -92,24 +92,23 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     update_temp_db()?;
     let alpm = alpm()?;
     let alpm_tmp = alpm_with_db_path(TEMP_DB_PATH)?;
-    for pkg in &packages {
+    let packages_for_install = packages;
+    let mut packages_for_check = packages_for_install.clone();
+    while let Some(pkg) = &packages_for_check.pop() {
         if !installed(&alpm, pkg) {
             if package_was_updated_in_db(&alpm, &alpm_tmp, pkg)? {
                 bail!("One or more package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
             }
-            let mut deps = dependencies(&alpm, pkg)?;
-            while let Some(dep) = deps.pop() {
-                let dep_name = dep.name();
-                if !installed(&alpm, dep_name) {
-                    if package_was_updated_in_db(&alpm, &alpm_tmp, dep_name)? {
-                        bail!("One or more dependencies of package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
-                    }
-                    deps.append(&mut dependencies(&alpm, dep_name)?);
-                }
-            }
+            let deps = dependencies(&alpm, pkg)?
+                .into_iter()
+                .map(|dep| dep.name().to_owned());
+            packages_for_check.extend(deps);
         }
     }
-    Cmd::new(PARU_BIN).arg("-S").args(packages).execute()?;
+    Cmd::new(PARU_BIN)
+        .arg("-S")
+        .args(packages_for_install)
+        .execute()?;
     Ok(())
 }
 

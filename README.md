@@ -4,7 +4,9 @@
 
 - No need to manage index. pacrs do it under the hood.
   - No more risks to forget you performed `pacman -Sy` and installed package
-    after that and which caused dependency issues.
+    after that and which caused dependency issues (for the reasons why it's
+    bad, see
+    [Arch Wiki](https://wiki.archlinux.org/title/System_maintenance#Partial_upgrades_are_unsupported).
 - If you try to try to install package which updated in the repo pacrs inform
   you (without updating the main index) what you needed to upgrade system.
 - `pacman -Si` and `pacman -Qi` merged in single `pacrs info` command which by

@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
 use anyhow::{bail, Context};
@@ -68,7 +70,7 @@ fn syncdb_pkg<'a>(alpm: &'a Alpm, package: &str) -> anyhow::Result<&'a Package> 
         .context("Package {package} not found")
 }
 
-pub struct TempAlpm(Alpm);
+pub struct TempAlpm(PacrsAlpm);
 
 impl TempAlpm {
     pub fn new() -> anyhow::Result<Self> {
@@ -77,10 +79,14 @@ impl TempAlpm {
             .context("Failed to initialize alpm connection")?;
         alpm_utils::configure_alpm(&mut alpm, &conf).context("Failed to configure alpm")?;
         initialize_temp_db()?;
-        Ok(Self(alpm))
+        Ok(Self(PacrsAlpm(alpm)))
     }
+}
 
-    fn syncdb_pkg<'a>(&'a self, package: &str) -> anyhow::Result<&'a Package> {
-        syncdb_pkg(&self.0, package)
+impl Deref for TempAlpm {
+    type Target = PacrsAlpm;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
     }
 }

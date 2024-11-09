@@ -34,27 +34,10 @@ pub fn search(package: String) -> anyhow::Result<()> {
 pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::new()?;
-    let packages_for_install = packages;
-    let mut packages_for_check = packages_for_install.clone();
-    let mut packages_we_already_checked = Vec::with_capacity(packages_for_install.len());
-    while let Some(pkg) = packages_for_check.pop() {
-        let already_checked = packages_we_already_checked.contains(&pkg);
-        if !already_checked && !alpm.installed(&pkg) {
-            if alpm.package_was_updated_in_db(&alpm_tmp, &pkg)? {
-                bail!("One or more package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
-            }
-            let deps = alpm
-                .dependencies(&pkg)?
-                .into_iter()
-                .map(|dep| dep.name().to_owned());
-            packages_for_check.extend(deps);
-        }
-        packages_we_already_checked.push(pkg);
+    if alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, packages.clone())? {
+        bail!("One or more package you will want to install was updated in the repo. Upgrade your system with 'pacrs upgrade' befor install it.");
     }
-    Cmd::new(PARU_BIN)
-        .arg("-S")
-        .args(packages_for_install)
-        .execute()?;
+    Cmd::new(PARU_BIN).arg("-S").args(packages).execute()?;
     Ok(())
 }
 

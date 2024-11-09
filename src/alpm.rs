@@ -35,6 +35,30 @@ impl PacrsAlpm {
         Ok(pkg.version() < pkg_tmp.version())
     }
 
+    pub fn pkgs_or_their_deps_was_updated_in_db(
+        &self,
+        alpm_tmp: &TempAlpm,
+        packages: Vec<String>,
+    ) -> anyhow::Result<bool> {
+        let mut packages_for_check = packages;
+        let mut packages_we_already_checked = Vec::with_capacity(packages_for_check.len());
+        while let Some(pkg) = packages_for_check.pop() {
+            let already_checked = packages_we_already_checked.contains(&pkg);
+            if !already_checked && !self.installed(&pkg) {
+                if self.package_was_updated_in_db(alpm_tmp, &pkg)? {
+                    return Ok(true);
+                }
+                let deps = self
+                    .dependencies(&pkg)?
+                    .into_iter()
+                    .map(|dep| dep.name().to_owned());
+                packages_for_check.extend(deps);
+            }
+            packages_we_already_checked.push(pkg);
+        }
+        Ok(false)
+    }
+
     pub fn dependencies<'a>(&'a self, package: &str) -> anyhow::Result<Vec<&'a Package>> {
         if let Ok(pkg) = self.0.syncdbs().pkg(package) {
             let dependencies = pkg

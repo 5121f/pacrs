@@ -35,21 +35,11 @@ impl Cmd {
         self
     }
 
-    pub fn execute(mut self) -> Result<(), RunProgramError> {
-        let mut child = self
-            .cmd
-            .spawn()
-            .map_err(|source| RunProgramError::new(&self.cmd, source))?;
-        child
-            .wait()
-            .map_err(|source| RunProgramError::new(&self.cmd, source))?;
-        Ok(())
-    }
-
-    pub fn execute_without_output(mut self) -> Result<ExitStatus, RunProgramError> {
+    pub fn execute(mut self, show_output: bool) -> Result<ExitStatus, RunProgramError> {
+        if !show_output {
+            self.cmd.stderr(Stdio::null()).stdout(Stdio::null());
+        }
         self.cmd
-            .stderr(Stdio::null())
-            .stdout(Stdio::null())
             .spawn()
             .map_err(|source| RunProgramError::new(&self.cmd, source))?
             .wait()

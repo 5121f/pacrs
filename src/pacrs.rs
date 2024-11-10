@@ -10,7 +10,7 @@ use crate::{
 use anyhow::bail;
 
 pub fn list() -> anyhow::Result<()> {
-    pacman().arg("-Qq").execute()?;
+    pacman().arg("-Qq").execute(true)?;
     Ok(())
 }
 
@@ -18,25 +18,25 @@ pub fn info(package: String) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let is_local_pkg = alpm.localdb().pkg(package.as_str()).is_ok();
     if is_local_pkg {
-        pacman().args(["-Qi", &package]).execute()?;
+        pacman().args(["-Qi", &package]).execute(true)?;
         return Ok(());
     }
-    pacman().args(["-Si", &package]).execute()?;
+    pacman().args(["-Si", &package]).execute(true)?;
     Ok(())
 }
 
 pub fn search(package: String) -> anyhow::Result<()> {
-    pacman().args(["-Ss", &package]).execute()?;
+    pacman().args(["-Ss", &package]).execute(true)?;
     Ok(())
 }
 
 pub fn cache_clean() -> anyhow::Result<()> {
-    pacman().arg("-Scc").execute()?;
+    pacman().arg("-Scc").execute(true)?;
     Ok(())
 }
 
 pub fn cache_clean_uninstalled() -> anyhow::Result<()> {
-    pacman().arg("-Sc").execute()?;
+    pacman().arg("-Sc").execute(true)?;
     Ok(())
 }
 
@@ -49,17 +49,20 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
             the repo. Upgrade your system with 'pacrs upgrade' befor install it."
         );
     }
-    sudo_paru_or_pacman()?.arg("-S").args(packages).execute()?;
+    sudo_paru_or_pacman()?
+        .arg("-S")
+        .args(packages)
+        .execute(true)?;
     Ok(())
 }
 
 pub fn list_aur() -> anyhow::Result<()> {
-    pacman().arg("-Qmq").execute()?;
+    pacman().arg("-Qmq").execute(true)?;
     Ok(())
 }
 
 pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
-    sudo_pacman().arg("-Rs").args(packages).execute()?;
+    sudo_pacman().arg("-Rs").args(packages).execute(true)?;
     Ok(())
 }
 
@@ -67,18 +70,20 @@ pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
     sudo_paru_or_pacman()?
         .arg("-Syu")
         .args(packages)
-        .execute()?;
+        .execute(true)?;
     Ok(())
 }
 
 pub fn check_for_updates() -> anyhow::Result<()> {
     initialize_temp_db()?;
-    pacman().args(["-Qu", "--dbpath", TEMP_DB_PATH]).execute()?;
+    pacman()
+        .args(["-Qu", "--dbpath", TEMP_DB_PATH])
+        .execute(true)?;
     Ok(())
 }
 
 pub fn orphaned_packages() -> anyhow::Result<()> {
-    pacman().arg("-Qdtq").execute()?;
+    pacman().arg("-Qdtq").execute(true)?;
     Ok(())
 }
 
@@ -97,12 +102,15 @@ pub fn mark_explicit(packages: Vec<String>) -> anyhow::Result<()> {
     pacman()
         .args(["-D", "--asexplicit"])
         .args(packages)
-        .execute()?;
+        .execute(true)?;
     Ok(())
 }
 
 pub fn mark_dep(packages: Vec<String>) -> anyhow::Result<()> {
-    pacman().args(["-D", "--asdeps"]).args(packages).execute()?;
+    pacman()
+        .args(["-D", "--asdeps"])
+        .args(packages)
+        .execute(true)?;
     Ok(())
 }
 

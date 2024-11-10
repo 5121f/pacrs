@@ -12,10 +12,10 @@ pub fn list() -> anyhow::Result<()> {
 }
 
 pub fn info(package: String) -> anyhow::Result<()> {
-    let exit_status = pacman()
-        .args(["-Qi", &package])
-        .hide_error_from_user_and_give_exit_status()?;
-    if exit_status.success() {
+    let alpm = PacrsAlpm::new()?;
+    let is_local_pkg = alpm.localdb().pkg(package.as_str()).is_ok();
+    if is_local_pkg {
+        pacman().args(["-Qi", &package]).execute()?;
         return Ok(());
     }
     pacman().args(["-Si", &package]).execute()?;

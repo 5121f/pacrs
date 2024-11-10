@@ -88,6 +88,14 @@ impl PacrsAlpm {
     }
 }
 
+impl Deref for PacrsAlpm {
+    type Target = Alpm;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
 fn syncdb_pkg<'a>(alpm: &'a Alpm, package: &str) -> anyhow::Result<&'a Package> {
     alpm.syncdbs()
         .pkg(package)

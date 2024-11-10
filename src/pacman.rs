@@ -17,6 +17,6 @@ pub fn paru_or_pacman() -> anyhow::Result<Cmd> {
 fn program_is_present() -> anyhow::Result<bool> {
     Ok(Cmd::new("which")
         .arg(PACMAN_BIN)
-        .hide_error_from_user_and_give_exit_status()?
+        .hide_output_and_give_exit_status()?
         .success())
 }

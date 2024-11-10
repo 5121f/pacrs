@@ -35,11 +35,10 @@ impl Cmd {
         self
     }
 
-    pub fn hide_error_from_user_and_give_exit_status(
-        mut self,
-    ) -> Result<ExitStatus, RunProgramError> {
+    pub fn hide_output_and_give_exit_status(mut self) -> Result<ExitStatus, RunProgramError> {
         self.cmd
             .stderr(Stdio::null())
+            .stdout(Stdio::null())
             .spawn()
             .map_err(|source| RunProgramError::new(&self.cmd, source))?
             .wait()

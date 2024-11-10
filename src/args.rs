@@ -18,8 +18,8 @@ pub enum Args {
         packages: Vec<String>,
     },
     /// Print list of installed packages
-    #[clap(visible_alias = "l")]
-    List {
+    #[clap(visible_alias = "pa")]
+    Packages {
         /// Print list of packages that were updated in the repo
         /// (This does not affect the local index)
         #[clap(long, short, conflicts_with = "orphaned")]

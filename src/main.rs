@@ -18,7 +18,7 @@ use clap::Parser;
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args {
-        Args::List {
+        Args::Packages {
             upgradable,
             orphaned,
         } => list(upgradable, orphaned)?,

@@ -3,13 +3,13 @@ use crate::{
     Cmd, PacrsAlpm, TempAlpm,
 };
 
-use anyhow::{anyhow, bail};
+use anyhow::bail;
 
 pub const PACMAN_BIN: &str = "pacman";
 const PARU_BIN: &str = "paru";
 
 fn program_is_present() -> anyhow::Result<bool> {
-    Ok(Cmd::new("which").ignore_error()?.code().unwrap() == 0)
+    Ok(Cmd::new("which").ignore_error()?.success())
 }
 
 fn paru_or_pacman() -> anyhow::Result<Cmd> {
@@ -25,15 +25,13 @@ pub fn list() -> anyhow::Result<()> {
 }
 
 pub fn info(package: String) -> anyhow::Result<()> {
-    const COMMAND: &str = PACMAN_BIN;
-    let exit_status = Cmd::new(COMMAND).args(["-Qi", &package]).ignore_error()?;
-    let exit_code = exit_status
-        .code()
-        .ok_or_else(|| anyhow!("Failed to execute {COMMAND}"))?;
-    if exit_code == 0 {
+    let exit_status = Cmd::new(PACMAN_BIN)
+        .args(["-Qi", &package])
+        .ignore_error()?;
+    if exit_status.success() {
         return Ok(());
     }
-    Cmd::new(COMMAND).args(["-Si", &package]).execute()?;
+    Cmd::new(PACMAN_BIN).args(["-Si", &package]).execute()?;
     Ok(())
 }
 

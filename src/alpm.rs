@@ -103,5 +103,5 @@ impl Deref for PacrsAlpm {
 fn syncdb_pkg<'a>(alpm: &'a Alpm, package: &str) -> anyhow::Result<&'a Package> {
     alpm.syncdbs()
         .pkg(package)
-        .context("Package {package} not found")
+        .with_context(|| format!("Package {package} not found"))
 }

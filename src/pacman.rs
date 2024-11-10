@@ -8,6 +8,17 @@ use anyhow::{anyhow, bail};
 pub const PACMAN_BIN: &str = "pacman";
 const PARU_BIN: &str = "paru";
 
+fn program_is_present() -> anyhow::Result<bool> {
+    Ok(Cmd::new("which").ignore_error()?.code().unwrap() == 0)
+}
+
+fn paru_or_pacman() -> anyhow::Result<Cmd> {
+    let cmd = program_is_present()?
+        .then(|| Cmd::new(PARU_BIN))
+        .unwrap_or_else(|| Cmd::new(PACMAN_BIN));
+    Ok(cmd)
+}
+
 pub fn list() -> anyhow::Result<()> {
     Cmd::new(PACMAN_BIN).arg("-Qq").execute()?;
     Ok(())
@@ -40,7 +51,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
             the repo. Upgrade your system with 'pacrs upgrade' befor install it."
         );
     }
-    Cmd::new(PARU_BIN).arg("-S").args(packages).execute()?;
+    paru_or_pacman()?.arg("-S").args(packages).execute()?;
     Ok(())
 }
 
@@ -50,7 +61,7 @@ pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
 }
 
 pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
-    Cmd::new(PARU_BIN).arg("-Syu").args(packages).execute()?;
+    paru_or_pacman()?.arg("-Syu").args(packages).execute()?;
     Ok(())
 }
 

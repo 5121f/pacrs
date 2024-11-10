@@ -5,11 +5,7 @@ mod pacman;
 mod pacrs;
 mod temp_db;
 
-use crate::{
-    alpm::{PacrsAlpm, TempAlpm},
-    args::Args,
-    command::Cmd,
-};
+use crate::{alpm::PacrsAlpm, args::Args, command::Cmd};
 
 use anyhow::bail;
 use args::{CacheCleanGroup, MarkGroup, RemoveGroup};

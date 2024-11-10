@@ -1,10 +1,37 @@
-use std::path::Path;
+use std::{ops::Deref, path::Path};
 
-use crate::{pacman::PACMAN_BIN, Cmd};
+use crate::{
+    alpm::{pacmanconf, PacrsAlpm},
+    pacman::PACMAN_BIN,
+    Cmd,
+};
 
+use alpm::Alpm;
+use anyhow::Context;
 use fs_err as fs;
 
 pub const TEMP_DB_PATH: &str = "/tmp/pacrs/db";
+
+pub struct TempAlpm(PacrsAlpm);
+
+impl TempAlpm {
+    pub fn new() -> anyhow::Result<Self> {
+        let conf = pacmanconf()?;
+        let mut alpm = Alpm::new(&*conf.root_dir, TEMP_DB_PATH)
+            .context("Failed to initialize alpm connection")?;
+        alpm_utils::configure_alpm(&mut alpm, &conf).context("Failed to configure alpm")?;
+        initialize_temp_db()?;
+        Ok(Self(PacrsAlpm::with_alpm(alpm)))
+    }
+}
+
+impl Deref for TempAlpm {
+    type Target = PacrsAlpm;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
 
 pub fn initialize_temp_db() -> anyhow::Result<()> {
     fs::create_dir_all(TEMP_DB_PATH)?;

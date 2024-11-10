@@ -3,8 +3,8 @@ use std::{os::unix::fs::MetadataExt, path::Path};
 use crate::{
     alpm::pacmanconf,
     pacman::{pacman, paru_or_pacman},
-    temp_db::{initialize_temp_db, TEMP_DB_PATH},
-    PacrsAlpm, TempAlpm,
+    temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
+    PacrsAlpm,
 };
 
 use anyhow::bail;

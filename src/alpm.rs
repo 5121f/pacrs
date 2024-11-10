@@ -4,7 +4,7 @@ use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
 use anyhow::{bail, Context};
 
-use crate::temp_db::{initialize_temp_db, TEMP_DB_PATH};
+use crate::temp_db::TempAlpm;
 
 pub fn pacmanconf() -> anyhow::Result<pacmanconf::Config> {
     pacmanconf::Config::new().context("Failed to read pacmanconf")
@@ -18,6 +18,10 @@ impl PacrsAlpm {
         let alpm =
             alpm_utils::alpm_with_conf(&conf).context("Failed to initialize alpm connection")?;
         Ok(Self(alpm))
+    }
+
+    pub fn with_alpm(alpm: Alpm) -> Self {
+        Self(alpm)
     }
 
     // pub fn installed(&self, package: &str) -> bool {
@@ -100,25 +104,4 @@ fn syncdb_pkg<'a>(alpm: &'a Alpm, package: &str) -> anyhow::Result<&'a Package> 
     alpm.syncdbs()
         .pkg(package)
         .context("Package {package} not found")
-}
-
-pub struct TempAlpm(PacrsAlpm);
-
-impl TempAlpm {
-    pub fn new() -> anyhow::Result<Self> {
-        let conf = pacmanconf()?;
-        let mut alpm = Alpm::new(&*conf.root_dir, TEMP_DB_PATH)
-            .context("Failed to initialize alpm connection")?;
-        alpm_utils::configure_alpm(&mut alpm, &conf).context("Failed to configure alpm")?;
-        initialize_temp_db()?;
-        Ok(Self(PacrsAlpm(alpm)))
-    }
-}
-
-impl Deref for TempAlpm {
-    type Target = PacrsAlpm;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
 }

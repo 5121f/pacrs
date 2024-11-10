@@ -57,7 +57,7 @@ pub struct RemoveGroup {
     pub packages: Vec<String>,
     /// Remove orphaned packages
     /// (packages which not installed explicitly and on which no package depends)
-    /// For only print this packages use `pacrs list --ororphaned`
+    /// For only print this packages use `pacrs list --orphaned`
     #[clap(long, short)]
     pub orphaned: bool,
 }

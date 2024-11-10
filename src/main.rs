@@ -27,7 +27,7 @@ fn main() -> anyhow::Result<()> {
         Args::Upgrade { packages } => pacrs::upgrade(packages)?,
         Args::Info { package } => pacrs::info(package)?,
         Args::Search { package } => pacrs::search(package)?,
-        Args::Cache { clean } => cache(clean)?,
+        Args::Cache { clean, size } => cache(clean, size)?,
         Args::Mark {
             packages,
             mark_group:
@@ -40,7 +40,10 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn cache(clean: CacheCleanGroup) -> anyhow::Result<()> {
+fn cache(clean: CacheCleanGroup, size: bool) -> anyhow::Result<()> {
+    if size {
+        return pacrs::cache_size();
+    }
     if clean.clean {
         if clean.uninstalled {
             return pacrs::cache_clean_uninstalled();

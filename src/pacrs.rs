@@ -1,4 +1,7 @@
+use std::{os::unix::fs::MetadataExt, path::Path};
+
 use crate::{
+    alpm::pacmanconf,
     pacman::{pacman, paru_or_pacman},
     temp_db::{initialize_temp_db, TEMP_DB_PATH},
     PacrsAlpm, TempAlpm,
@@ -92,5 +95,19 @@ pub fn mark_explicit(packages: Vec<String>) -> anyhow::Result<()> {
 
 pub fn mark_dep(packages: Vec<String>) -> anyhow::Result<()> {
     pacman().args(["-D", "--asdeps"]).args(packages).execute()?;
+    Ok(())
+}
+
+pub fn cache_size() -> anyhow::Result<()> {
+    let conf = pacmanconf()?;
+    let mut total_size = 0;
+    for cache_dir in conf.cache_dir {
+        for entry in fs_err::read_dir(Path::new(&cache_dir))? {
+            let entry = entry?;
+            total_size += entry.metadata()?.size();
+        }
+    }
+    let size = humansize::format_size(total_size, humansize::DECIMAL);
+    println!("{size}");
     Ok(())
 }

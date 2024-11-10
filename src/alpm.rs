@@ -6,7 +6,7 @@ use anyhow::{bail, Context};
 
 use crate::temp_db::{initialize_temp_db, TEMP_DB_PATH};
 
-fn pacmanconf() -> anyhow::Result<pacmanconf::Config> {
+pub fn pacmanconf() -> anyhow::Result<pacmanconf::Config> {
     pacmanconf::Config::new().context("Failed to read pacmanconf")
 }
 

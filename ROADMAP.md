@@ -1,6 +1,5 @@
 # Roadmap of `pacrs`
 
-- Request root password from user if needed.
 - `pacrs install --reinstall` command which should check cache and if the
   packages are contained in it, reinstall these packages without check.
 - `pacrs packages --files` - alias of `pacman -F`.

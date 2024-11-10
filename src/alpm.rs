@@ -49,11 +49,17 @@ impl PacrsAlpm {
         while let Some(pkg) = packages_for_check.pop() {
             let already_checked = packages_we_already_checked.contains(&pkg);
             if !already_checked {
-                if self.package_was_updated_in_db(alpm_tmp, &pkg)? {
+                let package_was_updated = self
+                    // We assume that if package not finded in syncdb, then the package from AUR and we ignore it
+                    .package_was_updated_in_db(alpm_tmp, &pkg)
+                    .unwrap_or(false);
+                if package_was_updated {
                     return Ok(true);
                 }
                 let deps = self
-                    .dependencies(&pkg)?
+                    .dependencies(&pkg)
+                    // We assume that if you could not find dependencies, then the package from AUR and we ignore it
+                    .unwrap_or_default()
                     .into_iter()
                     .map(|dep| dep.name().to_owned());
                 packages_for_check.extend(deps);

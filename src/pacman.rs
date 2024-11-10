@@ -5,6 +5,7 @@ const PARU_BIN: &str = "paru";
 
 pub fn program_is_present() -> anyhow::Result<bool> {
     Ok(Cmd::new("which")
+        .arg(PACMAN_BIN)
         .hide_error_from_user_and_give_exit_status()?
         .success())
 }

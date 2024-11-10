@@ -4,6 +4,7 @@ use std::{
     fmt::Display,
     io,
     process::{Command, ExitStatus, Stdio},
+    str,
 };
 
 use anyhow::Context;
@@ -67,7 +68,7 @@ impl Cmd {
             .stderr(std::io::stderr())
             .output()
             .map_err(|source| RunProgramError::new(&self.cmd, source))?;
-        let output = String::from_utf8(output.stdout).with_context(|| {
+        let output = str::from_utf8(&output.stdout).with_context(|| {
             format!(
                 "{}: Failed to take command output",
                 &self.cmd.get_program().to_str().unwrap_or_default()

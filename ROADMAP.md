@@ -1,4 +1,3 @@
-- Uses pacman directly if paru is not installed.
 - `pacrs install --reinstall` command which should check cache and if the
   packages are contained in it, reinstall these packages without check.
 - `pacrs list --files` - alias of `pacman -F`.

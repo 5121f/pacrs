@@ -19,10 +19,7 @@ pub fn sudo_paru_or_pacman() -> anyhow::Result<Cmd> {
 }
 
 fn program_is_present() -> anyhow::Result<bool> {
-    Ok(which()
-        .arg(PACMAN_BIN)
-        .hide_output_and_give_exit_status()?
-        .success())
+    Ok(which().arg(PACMAN_BIN).execute_without_output()?.success())
 }
 
 fn sudo() -> Cmd {

@@ -35,16 +35,6 @@ impl Cmd {
         self
     }
 
-    pub fn hide_output_and_give_exit_status(mut self) -> Result<ExitStatus, RunProgramError> {
-        self.cmd
-            .stderr(Stdio::null())
-            .stdout(Stdio::null())
-            .spawn()
-            .map_err(|source| RunProgramError::new(&self.cmd, source))?
-            .wait()
-            .map_err(|source| RunProgramError::new(&self.cmd, source))
-    }
-
     pub fn execute(mut self) -> Result<(), RunProgramError> {
         let mut child = self
             .cmd
@@ -56,11 +46,14 @@ impl Cmd {
         Ok(())
     }
 
-    pub fn execute_without_output(mut self) -> Result<(), RunProgramError> {
+    pub fn execute_without_output(mut self) -> Result<ExitStatus, RunProgramError> {
         self.cmd
-            .output()
-            .map_err(|source| RunProgramError::new(&self.cmd, source))?;
-        Ok(())
+            .stderr(Stdio::null())
+            .stdout(Stdio::null())
+            .spawn()
+            .map_err(|source| RunProgramError::new(&self.cmd, source))?
+            .wait()
+            .map_err(|source| RunProgramError::new(&self.cmd, source))
     }
 
     pub fn execute_and_grub_output(mut self) -> anyhow::Result<String> {

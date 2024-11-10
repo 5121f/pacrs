@@ -41,6 +41,11 @@ pub enum Args {
         #[clap(required = true)]
         package: String,
     },
+    #[clap(visible_alias = "ca")]
+    Cache {
+        #[clap(flatten)]
+        clean: CacheCleanGroup,
+    },
     /// Mark packages
     #[clap(visible_alias = "m")]
     Mark {
@@ -49,6 +54,17 @@ pub enum Args {
         #[clap(flatten)]
         mark_group: MarkGroup,
     },
+}
+
+#[derive(Debug, Parser)]
+#[group(requires_all = ["clean"])]
+pub struct CacheCleanGroup {
+    /// Clean packages from cache and unused repos. By default clean all packages from cache
+    #[clap(long, short)]
+    pub clean: bool,
+    /// Clean only cache of uninstalled packages
+    #[clap(long, short)]
+    pub uninstalled: bool,
 }
 
 #[derive(Debug, Parser)]

@@ -27,6 +27,16 @@ pub fn search(package: String) -> anyhow::Result<()> {
     Ok(())
 }
 
+pub fn cache_clean() -> anyhow::Result<()> {
+    pacman().arg("-Scc").execute()?;
+    Ok(())
+}
+
+pub fn cache_clean_uninstalled() -> anyhow::Result<()> {
+    pacman().arg("-Sc").execute()?;
+    Ok(())
+}
+
 pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::new()?;

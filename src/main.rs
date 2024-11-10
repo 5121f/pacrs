@@ -12,7 +12,7 @@ use crate::{
 };
 
 use anyhow::bail;
-use args::{MarkGroup, RemoveGroup};
+use args::{CacheCleanGroup, MarkGroup, RemoveGroup};
 use clap::Parser;
 
 fn main() -> anyhow::Result<()> {
@@ -27,6 +27,7 @@ fn main() -> anyhow::Result<()> {
         Args::Upgrade { packages } => pacrs::upgrade(packages)?,
         Args::Info { package } => pacrs::info(package)?,
         Args::Search { package } => pacrs::search(package)?,
+        Args::Cache { clean } => cache(clean)?,
         Args::Mark {
             packages,
             mark_group:
@@ -35,6 +36,16 @@ fn main() -> anyhow::Result<()> {
                     dependencie,
                 },
         } => mark(packages, explicit, dependencie)?,
+    }
+    Ok(())
+}
+
+fn cache(clean: CacheCleanGroup) -> anyhow::Result<()> {
+    if clean.clean {
+        if clean.uninstalled {
+            return pacrs::cache_clean_uninstalled();
+        }
+        return pacrs::cache_clean();
     }
     Ok(())
 }

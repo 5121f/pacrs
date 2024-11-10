@@ -2,6 +2,7 @@ mod alpm;
 mod args;
 mod command;
 mod pacman;
+mod pacrs;
 mod temp_db;
 
 use crate::{
@@ -21,11 +22,11 @@ fn main() -> anyhow::Result<()> {
             upgradable,
             orphaned,
         } => list(upgradable, orphaned)?,
-        Args::Install { packages } => pacman::install(packages)?,
+        Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove(RemoveGroup { packages, orphaned }) => remove(packages, orphaned)?,
-        Args::Upgrade { packages } => pacman::upgrade(packages)?,
-        Args::Info { package } => pacman::info(package)?,
-        Args::Search { package } => pacman::search(package)?,
+        Args::Upgrade { packages } => pacrs::upgrade(packages)?,
+        Args::Info { package } => pacrs::info(package)?,
+        Args::Search { package } => pacrs::search(package)?,
         Args::Mark {
             packages,
             mark_group:
@@ -40,27 +41,27 @@ fn main() -> anyhow::Result<()> {
 
 fn remove(packages: Vec<String>, orphaned: bool) -> anyhow::Result<()> {
     if orphaned {
-        return pacman::remvoe_orphaned_packages();
+        return pacrs::remvoe_orphaned_packages();
     }
-    pacman::remove(packages)
+    pacrs::remove(packages)
 }
 
 fn list(updated: bool, orphaned: bool) -> anyhow::Result<()> {
     if updated {
-        return pacman::check_for_updates();
+        return pacrs::check_for_updates();
     }
     if orphaned {
-        return pacman::orphaned_packages();
+        return pacrs::orphaned_packages();
     }
-    pacman::list()
+    pacrs::list()
 }
 
 fn mark(packages: Vec<String>, explicit: bool, dependencie: bool) -> anyhow::Result<()> {
     if explicit {
-        return pacman::mark_explicit(packages);
+        return pacrs::mark_explicit(packages);
     }
     if dependencie {
-        return pacman::mark_dep(packages);
+        return pacrs::mark_dep(packages);
     }
     bail!("No one parameter specified");
 }

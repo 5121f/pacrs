@@ -17,7 +17,8 @@ fn main() -> anyhow::Result<()> {
         Args::Packages {
             upgradable,
             orphaned,
-        } => list(upgradable, orphaned)?,
+            aur,
+        } => list(upgradable, orphaned, aur)?,
         Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove(RemoveGroup { packages, orphaned }) => remove(packages, orphaned)?,
         Args::Upgrade { packages } => pacrs::upgrade(packages)?,
@@ -56,12 +57,15 @@ fn remove(packages: Vec<String>, orphaned: bool) -> anyhow::Result<()> {
     pacrs::remove(packages)
 }
 
-fn list(updated: bool, orphaned: bool) -> anyhow::Result<()> {
+fn list(updated: bool, orphaned: bool, aur: bool) -> anyhow::Result<()> {
     if updated {
         return pacrs::check_for_updates();
     }
     if orphaned {
         return pacrs::orphaned_packages();
+    }
+    if aur {
+        return pacrs::list_aur();
     }
     pacrs::list()
 }

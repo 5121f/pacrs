@@ -53,6 +53,11 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
+pub fn list_aur() -> anyhow::Result<()> {
+    pacman().arg("-Qmq").execute()?;
+    Ok(())
+}
+
 pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
     pacman().arg("-Rs").args(packages).execute()?;
     Ok(())

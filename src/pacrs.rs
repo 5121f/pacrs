@@ -2,7 +2,7 @@ use std::{os::unix::fs::MetadataExt, path::Path};
 
 use crate::{
     alpm::pacmanconf,
-    pacman::{pacman, paru_or_pacman},
+    pacman::{pacman, sudo_pacman, sudo_paru_or_pacman},
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
     PacrsAlpm,
 };
@@ -49,7 +49,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
             the repo. Upgrade your system with 'pacrs upgrade' befor install it."
         );
     }
-    paru_or_pacman()?.arg("-S").args(packages).execute()?;
+    sudo_paru_or_pacman()?.arg("-S").args(packages).execute()?;
     Ok(())
 }
 
@@ -59,12 +59,15 @@ pub fn list_aur() -> anyhow::Result<()> {
 }
 
 pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
-    pacman().arg("-Rs").args(packages).execute()?;
+    sudo_pacman().arg("-Rs").args(packages).execute()?;
     Ok(())
 }
 
 pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
-    paru_or_pacman()?.arg("-Syu").args(packages).execute()?;
+    sudo_paru_or_pacman()?
+        .arg("-Syu")
+        .args(packages)
+        .execute()?;
     Ok(())
 }
 

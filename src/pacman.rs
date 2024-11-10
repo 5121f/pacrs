@@ -2,15 +2,20 @@ use crate::Cmd;
 
 pub const PACMAN_BIN: &str = "pacman";
 const PARU_BIN: &str = "paru";
+const SUDO_BIN: &str = "sudo";
 
 pub fn pacman() -> Cmd {
     Cmd::new(PACMAN_BIN)
 }
 
-pub fn paru_or_pacman() -> anyhow::Result<Cmd> {
+pub fn sudo_pacman() -> Cmd {
+    Cmd::new(SUDO_BIN).arg(PACMAN_BIN)
+}
+
+pub fn sudo_paru_or_pacman() -> anyhow::Result<Cmd> {
     let cmd = program_is_present()?
         .then(|| Cmd::new(PARU_BIN))
-        .unwrap_or_else(|| Cmd::new("sudo").arg(PACMAN_BIN));
+        .unwrap_or_else(|| Cmd::new(SUDO_BIN).arg(PACMAN_BIN));
     Ok(cmd)
 }
 

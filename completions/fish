@@ -10,6 +10,7 @@ set -l list '__fish_seen_subcommand_from l list'
 set -l search '__fish_seen_subcommand_from se search'
 set -l mark '__fish_seen_subcommand_from m mark'
 set -l info '__fish_seen_subcommand_from i info'
+set -l cache '__fish_seen_subcommand_from ca cache'
 
 complete -c $progname -e # Erase old completion
 complete -c $progname -f # Disable file completions for entire command
@@ -20,6 +21,7 @@ complete -c $progname -a 'upgrade' -d 'Upgrade the system'
 complete -c $progname -a 'list' -d 'Print list of installed packages'
 complete -c $progname -a 'info' -d 'Print info about package'
 complete -c $progname -a 'search' -d 'Search packages'
+complete -c $progname -a 'cache' -d 'Cache'
 complete -c $progname -a 'mark' -d 'Mark packages'
 complete -c $progname -a 'help' -d 'Print this message or the help of the given subcommand(s)'
 
@@ -27,6 +29,8 @@ complete -c $progname -n $install -s o -l orphaned -d 'Remove orphaned packages'
 complete -c $progname -n $list -s u -l upgradable -d 'Print list of packages that were updated in the repo'
 complete -c $progname -n $list -s o -l orphaned -d 'Print list of orphaned packages'
 complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed explicit'
+complete -c $progname -n $cache -s c -l clean -d 'Clean packages from cache and unused repos'
+complete -c $progname -n $cache -s u -l uninstalled -d 'Clean only cache of uninstalled packages'
 complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependencie'
 complete -c $progname -s h -l help -d 'Print help message'
 

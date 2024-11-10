@@ -57,17 +57,44 @@ fn remove(packages: Vec<String>, orphaned: bool) -> anyhow::Result<()> {
     pacrs::remove(packages)
 }
 
+fn list_filter(list: Vec<String>, packages: String, changed: bool) -> Vec<String> {
+    let packages: Vec<String> = packages.split("\n").map(ToOwned::to_owned).collect();
+    if !(changed || packages.is_empty()) {
+        return packages;
+    }
+    let mut packages = packages.iter();
+    list.into_iter()
+        .filter(|line| packages.any(|pkg| line == pkg))
+        .collect()
+}
+
 fn list(updated: bool, orphaned: bool, aur: bool) -> anyhow::Result<()> {
+    let mut changed = false;
+    let mut list = Vec::new();
+
     if updated {
-        return pacrs::check_for_updates();
+        list = list_filter(list, pacrs::check_for_updates()?, changed);
+        changed = true;
     }
     if orphaned {
-        return pacrs::orphaned_packages();
+        list = list_filter(list, pacrs::orphaned_packages()?, changed);
+        changed = true;
     }
     if aur {
-        return pacrs::list_aur();
+        list = list_filter(list, pacrs::list_aur()?, changed);
+        changed = true;
     }
-    pacrs::list()
+
+    if !changed {
+        pacrs::list()?;
+        return Ok(());
+    }
+
+    for package in list {
+        println!("{package}");
+    }
+
+    Ok(())
 }
 
 fn mark(packages: Vec<String>, explicit: bool, dependencie: bool) -> anyhow::Result<()> {

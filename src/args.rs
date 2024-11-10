@@ -22,19 +22,14 @@ pub enum Args {
     Packages {
         /// Print list of packages that were updated in the repo
         /// (This does not affect the local index)
-        #[clap(long, short, conflicts_with = "orphaned", conflicts_with = "aur")]
+        #[clap(long, short)]
         upgradable: bool,
         /// Print list of orphaned packages
         /// (packages which not installed explicitly and on which no package depends)
-        #[clap(long, short, conflicts_with = "upgradable", conflicts_with = "aur")]
+        #[clap(long, short)]
         orphaned: bool,
         /// Print list of packages which not finded in databases. In most cases it's AUR packages
-        #[clap(
-            long,
-            short,
-            conflicts_with = "upgradable",
-            conflicts_with = "orphaned"
-        )]
+        #[clap(long, short)]
         aur: bool,
     },
     /// Search packages

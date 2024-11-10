@@ -49,6 +49,7 @@ pub enum Args {
         #[clap(required = true)]
         package: String,
     },
+    /// Cache
     #[clap(visible_alias = "ca")]
     Cache {
         /// Print occupied size on disk by cache

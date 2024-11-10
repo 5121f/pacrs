@@ -35,7 +35,9 @@ impl Cmd {
         self
     }
 
-    pub fn ignore_error(mut self) -> Result<ExitStatus, RunProgramError> {
+    pub fn hide_error_from_user_and_give_exit_status(
+        mut self,
+    ) -> Result<ExitStatus, RunProgramError> {
         self.cmd
             .stderr(Stdio::null())
             .spawn()

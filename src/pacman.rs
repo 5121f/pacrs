@@ -9,7 +9,9 @@ pub const PACMAN_BIN: &str = "pacman";
 const PARU_BIN: &str = "paru";
 
 fn program_is_present() -> anyhow::Result<bool> {
-    Ok(Cmd::new("which").ignore_error()?.success())
+    Ok(Cmd::new("which")
+        .hide_error_from_user_and_give_exit_status()?
+        .success())
 }
 
 fn paru_or_pacman() -> anyhow::Result<Cmd> {
@@ -27,7 +29,7 @@ pub fn list() -> anyhow::Result<()> {
 pub fn info(package: String) -> anyhow::Result<()> {
     let exit_status = Cmd::new(PACMAN_BIN)
         .args(["-Qi", &package])
-        .ignore_error()?;
+        .hide_error_from_user_and_give_exit_status()?;
     if exit_status.success() {
         return Ok(());
     }

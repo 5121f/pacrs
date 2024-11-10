@@ -7,8 +7,8 @@
     after that and which caused dependency issues (for the reasons why it's
     bad, see
     [Arch Wiki](https://wiki.archlinux.org/title/System_maintenance#Partial_upgrades_are_unsupported).
-- If you try to try to install package which updated in the repo pacrs inform
-  you (without updating the main index) what you needed to upgrade system.
+- If you try to install package which updated in the repo pacrs inform you
+  (without updating the main index) what you needed to upgrade system.
 - `pacman -Si` and `pacman -Qi` merged in single `pacrs info` command which by
   default search into local index and with an error search into internet.
 - `pacrs list --upgradable` is alternative to `pacman -Qu` but uses actual info

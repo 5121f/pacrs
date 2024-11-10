@@ -88,7 +88,10 @@ impl PacrsAlpm {
     }
 
     fn syncdb_pkg<'a>(&'a self, package: &str) -> anyhow::Result<&'a Package> {
-        syncdb_pkg(&self.0, package)
+        self.0
+            .syncdbs()
+            .pkg(package)
+            .with_context(|| format!("Package {package} not found"))
     }
 }
 
@@ -98,10 +101,4 @@ impl Deref for PacrsAlpm {
     fn deref(&self) -> &Self::Target {
         &self.0
     }
-}
-
-fn syncdb_pkg<'a>(alpm: &'a Alpm, package: &str) -> anyhow::Result<&'a Package> {
-    alpm.syncdbs()
-        .pkg(package)
-        .with_context(|| format!("Package {package} not found"))
 }

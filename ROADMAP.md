@@ -7,3 +7,5 @@
 - `pacrs list --aur` alias for `pacman -Qm`
 - Opportunity to use multiple filters for `list` command. Example:
   `pacrs list --upgradable --orphaned`
+- Clean cache functionality (`pacman -Sc`, `paccache`)
+  - Configuration for automaticly clean.

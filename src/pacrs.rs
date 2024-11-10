@@ -2,7 +2,7 @@ use std::{os::unix::fs::MetadataExt, path::Path};
 
 use crate::{
     alpm::pacmanconf,
-    pacman::{pacman, sudo_pacman, sudo_paru_or_pacman},
+    cmds::{pacman, sudo_pacman, sudo_paru_or_pacman},
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
     PacrsAlpm,
 };

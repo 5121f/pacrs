@@ -1,7 +1,7 @@
 mod alpm;
 mod args;
+mod cmds;
 mod command;
-mod pacman;
 mod pacrs;
 mod temp_db;
 

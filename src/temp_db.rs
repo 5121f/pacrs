@@ -2,7 +2,7 @@ use std::{ops::Deref, path::Path};
 
 use crate::{
     alpm::{pacmanconf, PacrsAlpm},
-    pacman::PACMAN_BIN,
+    cmds::PACMAN_BIN,
     Cmd,
 };
 

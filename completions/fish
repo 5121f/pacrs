@@ -22,6 +22,7 @@ set -l cache '__fish_seen_subcommand_from ca cache'
 complete -c $progname -e # Erase old completion
 complete -c $progname -f # Disable file completions for entire command
 
+# Primary operations
 complete -c $progname -a 'install' -d 'Install packages'
 complete -c $progname -a 'remove' -d 'Remove packages and unneeded dependencies'
 complete -c $progname -a 'upgrade' -d 'Upgrade the system'
@@ -32,18 +33,29 @@ complete -c $progname -a 'cache' -d 'Cache'
 complete -c $progname -a 'mark' -d 'Mark packages'
 complete -c $progname -a 'help' -d 'Print this message or the help of the given subcommand(s)'
 
+# General options
+complete -c $progname -s h -l help -d 'Print help message'
+
+# Install options
 complete -c $progname -n $install -s o -l orphaned -d 'Remove orphaned packages'
+
+# Remove options
+complete -c $progname -n $remove -xa $listinstalled
+
+# Packages options
 complete -c $progname -n $packages -s u -l updated -d 'Print list of packages that were updated in the repo'
 complete -c $progname -n $packages -s o -l orphaned -d 'Print list of orphaned packages'
 complete -c $progname -n $packages -s a -l aur -d 'Print list of AUR packages'
+
+# Mark options
 complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed explicit'
+complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependencie'
+
+# Cache options
 complete -c $progname -n $cache -s s -l size -d 'Print occupied size on disk by cache'
 complete -c $progname -n $cache -s c -l clean -d 'Clean packages from cache and unused repos'
 complete -c $progname -n $cache -s u -l uninstalled -d 'Clean only cache of uninstalled packages'
-complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependencie'
-complete -c $progname -s h -l help -d 'Print help message'
 
-complete -c $progname -n $install -xa "(listall) $listgroups"
-complete -c $progname -n $remove -xa $listinstalled
-complete -c $progname -n $search -xa "(listall) $listgroups"
-complete -c $progname -n $info -xa "(listall) $listgroups"
+for condition in $install $search $info
+    complete -c $progname -n $condition -xa "(listall) $listgroups"
+end

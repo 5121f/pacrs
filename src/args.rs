@@ -23,7 +23,7 @@ pub enum Args {
         /// Print list of packages that were updated in the repo
         /// (This does not affect the local index)
         #[clap(long, short)]
-        upgradable: bool,
+        updated: bool,
         /// Print list of orphaned packages
         /// (packages which not installed explicitly and on which no package depends)
         #[clap(long, short)]

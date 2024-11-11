@@ -26,7 +26,7 @@ complete -c $progname -a 'mark' -d 'Mark packages'
 complete -c $progname -a 'help' -d 'Print this message or the help of the given subcommand(s)'
 
 complete -c $progname -n $install -s o -l orphaned -d 'Remove orphaned packages'
-complete -c $progname -n $packages -s u -l upgradable -d 'Print list of packages that were updated in the repo'
+complete -c $progname -n $packages -s u -l updated -d 'Print list of packages that were updated in the repo'
 complete -c $progname -n $packages -s o -l orphaned -d 'Print list of orphaned packages'
 complete -c $progname -n $packages -s a -l aur -d 'Print list of AUR packages'
 complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed explicit'

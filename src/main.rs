@@ -15,10 +15,10 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args {
         Args::Packages {
-            upgradable,
+            updated,
             orphaned,
             aur,
-        } => list(upgradable, orphaned, aur)?,
+        } => list(updated, orphaned, aur)?,
         Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove(RemoveGroup { packages, orphaned }) => remove(packages, orphaned)?,
         Args::Upgrade { packages } => pacrs::upgrade(packages)?,

@@ -3,7 +3,7 @@
 - `pacrs package --updated` should support AUR packages.
 - `pacrs install --from-cache` command which should check cache and if the
   packages are contained in it, reinstall these packages without check.
-- `pacrs packages --files` - alias of `pacman -F`.
+- `pacrs files`- alias of `pacman -F`.
   - How we should process index?
     - Update by default. If error - skip.
 - Clean cache functionality (`pacman -Sc`, `paccache`)

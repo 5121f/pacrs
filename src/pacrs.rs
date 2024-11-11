@@ -83,12 +83,7 @@ pub fn orphaned_packages() -> anyhow::Result<Vec<String>> {
 }
 
 pub fn remvoe_orphaned_packages() -> anyhow::Result<()> {
-    let orphaned_packages = pacman()
-        .arg("-Qdtq")
-        .execute_and_grub_output()?
-        .split("\n")
-        .map(|line| line.to_owned())
-        .collect();
+    let orphaned_packages = orphaned_packages()?;
     remove(orphaned_packages)?;
     Ok(())
 }

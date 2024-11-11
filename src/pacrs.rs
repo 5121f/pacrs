@@ -53,8 +53,8 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn list_aur() -> anyhow::Result<String> {
-    pacman().arg("-Qmq").execute_and_grub_output()
+pub fn list_aur() -> anyhow::Result<Vec<String>> {
+    pacman().arg("-Qmq").execute_and_grub_lines()
 }
 
 pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
@@ -70,15 +70,15 @@ pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn check_for_updates() -> anyhow::Result<String> {
+pub fn check_for_updates() -> anyhow::Result<Vec<String>> {
     initialize_temp_db()?;
     pacman()
         .args(["-Qu", "--dbpath", TEMP_DB_PATH])
-        .execute_and_grub_output()
+        .execute_and_grub_lines()
 }
 
-pub fn orphaned_packages() -> anyhow::Result<String> {
-    pacman().arg("-Qdtq").execute_and_grub_output()
+pub fn orphaned_packages() -> anyhow::Result<Vec<String>> {
+    pacman().arg("-Qdtq").execute_and_grub_lines()
 }
 
 pub fn remvoe_orphaned_packages() -> anyhow::Result<()> {

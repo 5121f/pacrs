@@ -62,6 +62,14 @@ impl Cmd {
         })?;
         Ok(output.trim().to_owned())
     }
+
+    pub fn execute_and_grub_lines(self) -> anyhow::Result<Vec<String>> {
+        Ok(self
+            .execute_and_grub_output()?
+            .split("\n")
+            .map(ToOwned::to_owned)
+            .collect())
+    }
 }
 
 #[derive(Debug)]

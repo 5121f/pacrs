@@ -23,7 +23,7 @@ fn paru() -> Cmd {
 }
 
 fn program_is_present() -> anyhow::Result<bool> {
-    Ok(which().arg(PACMAN_BIN).execute(false)?.success())
+    Ok(which().arg(PARU_BIN).execute(false)?.success())
 }
 
 fn sudo() -> Cmd {

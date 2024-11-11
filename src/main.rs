@@ -68,13 +68,13 @@ fn list_filter(list: Vec<String>, packages: Vec<String>, changed: bool) -> Vec<S
 }
 
 fn list(updated: bool, orphaned: bool, aur: bool) -> anyhow::Result<()> {
+    if updated {
+        pacrs::check_for_updates()?;
+    }
+
     let mut changed = false;
     let mut list = Vec::new();
 
-    if updated {
-        list = list_filter(list, pacrs::check_for_updates()?, changed);
-        changed = true;
-    }
     if orphaned {
         list = list_filter(list, pacrs::orphaned_packages()?, changed);
         changed = true;

@@ -88,6 +88,21 @@ pub fn remvoe_orphaned_packages() -> anyhow::Result<()> {
     Ok(())
 }
 
+pub fn find_file(file: &str) -> anyhow::Result<()> {
+    pacman().arg("-F").arg(file).execute()?;
+    Ok(())
+}
+
+pub fn list_of_all_files() -> anyhow::Result<()> {
+    pacman().arg("-Fl").execute()?;
+    Ok(())
+}
+
+pub fn list_files_of_package(name: &str) -> anyhow::Result<()> {
+    pacman().arg("-Fl").arg(name).execute()?;
+    Ok(())
+}
+
 pub fn mark_explicit(packages: Vec<String>) -> anyhow::Result<()> {
     pacman()
         .args(["-D", "--asexplicit"])

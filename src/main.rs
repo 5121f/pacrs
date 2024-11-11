@@ -25,6 +25,10 @@ fn main() -> anyhow::Result<()> {
         Args::Upgrade { packages } => pacrs::upgrade(packages)?,
         Args::Info { package } => pacrs::info(package)?,
         Args::Search { package } => pacrs::search(package)?,
+        Args::Files {
+            package,
+            find: file,
+        } => files(package, file)?,
         Args::Cache { clean, size } => cache(clean, size)?,
         Args::Mark {
             packages,
@@ -36,6 +40,16 @@ fn main() -> anyhow::Result<()> {
         } => mark(packages, explicit, dependencie)?,
     }
     Ok(())
+}
+
+fn files(package: Option<String>, file: Option<String>) -> anyhow::Result<()> {
+    if let Some(package) = package {
+        return pacrs::list_files_of_package(&package);
+    }
+    if let Some(file) = file {
+        return pacrs::find_file(&file);
+    }
+    pacrs::list_of_all_files()
 }
 
 fn cache(clean: CacheCleanGroup, size: bool) -> anyhow::Result<()> {

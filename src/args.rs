@@ -44,6 +44,17 @@ pub enum Args {
         #[clap(required = true)]
         package: String,
     },
+    /// Print list of files
+    /// (by default print all files)
+    #[clap(visible_alias = "f")]
+    Files {
+        /// Print files related to specific package
+        #[clap(conflicts_with = "find")]
+        package: Option<String>,
+        /// Find specific file among all packages
+        #[clap(long, short, conflicts_with = "package")]
+        find: Option<String>,
+    },
     /// Cache
     #[clap(visible_alias = "ca")]
     Cache {

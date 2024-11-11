@@ -46,6 +46,7 @@ pub fn initialize_temp_db() -> anyhow::Result<()> {
 pub fn update_temp_db() -> anyhow::Result<()> {
     Cmd::new("fakeroot")
         .args(["--", PACMAN_BIN, "-Sy", "--dbpath", TEMP_DB_PATH])
-        .execute(false)?;
+        .hide_output()
+        .execute()?;
     Ok(())
 }

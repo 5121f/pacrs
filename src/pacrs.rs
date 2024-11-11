@@ -10,7 +10,7 @@ use crate::{
 use anyhow::bail;
 
 pub fn list() -> anyhow::Result<()> {
-    pacman().arg("-Qq").execute(true)?;
+    pacman().arg("-Qq").execute()?;
     Ok(())
 }
 
@@ -18,25 +18,25 @@ pub fn info(package: String) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let is_local_pkg = alpm.localdb().pkg(package.as_str()).is_ok();
     if is_local_pkg {
-        pacman().args(["-Qi", &package]).execute(true)?;
+        pacman().args(["-Qi", &package]).execute()?;
         return Ok(());
     }
-    paru_or_pacman()?.args(["-Si", &package]).execute(true)?;
+    paru_or_pacman()?.args(["-Si", &package]).execute()?;
     Ok(())
 }
 
 pub fn search(package: String) -> anyhow::Result<()> {
-    paru_or_pacman()?.args(["-Ss", &package]).execute(true)?;
+    paru_or_pacman()?.args(["-Ss", &package]).execute()?;
     Ok(())
 }
 
 pub fn cache_clean() -> anyhow::Result<()> {
-    pacman().arg("-Scc").execute(true)?;
+    pacman().arg("-Scc").execute()?;
     Ok(())
 }
 
 pub fn cache_clean_uninstalled() -> anyhow::Result<()> {
-    pacman().arg("-Sc").execute(true)?;
+    pacman().arg("-Sc").execute()?;
     Ok(())
 }
 
@@ -49,10 +49,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
             the repo. Upgrade your system with 'pacrs upgrade' befor install it."
         );
     }
-    sudo_paru_or_pacman()?
-        .arg("-S")
-        .args(packages)
-        .execute(true)?;
+    sudo_paru_or_pacman()?.arg("-S").args(packages).execute()?;
     Ok(())
 }
 
@@ -61,7 +58,7 @@ pub fn list_aur() -> anyhow::Result<String> {
 }
 
 pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
-    sudo_pacman().arg("-Rs").args(packages).execute(true)?;
+    sudo_pacman().arg("-Rs").args(packages).execute()?;
     Ok(())
 }
 
@@ -69,7 +66,7 @@ pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
     sudo_paru_or_pacman()?
         .arg("-Syu")
         .args(packages)
-        .execute(true)?;
+        .execute()?;
     Ok(())
 }
 
@@ -99,15 +96,12 @@ pub fn mark_explicit(packages: Vec<String>) -> anyhow::Result<()> {
     pacman()
         .args(["-D", "--asexplicit"])
         .args(packages)
-        .execute(true)?;
+        .execute()?;
     Ok(())
 }
 
 pub fn mark_dep(packages: Vec<String>) -> anyhow::Result<()> {
-    pacman()
-        .args(["-D", "--asdeps"])
-        .args(packages)
-        .execute(true)?;
+    pacman().args(["-D", "--asdeps"]).args(packages).execute()?;
     Ok(())
 }
 

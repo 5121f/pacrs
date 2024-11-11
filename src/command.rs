@@ -35,10 +35,12 @@ impl Cmd {
         self
     }
 
-    pub fn execute(mut self, show_output: bool) -> Result<ExitStatus, RunProgramError> {
-        if !show_output {
-            self.cmd.stderr(Stdio::null()).stdout(Stdio::null());
-        }
+    pub fn hide_output(mut self) -> Self {
+        self.cmd.stderr(Stdio::null()).stdout(Stdio::null());
+        self
+    }
+
+    pub fn execute(mut self) -> Result<ExitStatus, RunProgramError> {
         self.cmd
             .spawn()
             .map_err(|source| RunProgramError::new(&self.cmd, source))?

@@ -1,6 +1,13 @@
 set -l progname pacrs
 
-set -l listall "(paru -Pc | string replace ' ' \t)"
+function listall
+    if which paru &> /dev/null
+        paru -Pc | string replace ' ' \t
+    else
+        __fish_print_pacman_packages
+    end
+end
+
 set -l listgroups "(pacman -Sg)\t'Package Group'"
 set -l listinstalled "(pacman -Q | string replace ' ' \t)"
 
@@ -36,7 +43,7 @@ complete -c $progname -n $cache -s u -l uninstalled -d 'Clean only cache of unin
 complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependencie'
 complete -c $progname -s h -l help -d 'Print help message'
 
-complete -c $progname -n $install -xa "$listall $listgroups"
+complete -c $progname -n $install -xa "(listall) $listgroups"
 complete -c $progname -n $remove -xa $listinstalled
-complete -c $progname -n $search -xa "$listall $listgroups"
-complete -c $progname -n $info -xa "$listall $listgroups"
+complete -c $progname -n $search -xa "(listall) $listgroups"
+complete -c $progname -n $info -xa "(listall) $listgroups"

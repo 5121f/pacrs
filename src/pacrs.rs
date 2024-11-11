@@ -89,17 +89,25 @@ pub fn remvoe_orphaned_packages() -> anyhow::Result<()> {
 }
 
 pub fn find_file(file: &str) -> anyhow::Result<()> {
+    update_files_index()?;
     pacman().arg("-F").arg(file).execute()?;
     Ok(())
 }
 
 pub fn list_of_all_files() -> anyhow::Result<()> {
+    update_files_index()?;
     pacman().arg("-Fl").execute()?;
     Ok(())
 }
 
 pub fn list_files_of_package(name: &str) -> anyhow::Result<()> {
+    update_files_index()?;
     pacman().arg("-Fl").arg(name).execute()?;
+    Ok(())
+}
+
+fn update_files_index() -> anyhow::Result<()> {
+    pacman().arg("-Fy").execute()?;
     Ok(())
 }
 

@@ -1,5 +1,6 @@
 mod alpm;
 mod args;
+mod aur;
 mod cmds;
 mod command;
 mod pacrs;
@@ -11,14 +12,15 @@ use anyhow::bail;
 use args::{CacheCleanGroup, MarkGroup, RemoveGroup};
 use clap::Parser;
 
-fn main() -> anyhow::Result<()> {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args {
         Args::Packages {
             updated,
             orphaned,
             aur,
-        } => list(updated, orphaned, aur)?,
+        } => list(updated, orphaned, aur).await?,
         Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove(RemoveGroup { packages, orphaned }) => remove(packages, orphaned)?,
         Args::Upgrade { packages } => pacrs::upgrade(packages)?,
@@ -66,12 +68,12 @@ fn list_filter(list: Vec<String>, packages: Vec<String>, changed: bool) -> Vec<S
         .collect()
 }
 
-fn list(updated: bool, orphaned: bool, aur: bool) -> anyhow::Result<()> {
+async fn list(updated: bool, orphaned: bool, aur: bool) -> anyhow::Result<()> {
     let mut changed = false;
     let mut list = Vec::new();
 
     if updated {
-        list = list_filter(list, pacrs::check_for_updates()?, changed);
+        list = list_filter(list, pacrs::check_for_updates().await?, changed);
         changed = true;
     }
     if orphaned {

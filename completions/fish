@@ -15,9 +15,10 @@ set -l install '__fish_seen_subcommand_from in install'
 set -l remove '__fish_seen_subcommand_from rm remove'
 set -l packages '__fish_seen_subcommand_from pa packages'
 set -l search '__fish_seen_subcommand_from se search'
-set -l mark '__fish_seen_subcommand_from m mark'
 set -l info '__fish_seen_subcommand_from i info'
+set -l files '__fish_seen_subcommand_from f files'
 set -l cache '__fish_seen_subcommand_from ca cache'
+set -l mark '__fish_seen_subcommand_from m mark'
 
 complete -c $progname -e # Erase old completion
 complete -c $progname -f # Disable file completions for entire command
@@ -29,6 +30,7 @@ complete -c $progname -a 'upgrade' -d 'Upgrade the system'
 complete -c $progname -a 'packages' -d 'Print list of installed packages'
 complete -c $progname -a 'info' -d 'Print info about package'
 complete -c $progname -a 'search' -d 'Search packages'
+complete -c $progname -a 'files' -d 'Print list of files'
 complete -c $progname -a 'cache' -d 'Cache'
 complete -c $progname -a 'mark' -d 'Mark packages'
 complete -c $progname -a 'help' -d 'Print this message or the help of the given subcommand(s)'
@@ -47,14 +49,18 @@ complete -c $progname -n $packages -s u -l updated -d 'Print list of packages th
 complete -c $progname -n $packages -s o -l orphaned -d 'Print list of orphaned packages'
 complete -c $progname -n $packages -s a -l aur -d 'Print list of AUR packages'
 
-# Mark options
-complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed explicit'
-complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependencie'
+# Files options
+complete -c $progname -n $files -xa "(listall)"
+complete -c $progname -n $files -s f -l find -d 'Find specific file among all packages'
 
 # Cache options
 complete -c $progname -n $cache -s s -l size -d 'Print occupied size on disk by cache'
 complete -c $progname -n $cache -s c -l clean -d 'Clean packages from cache and unused repos'
 complete -c $progname -n $cache -s u -l uninstalled -d 'Clean only cache of uninstalled packages'
+
+# Mark options
+complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed explicit'
+complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependencie'
 
 for condition in $install $search $info
     complete -c $progname -n $condition -xa "(listall) $listgroups"

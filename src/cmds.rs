@@ -2,6 +2,8 @@ use crate::Cmd;
 
 pub const PACMAN_BIN: &str = "pacman";
 const PARU_BIN: &str = "paru";
+const WHICH_BIN: &str = "which";
+const SUDO_BIN: &str = "sudo";
 
 pub fn pacman() -> Cmd {
     Cmd::new(PACMAN_BIN)
@@ -12,10 +14,12 @@ pub fn sudo_pacman() -> Cmd {
 }
 
 pub fn sudo_paru_or_pacman() -> anyhow::Result<Cmd> {
-    let cmd = program_is_present()?
-        .then(|| Cmd::new(PARU_BIN))
-        .unwrap_or_else(|| sudo().arg(PACMAN_BIN));
+    let cmd = program_is_present()?.then(paru).unwrap_or_else(sudo_pacman);
     Ok(cmd)
+}
+
+fn paru() -> Cmd {
+    Cmd::new(PARU_BIN)
 }
 
 fn program_is_present() -> anyhow::Result<bool> {
@@ -23,11 +27,9 @@ fn program_is_present() -> anyhow::Result<bool> {
 }
 
 fn sudo() -> Cmd {
-    const SUDO_BIN: &str = "sudo";
     Cmd::new(SUDO_BIN)
 }
 
 fn which() -> Cmd {
-    const WHICH_BIN: &str = "which";
     Cmd::new(WHICH_BIN)
 }

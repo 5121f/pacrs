@@ -2,7 +2,6 @@ use std::{os::unix::fs::MetadataExt, path::Path};
 
 use crate::{
     alpm::pacmanconf,
-    aur::PacrsAur,
     cmds::{pacman, paru_or_pacman, sudo_pacman, sudo_paru_or_pacman},
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
     PacrsAlpm,
@@ -71,27 +70,11 @@ pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub async fn check_for_updates() -> anyhow::Result<Vec<String>> {
+pub fn check_for_updates() -> anyhow::Result<Vec<String>> {
     initialize_temp_db()?;
-    let pacman = pacman()
+    paru_or_pacman()?
         .args(["-Qu", "--dbpath", TEMP_DB_PATH])
-        .execute_and_grub_lines()?;
-    let aur = check_for_update_aur().await?;
-    Ok([pacman, aur].concat())
-}
-
-async fn check_for_update_aur() -> anyhow::Result<Vec<String>> {
-    let aur_packages = list_aur()?;
-    let alpm = PacrsAlpm::new()?;
-    let aur = PacrsAur::new();
-    let mut list = Vec::new();
-    for package in aur_packages {
-        if let Some((local_ver, actual_ver)) = aur.pkg_was_updated(&package, &alpm).await? {
-            let line = format!("{package} {local_ver} -> {actual_ver}");
-            list.push(line);
-        }
-    }
-    Ok(list)
+        .execute_and_grub_lines()
 }
 
 pub fn orphaned_packages() -> anyhow::Result<Vec<String>> {

@@ -93,12 +93,12 @@ impl PacrsAlpm {
         self.0.localdb().group("error")
     }
 
-    pub fn localdb_pkg<'a>(&'a self, name: &str) -> anyhow::Result<&'a Package> {
-        self.0
-            .localdb()
-            .pkg(name)
-            .with_context(|| format!("{name}: failed to find package. Maybe it didn't install?"))
-    }
+    // pub fn localdb_pkg<'a>(&'a self, name: &str) -> anyhow::Result<&'a Package> {
+    //     self.0
+    //         .localdb()
+    //         .pkg(name)
+    //         .with_context(|| format!("{name}: failed to find package. Maybe it didn't install?"))
+    // }
 
     fn syncdb_pkg<'a>(&'a self, package: &str) -> anyhow::Result<&'a Package> {
         self.0

@@ -8,6 +8,7 @@ use crate::{
 };
 
 use anyhow::bail;
+use nix::unistd::getuid;
 
 pub fn list() -> anyhow::Result<()> {
     pacman().arg("-Qq").execute()?;
@@ -107,7 +108,14 @@ pub fn list_files_of_package(name: &str) -> anyhow::Result<()> {
 }
 
 fn update_files_index() -> anyhow::Result<()> {
-    pacman().arg("-Fy").execute()?;
+    if getuid().is_root() {
+        pacman().arg("-Fy").execute()?;
+    } else {
+        eprintln!(
+            "Info: you run program without root priviliges. \
+            Files index wouldn't be updated."
+        );
+    }
     Ok(())
 }
 

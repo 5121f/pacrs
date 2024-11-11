@@ -10,6 +10,7 @@ anyhow = "1.0.93"
 clap = { version = "4.5.20", features = ["derive"] }
 fs-err = "3.0.0"
 humansize = "2.1.3"
+nix = { version = "0.29.0", features = ["user"] }
 pacmanconf = "3.0.0"
 
 [profile.release]

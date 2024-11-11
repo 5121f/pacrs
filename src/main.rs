@@ -58,11 +58,10 @@ fn remove(packages: Vec<String>, orphaned: bool) -> anyhow::Result<()> {
 }
 
 fn list_filter(list: Vec<String>, packages: String, changed: bool) -> Vec<String> {
-    let packages: Vec<String> = packages.split("\n").map(ToOwned::to_owned).collect();
     if !(changed || packages.is_empty()) {
-        return packages;
+        return packages.split("\n").map(ToOwned::to_owned).collect();
     }
-    let mut packages = packages.iter();
+    let mut packages = packages.split("\n");
     list.into_iter()
         .filter(|line| packages.any(|pkg| line == pkg))
         .collect()

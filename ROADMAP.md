@@ -1,6 +1,7 @@
 # Roadmap of `pacrs`
 
-- `pacrs install --reinstall` command which should check cache and if the
+- `pacrs package --updated` should support AUR packages.
+- `pacrs install --from-cache` command which should check cache and if the
   packages are contained in it, reinstall these packages without check.
 - `pacrs packages --files` - alias of `pacman -F`.
   - How we should process index?

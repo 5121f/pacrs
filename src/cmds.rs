@@ -18,6 +18,10 @@ pub fn sudo_paru_or_pacman() -> anyhow::Result<Cmd> {
     Ok(cmd)
 }
 
+pub fn paru_or_pacman() -> anyhow::Result<Cmd> {
+    Ok(program_is_present()?.then(paru).unwrap_or_else(pacman))
+}
+
 fn paru() -> Cmd {
     Cmd::new(PARU_BIN)
 }

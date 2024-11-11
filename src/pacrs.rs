@@ -2,7 +2,7 @@ use std::{os::unix::fs::MetadataExt, path::Path};
 
 use crate::{
     alpm::pacmanconf,
-    cmds::{pacman, sudo_pacman, sudo_paru_or_pacman},
+    cmds::{pacman, paru_or_pacman, sudo_pacman, sudo_paru_or_pacman},
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
     PacrsAlpm,
 };
@@ -21,12 +21,12 @@ pub fn info(package: String) -> anyhow::Result<()> {
         pacman().args(["-Qi", &package]).execute(true)?;
         return Ok(());
     }
-    pacman().args(["-Si", &package]).execute(true)?;
+    paru_or_pacman()?.args(["-Si", &package]).execute(true)?;
     Ok(())
 }
 
 pub fn search(package: String) -> anyhow::Result<()> {
-    pacman().args(["-Ss", &package]).execute(true)?;
+    paru_or_pacman()?.args(["-Ss", &package]).execute(true)?;
     Ok(())
 }
 

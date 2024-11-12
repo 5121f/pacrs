@@ -5,6 +5,7 @@ mod cmds;
 mod command;
 mod pacrs;
 mod temp_db;
+mod utils;
 
 use crate::{alpm::PacrsAlpm, args::Args, command::Cmd};
 

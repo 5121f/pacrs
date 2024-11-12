@@ -22,12 +22,12 @@ pub fn info(package: String) -> anyhow::Result<()> {
         pacman().args(["-Qi", &package]).execute()?;
         return Ok(());
     }
-    paru_or_pacman()?.args(["-Si", &package]).execute()?;
+    paru_or_pacman().args(["-Si", &package]).execute()?;
     Ok(())
 }
 
 pub fn search(package: String) -> anyhow::Result<()> {
-    paru_or_pacman()?.args(["-Ss", &package]).execute()?;
+    paru_or_pacman().args(["-Ss", &package]).execute()?;
     Ok(())
 }
 
@@ -50,7 +50,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
             the repo. Upgrade your system with 'pacrs upgrade' befor install it."
         );
     }
-    sudo_paru_or_pacman()?.arg("-S").args(packages).execute()?;
+    sudo_paru_or_pacman().arg("-S").args(packages).execute()?;
     Ok(())
 }
 
@@ -64,16 +64,13 @@ pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
 }
 
 pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
-    sudo_paru_or_pacman()?
-        .arg("-Syu")
-        .args(packages)
-        .execute()?;
+    sudo_paru_or_pacman().arg("-Syu").args(packages).execute()?;
     Ok(())
 }
 
 pub fn check_for_updates() -> anyhow::Result<()> {
     initialize_temp_db()?;
-    paru_or_pacman()?
+    paru_or_pacman()
         .args(["-Qu", "--dbpath", TEMP_DB_PATH])
         .execute()?;
     Ok(())

@@ -21,7 +21,6 @@ pub enum Args {
     #[clap(visible_alias = "pa")]
     Packages {
         /// Print list of packages that were updated in the repo
-        /// (This does not affect the local index)
         #[clap(long, short)]
         updated: bool,
         /// Print list of orphaned packages

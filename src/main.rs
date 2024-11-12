@@ -57,7 +57,8 @@ fn upgrade(packages: Vec<String>, quiet: bool) {
             eprintln!(
                 "Warning: The upgrade ended with an error. \
                 You need to finish upgrade before installing packages."
-            )
+            );
+            std::process::exit(1);
         }
         Ok(()) => {}
     }

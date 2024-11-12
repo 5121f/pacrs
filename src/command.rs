@@ -43,9 +43,9 @@ impl Cmd {
     pub fn execute(mut self) -> Result<ExitStatus, RunProgramError> {
         self.cmd
             .spawn()
-            .map_err(|source| RunProgramError::new(&self.cmd, source))?
+            .run_err_map(&self.cmd)?
             .wait()
-            .map_err(|source| RunProgramError::new(&self.cmd, source))
+            .run_err_map(&self.cmd)
     }
 
     pub fn execute_and_grub_output(mut self) -> anyhow::Result<String> {
@@ -53,7 +53,7 @@ impl Cmd {
             .cmd
             .stderr(std::io::stderr())
             .output()
-            .map_err(|source| RunProgramError::new(&self.cmd, source))?;
+            .run_err_map(&self.cmd)?;
         let output = str::from_utf8(&output.stdout).with_context(|| {
             format!(
                 "{}: Failed to take command output",
@@ -69,6 +69,16 @@ impl Cmd {
             .split("\n")
             .map(ToOwned::to_owned)
             .collect())
+    }
+}
+
+trait IoResultExt<T> {
+    fn run_err_map(self, cmd: &Command) -> Result<T, RunProgramError>;
+}
+
+impl<T> IoResultExt<T> for io::Result<T> {
+    fn run_err_map(self, cmd: &Command) -> Result<T, RunProgramError> {
+        self.map_err(|source| RunProgramError::new(cmd, source))
     }
 }
 

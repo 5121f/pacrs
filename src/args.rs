@@ -56,6 +56,9 @@ pub enum Args {
         /// Find specific file among all packages
         #[clap(long, short, conflicts_with = "package")]
         find: Option<String>,
+        /// Don't update files index
+        #[clap(long, short = 'u')]
+        not_update_index: bool,
         /// Don't show additional messages
         #[clap(long, short)]
         quiet: bool,

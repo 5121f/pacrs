@@ -92,25 +92,22 @@ pub fn remvoe_orphaned_packages() -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn find_file(file: &str, quiet: bool) -> anyhow::Result<()> {
-    update_files_index(quiet)?;
+pub fn find_file(file: &str) -> anyhow::Result<()> {
     pacman().arg("-F").arg(file).execute()?;
     Ok(())
 }
 
-pub fn list_of_all_files(quiet: bool) -> anyhow::Result<()> {
-    update_files_index(quiet)?;
+pub fn list_of_all_files() -> anyhow::Result<()> {
     pacman().arg("-Fl").execute()?;
     Ok(())
 }
 
-pub fn list_files_of_package(name: &str, quiet: bool) -> anyhow::Result<()> {
-    update_files_index(quiet)?;
+pub fn list_files_of_package(name: &str) -> anyhow::Result<()> {
     pacman().arg("-Fl").arg(name).execute()?;
     Ok(())
 }
 
-fn update_files_index(quiet: bool) -> anyhow::Result<()> {
+pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {
     if is_root() {
         pacman().arg("-Fy").execute()?;
         return Ok(());

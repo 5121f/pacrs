@@ -29,8 +29,9 @@ fn main() -> anyhow::Result<()> {
         Args::Files {
             package,
             find: file,
+            not_update_index,
             quiet,
-        } => files(package, file, quiet)?,
+        } => files(package, file, not_update_index, quiet)?,
         Args::Cache { clean, size } => cache(clean, size)?,
         Args::Mark {
             packages,
@@ -44,14 +45,24 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn files(package: Option<String>, file: Option<String>, quiet: bool) -> anyhow::Result<()> {
+fn files(
+    package: Option<String>,
+    file: Option<String>,
+    not_update_index: bool,
+    quiet: bool,
+) -> anyhow::Result<()> {
+    let update_index = !not_update_index;
+    if update_index {
+        pacrs::update_files_index(quiet)?;
+    }
+
     if let Some(package) = package {
-        return pacrs::list_files_of_package(&package, quiet);
+        return pacrs::list_files_of_package(&package);
     }
     if let Some(file) = file {
-        return pacrs::find_file(&file, quiet);
+        return pacrs::find_file(&file);
     }
-    pacrs::list_of_all_files(quiet)
+    pacrs::list_of_all_files()
 }
 
 fn cache(clean: CacheCleanGroup, size: bool) -> anyhow::Result<()> {

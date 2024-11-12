@@ -47,17 +47,19 @@ fn main() -> anyhow::Result<()> {
 fn upgrade(packages: Vec<String>, quiet: bool) {
     let result = pacrs::upgrade(packages);
 
-    if let Err(error) = result {
-        eprintln!("{error}");
-        eprintln!(
-            "Warning: The upgrade ended with an error. \
-            You need to finish upgrade before installing packages."
-        )
-    } else if !quiet {
-        eprintln!(
+    match result {
+        Ok(()) if !quiet => eprintln!(
             "Remember: if upgrade system was aborted or error ends, \
             you need to finish the update before installing packages"
-        );
+        ),
+        Err(error) => {
+            eprintln!("{error}");
+            eprintln!(
+                "Warning: The upgrade ended with an error. \
+                You need to finish upgrade before installing packages."
+            )
+        }
+        Ok(()) => {}
     }
 }
 

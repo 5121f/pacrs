@@ -4,11 +4,11 @@ use crate::{
     alpm::pacmanconf,
     cmds::{pacman, paru_or_pacman, sudo_pacman, sudo_paru_or_pacman},
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
+    utils::is_root,
     PacrsAlpm,
 };
 
 use anyhow::bail;
-use nix::unistd::getuid;
 
 pub fn list() -> anyhow::Result<()> {
     pacman().arg("-Qq").execute()?;
@@ -105,7 +105,7 @@ pub fn list_files_of_package(name: &str) -> anyhow::Result<()> {
 }
 
 fn update_files_index() -> anyhow::Result<()> {
-    if getuid().is_root() {
+    if is_root() {
         pacman().arg("-Fy").execute()?;
     } else {
         eprintln!(

@@ -42,7 +42,7 @@ impl PacrsAlpm {
     pub fn pkgs_or_their_deps_was_updated_in_db(
         &self,
         alpm_tmp: &TempAlpm,
-        packages: Vec<String>,
+        packages: Vec<&str>,
     ) -> anyhow::Result<bool> {
         let mut packages_for_check = packages;
         let mut packages_we_already_checked = Vec::with_capacity(packages_for_check.len());
@@ -51,17 +51,17 @@ impl PacrsAlpm {
             if !already_checked {
                 let package_was_updated = self
                     // We assume that if package not finded in syncdb, then the package from AUR and we ignore it
-                    .package_was_updated_in_db(alpm_tmp, &pkg)
+                    .package_was_updated_in_db(alpm_tmp, pkg)
                     .unwrap_or(false);
                 if package_was_updated {
                     return Ok(true);
                 }
                 let deps = self
-                    .dependencies(&pkg)
+                    .dependencies(pkg)
                     // We assume that if you could not find dependencies, then the package from AUR and we ignore it
                     .unwrap_or_default()
                     .into_iter()
-                    .map(|dep| dep.name().to_owned());
+                    .map(|dep| dep.name());
                 packages_for_check.extend(deps);
             }
             packages_we_already_checked.push(pkg);

@@ -44,7 +44,8 @@ pub fn cache_clean_uninstalled() -> anyhow::Result<()> {
 pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::new()?;
-    if alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, packages.clone())? {
+    let pkgs = packages.iter().map(String::as_str).collect();
+    if alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, pkgs)? {
         bail!(
             "One or more package you will want to install or their dependencies was updated in \
             the repo. Upgrade your system with 'pacrs upgrade' befor install it."

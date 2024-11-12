@@ -1,6 +1,5 @@
 mod alpm;
 mod args;
-// mod aur;
 mod cmds;
 mod command;
 mod pacrs;

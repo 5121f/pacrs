@@ -29,7 +29,8 @@ fn main() -> anyhow::Result<()> {
         Args::Files {
             package,
             find: file,
-        } => files(package, file)?,
+            quiet,
+        } => files(package, file, quiet)?,
         Args::Cache { clean, size } => cache(clean, size)?,
         Args::Mark {
             packages,
@@ -43,14 +44,14 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn files(package: Option<String>, file: Option<String>) -> anyhow::Result<()> {
+fn files(package: Option<String>, file: Option<String>, quiet: bool) -> anyhow::Result<()> {
     if let Some(package) = package {
-        return pacrs::list_files_of_package(&package);
+        return pacrs::list_files_of_package(&package, quiet);
     }
     if let Some(file) = file {
-        return pacrs::find_file(&file);
+        return pacrs::find_file(&file, quiet);
     }
-    pacrs::list_of_all_files()
+    pacrs::list_of_all_files(quiet)
 }
 
 fn cache(clean: CacheCleanGroup, size: bool) -> anyhow::Result<()> {

@@ -63,12 +63,14 @@ pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
+pub fn upgrade(packages: Vec<String>, quiet: bool) -> anyhow::Result<()> {
     sudo_paru_or_pacman().arg("-Syu").args(packages).execute()?;
-    eprintln!(
-        "Info: if upgrade system was interrupted or error ends, \
+    if !quiet {
+        eprintln!(
+            "Info: if upgrade system was interrupted or error ends, \
         you must finish the update before installing packages"
-    );
+        );
+    }
     Ok(())
 }
 

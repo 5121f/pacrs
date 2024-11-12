@@ -16,6 +16,9 @@ pub enum Args {
     Upgrade {
         /// Packages to install with upgrade
         packages: Vec<String>,
+        /// Don't show additional messages
+        #[clap(long, short)]
+        quiet: bool,
     },
     /// Print list of installed packages
     #[clap(visible_alias = "pa")]

@@ -23,7 +23,7 @@ fn main() -> anyhow::Result<()> {
         } => list(updated, orphaned, aur)?,
         Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove(RemoveGroup { packages, orphaned }) => remove(packages, orphaned)?,
-        Args::Upgrade { packages } => pacrs::upgrade(packages)?,
+        Args::Upgrade { packages, quiet } => pacrs::upgrade(packages, quiet)?,
         Args::Info { package } => pacrs::info(package)?,
         Args::Search { package } => pacrs::search(package)?,
         Args::Files {

@@ -13,6 +13,7 @@ set -l listinstalled "(pacman -Q | string replace ' ' \t)"
 
 set -l install '__fish_seen_subcommand_from in install'
 set -l remove '__fish_seen_subcommand_from rm remove'
+set -l upgrade '__fish_seen_subcommand_from up upgrade'
 set -l packages '__fish_seen_subcommand_from pa packages'
 set -l search '__fish_seen_subcommand_from se search'
 set -l info '__fish_seen_subcommand_from i info'
@@ -43,6 +44,9 @@ complete -c $progname -n $install -s o -l orphaned -d 'Remove orphaned packages'
 
 # Remove options
 complete -c $progname -n $remove -xa $listinstalled
+
+# Upgrade options
+complete -c $progname -n $upgrade -s q -l quiet -d 'Don\'t show additional messages'
 
 # Packages options
 complete -c $progname -n $packages -s u -l updated -d 'Print list of packages that were updated in the repo'

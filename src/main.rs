@@ -22,7 +22,7 @@ fn main() -> anyhow::Result<()> {
         } => list(updated, orphaned, aur)?,
         Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove(RemoveGroup { packages, orphaned }) => remove(packages, orphaned)?,
-        Args::Upgrade { packages, quiet } => pacrs::upgrade(packages, quiet)?,
+        Args::Upgrade { packages, quiet } => upgrade(packages, quiet),
         Args::Info { package } => pacrs::info(package)?,
         Args::Search { package } => pacrs::search(package)?,
         Args::Files {
@@ -42,6 +42,23 @@ fn main() -> anyhow::Result<()> {
         } => mark(packages, explicit, dependencie)?,
     }
     Ok(())
+}
+
+fn upgrade(packages: Vec<String>, quiet: bool) {
+    let result = pacrs::upgrade(packages);
+
+    if let Err(error) = result {
+        eprintln!("{error}");
+        eprintln!(
+            "Warning: The upgrade ended with an error. \
+            You need to finish upgrade before installing packages."
+        )
+    } else if !quiet {
+        eprintln!(
+            "Remember: if upgrade system was aborted or error ends, \
+            you need to finish the update before installing packages"
+        );
+    }
 }
 
 fn files(

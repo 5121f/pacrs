@@ -88,11 +88,10 @@ impl RunProgramError {
 }
 impl Display for RunProgramError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        const ERROR: &str = "failed to run program";
         if let Some(program) = &self.command_name {
             write!(f, "{program}: ")?;
         }
-        write!(f, "{ERROR}: {source}", source = self.source)
+        write!(f, "Failed to run program: {source}", source = self.source)
     }
 }
 impl Error for RunProgramError {}

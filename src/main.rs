@@ -116,6 +116,7 @@ fn list_filter(list: Vec<String>, packages: Vec<String>, changed: bool) -> Vec<S
 fn list(updated: bool, orphaned: bool, aur: bool) -> anyhow::Result<()> {
     if updated {
         pacrs::check_for_updates()?;
+        return Ok(());
     }
 
     let mut changed = false;

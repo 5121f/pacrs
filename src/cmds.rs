@@ -18,16 +18,16 @@ pub fn sudo_pacman() -> Cmd {
     sudo().arg(PACMAN_BIN)
 }
 
+pub fn paru_if_present() -> Option<Cmd> {
+    program_is_present(PARU_BIN).then(paru)
+}
+
 pub fn paru_or_sudo_pacman() -> Cmd {
-    program_is_present(PARU_BIN)
-        .then(paru)
-        .unwrap_or_else(sudo_pacman)
+    paru_if_present().unwrap_or_else(sudo_pacman)
 }
 
 pub fn paru_or_pacman() -> Cmd {
-    program_is_present(PARU_BIN)
-        .then(paru)
-        .unwrap_or_else(pacman)
+    paru_if_present().unwrap_or_else(pacman)
 }
 
 fn paru() -> Cmd {

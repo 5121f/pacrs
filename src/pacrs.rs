@@ -1,11 +1,11 @@
 use crate::{
-    cmds::{pacman, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman},
+    cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman},
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
     utils::is_root,
     PacrsAlpm,
 };
 
-use anyhow::bail;
+use anyhow::{bail, Ok};
 
 pub fn list() -> anyhow::Result<()> {
     pacman().arg("-Qq").execute()?;
@@ -83,6 +83,10 @@ pub fn orphaned_packages() -> anyhow::Result<Vec<String>> {
 }
 
 pub fn remvoe_orphaned_packages(clean_deps: bool) -> anyhow::Result<()> {
+    if let Some(paru) = paru_if_present() {
+        paru.arg("-c").execute()?;
+        return Ok(());
+    }
     let orphaned_packages = orphaned_packages()?;
     remove(orphaned_packages, clean_deps)?;
     Ok(())

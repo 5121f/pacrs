@@ -1,4 +1,7 @@
-use crate::{utils::program_is_present, Cmd};
+use crate::{
+    utils::{is_root, program_is_present},
+    Cmd,
+};
 
 pub const PACMAN_BIN: &str = "pacman";
 pub const PARU_BIN: &str = "paru";
@@ -9,6 +12,9 @@ pub fn pacman() -> Cmd {
 }
 
 pub fn sudo_pacman() -> Cmd {
+    if is_root() {
+        return pacman();
+    }
     sudo().arg(PACMAN_BIN)
 }
 

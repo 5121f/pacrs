@@ -23,9 +23,6 @@ pub enum Args {
     /// Print list of installed packages
     #[clap(visible_alias = "pa")]
     Packages {
-        /// Print list of packages that were updated in the repo
-        #[clap(long, short)]
-        updated: bool,
         /// Print list of orphaned packages
         /// (packages which not installed explicitly and on which no package depends)
         #[clap(long, short)]
@@ -46,6 +43,9 @@ pub enum Args {
         #[clap(required = true)]
         package: String,
     },
+    /// List available updates
+    #[clap(visible_alias = "lu")]
+    ListUpdates,
     /// Print list of files
     /// (by default print all files)
     #[clap(visible_alias = "f")]

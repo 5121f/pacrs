@@ -69,7 +69,7 @@ pub fn update(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn check_for_updates() -> anyhow::Result<()> {
+pub fn list_updates() -> anyhow::Result<()> {
     initialize_temp_db()?;
     paru_or_pacman()
         .args(["-Qu", "--dbpath", TEMP_DB_PATH])

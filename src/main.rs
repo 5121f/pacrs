@@ -15,16 +15,13 @@ use clap::Parser;
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args {
-        Args::Packages {
-            updated,
-            orphaned,
-            aur,
-        } => list(updated, orphaned, aur)?,
+        Args::Packages { orphaned, aur } => list(orphaned, aur)?,
         Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove(RemoveGroup { packages, orphaned }) => remove(packages, orphaned)?,
         Args::Update { packages, quiet } => update(packages, quiet),
         Args::Info { package } => pacrs::info(package)?,
         Args::Search { package } => pacrs::search(package)?,
+        Args::ListUpdates => pacrs::list_updates()?,
         Args::Files {
             package,
             find: file,
@@ -113,12 +110,7 @@ fn list_filter(list: Vec<String>, packages: Vec<String>, changed: bool) -> Vec<S
         .collect()
 }
 
-fn list(updated: bool, orphaned: bool, aur: bool) -> anyhow::Result<()> {
-    if updated {
-        pacrs::check_for_updates()?;
-        return Ok(());
-    }
-
+fn list(orphaned: bool, aur: bool) -> anyhow::Result<()> {
     let mut changed = false;
     let mut list = Vec::new();
 

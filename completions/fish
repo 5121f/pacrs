@@ -31,6 +31,7 @@ complete -c $progname -a 'update' -d 'update the system'
 complete -c $progname -a 'packages' -d 'Print list of installed packages'
 complete -c $progname -a 'info' -d 'Print info about package'
 complete -c $progname -a 'search' -d 'Search packages'
+complete -c $progname -a 'list-updates' -d 'List available updates'
 complete -c $progname -a 'files' -d 'Print list of files'
 complete -c $progname -a 'cache' -d 'Cache'
 complete -c $progname -a 'mark' -d 'Mark packages'
@@ -46,7 +47,6 @@ complete -c $progname -n $install -s o -l orphaned -d 'Remove orphaned packages'
 complete -c $progname -n $remove -xa $listinstalled
 
 # Packages options
-complete -c $progname -n $packages -s u -l updated -d 'Print list of packages that were updated in the repo'
 complete -c $progname -n $packages -s o -l orphaned -d 'Print list of orphaned packages'
 complete -c $progname -n $packages -s a -l aur -d 'Print list of AUR packages'
 

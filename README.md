@@ -11,7 +11,9 @@
   (without updating the main index) what you needed to upgrade system.
 - `pacman -Si` and `pacman -Qi` merged in single `pacrs info` command which by
   default search into local index and with an error search into internet.
-- `pacrs list --upgradable` is alternative to `pacman -Qu` but uses actual info as if you would update indexes with `pacman -Sy` but pacrs actually not affects your local index for that.
+- `pacrs list --upgradable` is alternative to `pacman -Qu` but uses actual info
+  as if you would update indexes with `pacman -Sy` but pacrs actually not
+  affects your local index for that.
 
 ## Pros and cons in relation to `pacman` and `paru`
 

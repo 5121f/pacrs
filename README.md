@@ -14,6 +14,9 @@
 - `pacrs list --upgradable` is alternative to `pacman -Qu` but uses actual info
   as if you would update indexes with `pacman -Sy` but pacrs actually not
   affects your local index for that.
+- `pacrs packages` supports multiple filters which allows you to find, for
+  example AUR packages installed as dependencie -
+  `pacrs packages --aur --deps`.
 
 ## Pros and cons in relation to `pacman` and `paru`
 

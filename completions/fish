@@ -26,11 +26,11 @@ complete -c $progname -f # Disable file completions for entire command
 
 # Primary operations
 complete -c $progname -a 'install' -d 'Install packages'
-complete -c $progname -a 'remove' -d 'Remove packages and unneeded dependencies'
-complete -c $progname -a 'update' -d 'update the system'
-complete -c $progname -a 'packages' -d 'Print list of installed packages'
-complete -c $progname -a 'info' -d 'Print info about package'
-complete -c $progname -a 'search' -d 'Search packages'
+complete -c $progname -a 'remove' -d 'Remove (uninstall) packages'
+complete -c $progname -a 'update' -d 'Update installed packages with newer versions'
+complete -c $progname -a 'packages' -d 'List all available packages'
+complete -c $progname -a 'info' -d 'Displays detailed information about the specified packages'
+complete -c $progname -a 'search' -d 'Search for packages matching any of the given search strings.'
 complete -c $progname -a 'list-updates' -d 'List available updates'
 complete -c $progname -a 'files' -d 'Print list of files'
 complete -c $progname -a 'clean' -d 'Clean cache'

@@ -8,7 +8,7 @@ pub enum Args {
         #[clap(required = true)]
         packages: Vec<String>,
     },
-    /// Remove packages
+    /// Remove (uninstall) packages
     #[clap(visible_alias = "rm")]
     Remove {
         #[clap(flatten)]
@@ -17,7 +17,7 @@ pub enum Args {
         #[clap(long, short = 'u')]
         clean_deps: bool,
     },
-    /// Upgrade the system.
+    /// Update installed packages with newer versions
     #[clap(visible_alias = "up")]
     Update {
         /// Packages to install with upgrade
@@ -26,10 +26,10 @@ pub enum Args {
         #[clap(long, short)]
         quiet: bool,
     },
-    /// Print list of installed packages
+    /// List all available packages
     #[clap(visible_alias = "pa")]
     Packages {
-        /// Print list of orphaned packages
+        /// List of orphaned packages
         /// (packages which not installed explicitly and on which no package depends)
         #[clap(long, short)]
         orphaned: bool,
@@ -37,13 +37,13 @@ pub enum Args {
         #[clap(long, short)]
         aur: bool,
     },
-    /// Search packages
+    /// Search for packages matching any of the given search strings.
     #[clap(visible_alias = "se")]
     Search {
         #[clap(required = true)]
         package: String,
     },
-    /// Print info about package
+    /// Displays detailed information about the specified packages
     #[clap(visible_alias = "i")]
     Info {
         #[clap(required = true)]

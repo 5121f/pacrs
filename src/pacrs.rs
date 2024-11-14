@@ -128,17 +128,3 @@ pub fn mark_dep(packages: Vec<String>) -> anyhow::Result<()> {
     pacman().args(["-D", "--asdeps"]).args(packages).execute()?;
     Ok(())
 }
-
-pub fn cache_size() -> anyhow::Result<()> {
-    let conf = pacmanconf()?;
-    let mut total_size = 0;
-    for cache_dir in conf.cache_dir {
-        for entry in fs_err::read_dir(Path::new(&cache_dir))? {
-            let entry = entry?;
-            total_size += entry.metadata()?.size();
-        }
-    }
-    let size = humansize::format_size(total_size, humansize::DECIMAL);
-    println!("{size}");
-    Ok(())
-}

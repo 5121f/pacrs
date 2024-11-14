@@ -66,9 +66,6 @@ pub enum Args {
     /// Cache
     #[clap(visible_alias = "ca")]
     Cache {
-        /// Print occupied size on disk by cache
-        #[clap(long, short)]
-        size: bool,
         #[clap(flatten)]
         clean: CacheCleanGroup,
     },

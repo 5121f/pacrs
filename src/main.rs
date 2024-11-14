@@ -9,7 +9,7 @@ mod utils;
 use crate::{alpm::PacrsAlpm, args::Args, command::Cmd};
 
 use anyhow::bail;
-use args::{CacheCleanGroup, MarkGroup, RemoveGroup};
+use args::{MarkGroup, RemoveGroup};
 use clap::Parser;
 
 fn main() -> anyhow::Result<()> {
@@ -28,7 +28,7 @@ fn main() -> anyhow::Result<()> {
             not_update_index,
             quiet,
         } => files(package, file, not_update_index, quiet)?,
-        Args::Cache { clean } => cache(clean)?,
+        Args::Clean { uninstalled } => cache(uninstalled)?,
         Args::Mark {
             packages,
             mark_group:
@@ -81,14 +81,11 @@ fn files(
     pacrs::list_of_all_files()
 }
 
-fn cache(clean: CacheCleanGroup) -> anyhow::Result<()> {
-    if clean.clean {
-        if clean.uninstalled {
-            return pacrs::cache_clean_uninstalled();
-        }
-        return pacrs::cache_clean();
+fn cache(uninstalled: bool) -> anyhow::Result<()> {
+    if uninstalled {
+        return pacrs::cache_clean_uninstalled();
     }
-    Ok(())
+    pacrs::cache_clean()
 }
 
 fn remove(packages: Vec<String>, orphaned: bool) -> anyhow::Result<()> {

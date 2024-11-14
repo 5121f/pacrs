@@ -9,7 +9,7 @@ mod utils;
 use crate::{alpm::PacrsAlpm, args::Args, command::Cmd};
 
 use anyhow::bail;
-use args::{MarkGroup, RemoveGroup};
+use args::{MarkGroup, RemoveTarget};
 use clap::Parser;
 
 fn main() -> anyhow::Result<()> {
@@ -17,7 +17,10 @@ fn main() -> anyhow::Result<()> {
     match args {
         Args::Packages { orphaned, aur } => list(orphaned, aur)?,
         Args::Install { packages } => pacrs::install(packages)?,
-        Args::Remove(RemoveGroup { packages, orphaned }) => remove(packages, orphaned)?,
+        Args::Remove {
+            remove_target,
+            clean_deps,
+        } => remove(remove_target, clean_deps)?,
         Args::Update { packages, quiet } => update(packages, quiet),
         Args::Info { package } => pacrs::info(package)?,
         Args::Search { package } => pacrs::search(package)?,
@@ -88,11 +91,11 @@ fn cache(uninstalled: bool) -> anyhow::Result<()> {
     pacrs::cache_clean()
 }
 
-fn remove(packages: Vec<String>, orphaned: bool) -> anyhow::Result<()> {
-    if orphaned {
-        return pacrs::remvoe_orphaned_packages();
+fn remove(remove_target: RemoveTarget, clean_deps: bool) -> anyhow::Result<()> {
+    if remove_target.orphaned {
+        return pacrs::remvoe_orphaned_packages(clean_deps);
     }
-    pacrs::remove(packages)
+    pacrs::remove(remove_target.packages, clean_deps)
 }
 
 fn list_filter(list: Vec<String>, packages: Vec<String>, changed: bool) -> Vec<String> {

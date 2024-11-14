@@ -8,9 +8,15 @@ pub enum Args {
         #[clap(required = true)]
         packages: Vec<String>,
     },
-    /// Remove packages and unneeded dependencies
+    /// Remove packages
     #[clap(visible_alias = "rm")]
-    Remove(#[clap(flatten)] RemoveGroup),
+    Remove {
+        #[clap(flatten)]
+        remove_target: RemoveTarget,
+        /// Automatically remove dependencies which become unneeded after removal of requested packages.
+        #[clap(long, short = 'u')]
+        clean_deps: bool,
+    },
     /// Upgrade the system.
     #[clap(visible_alias = "up")]
     Update {
@@ -82,7 +88,7 @@ pub enum Args {
 
 #[derive(Debug, Parser)]
 #[group(required = true)]
-pub struct RemoveGroup {
+pub struct RemoveTarget {
     pub packages: Vec<String>,
     /// Remove orphaned packages
     /// (packages which not installed explicitly and on which no package depends)

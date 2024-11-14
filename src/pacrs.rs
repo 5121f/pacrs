@@ -56,8 +56,12 @@ pub fn list_aur() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qmq").execute_and_grub_lines()
 }
 
-pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
-    sudo_pacman().arg("-Rs").args(packages).execute()?;
+pub fn remove(packages: Vec<String>, clean_deps: bool) -> anyhow::Result<()> {
+    let mut pacman = sudo_pacman().arg("-R");
+    if clean_deps {
+        pacman = pacman.arg("-s");
+    }
+    pacman.args(packages).execute()?;
     Ok(())
 }
 
@@ -78,9 +82,9 @@ pub fn orphaned_packages() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qdtq").execute_and_grub_lines()
 }
 
-pub fn remvoe_orphaned_packages() -> anyhow::Result<()> {
+pub fn remvoe_orphaned_packages(clean_deps: bool) -> anyhow::Result<()> {
     let orphaned_packages = orphaned_packages()?;
-    remove(orphaned_packages)?;
+    remove(orphaned_packages, clean_deps)?;
     Ok(())
 }
 

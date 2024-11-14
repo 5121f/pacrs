@@ -15,7 +15,12 @@ use clap::Parser;
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args {
-        Args::Packages { orphaned, aur } => list(orphaned, aur)?,
+        Args::Packages {
+            orphaned,
+            aur,
+            explicit,
+            deps,
+        } => list(orphaned, aur, explicit, deps)?,
         Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove {
             remove_target,
@@ -107,7 +112,7 @@ fn list_filter(list: Vec<String>, packages: Vec<String>, changed: bool) -> Vec<S
         .collect()
 }
 
-fn list(orphaned: bool, aur: bool) -> anyhow::Result<()> {
+fn list(orphaned: bool, aur: bool, explicit: bool, deps: bool) -> anyhow::Result<()> {
     let mut changed = false;
     let mut list = Vec::new();
 
@@ -117,6 +122,14 @@ fn list(orphaned: bool, aur: bool) -> anyhow::Result<()> {
     }
     if aur {
         list = list_filter(list, pacrs::list_aur()?, changed);
+        changed = true;
+    }
+    if explicit {
+        list = list_filter(list, pacrs::list_explicit_packages()?, changed);
+        changed = true;
+    }
+    if deps {
+        list = list_filter(list, pacrs::list_deps()?, changed);
         changed = true;
     }
 

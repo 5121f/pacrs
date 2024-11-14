@@ -29,6 +29,12 @@ pub enum Args {
     /// List all available packages
     #[clap(visible_alias = "pa")]
     Packages {
+        /// List of explicit installed packages
+        #[clap(long, short)]
+        explicit: bool,
+        /// List of packages installed as dependencie
+        #[clap(long, short)]
+        deps: bool,
         /// List of orphaned packages
         /// (packages which not installed explicitly and on which no package depends)
         #[clap(long, short)]

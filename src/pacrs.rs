@@ -98,6 +98,14 @@ pub fn list_of_all_files() -> anyhow::Result<()> {
     Ok(())
 }
 
+pub fn list_explicit_packages() -> anyhow::Result<Vec<String>> {
+    pacman().arg("-Qeq").execute_and_grub_lines()
+}
+
+pub fn list_deps() -> anyhow::Result<Vec<String>> {
+    pacman().arg("-Qdq").execute_and_grub_lines()
+}
+
 pub fn list_files_of_package(name: &str) -> anyhow::Result<()> {
     pacman().arg("-Fl").arg(name).execute()?;
     Ok(())

@@ -13,7 +13,7 @@ set -l listinstalled "(pacman -Q | string replace ' ' \t)"
 
 set -l install '__fish_seen_subcommand_from in install'
 set -l remove '__fish_seen_subcommand_from rm remove'
-set -l upgrade '__fish_seen_subcommand_from up upgrade'
+set -l update '__fish_seen_subcommand_from up update'
 set -l packages '__fish_seen_subcommand_from pa packages'
 set -l search '__fish_seen_subcommand_from se search'
 set -l info '__fish_seen_subcommand_from i info'
@@ -27,7 +27,7 @@ complete -c $progname -f # Disable file completions for entire command
 # Primary operations
 complete -c $progname -a 'install' -d 'Install packages'
 complete -c $progname -a 'remove' -d 'Remove packages and unneeded dependencies'
-complete -c $progname -a 'upgrade' -d 'Upgrade the system'
+complete -c $progname -a 'update' -d 'update the system'
 complete -c $progname -a 'packages' -d 'Print list of installed packages'
 complete -c $progname -a 'info' -d 'Print info about package'
 complete -c $progname -a 'search' -d 'Search packages'
@@ -68,6 +68,6 @@ for condition in $install $search $info
     complete -c $progname -n $condition -xa "(listall) $listgroups"
 end
 
-for confition in $upgrade $files
+for confition in $update $files
     complete -c $progname -n $confition -s q -l quiet -d 'Don\'t show additional messages'
 end

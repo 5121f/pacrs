@@ -13,7 +13,7 @@ pub enum Args {
     Remove(#[clap(flatten)] RemoveGroup),
     /// Upgrade the system.
     #[clap(visible_alias = "up")]
-    Upgrade {
+    Update {
         /// Packages to install with upgrade
         packages: Vec<String>,
         /// Don't show additional messages

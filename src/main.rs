@@ -22,7 +22,7 @@ fn main() -> anyhow::Result<()> {
         } => list(updated, orphaned, aur)?,
         Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove(RemoveGroup { packages, orphaned }) => remove(packages, orphaned)?,
-        Args::Upgrade { packages, quiet } => upgrade(packages, quiet),
+        Args::Update { packages, quiet } => update(packages, quiet),
         Args::Info { package } => pacrs::info(package)?,
         Args::Search { package } => pacrs::search(package)?,
         Args::Files {
@@ -44,19 +44,19 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn upgrade(packages: Vec<String>, quiet: bool) {
-    let result = pacrs::upgrade(packages);
+fn update(packages: Vec<String>, quiet: bool) {
+    let result = pacrs::update(packages);
 
     match result {
         Ok(()) if !quiet => eprintln!(
-            "Remember: if upgrade system was aborted or error ends, \
+            "Remember: if update system was aborted or error ends, \
             you need to finish the update before installing packages"
         ),
         Err(error) => {
             eprintln!("{error}");
             eprintln!(
-                "Warning: The upgrade ended with an error. \
-                You need to finish upgrade before installing packages."
+                "Warning: The update ended with an error. \
+                You need to finish update before installing packages."
             );
             std::process::exit(1);
         }

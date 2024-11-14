@@ -64,7 +64,7 @@ pub fn remove(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn upgrade(packages: Vec<String>) -> anyhow::Result<()> {
+pub fn update(packages: Vec<String>) -> anyhow::Result<()> {
     paru_or_sudo_pacman().arg("-Syu").args(packages).execute()?;
     Ok(())
 }

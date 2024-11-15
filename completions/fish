@@ -45,7 +45,7 @@ complete -c $progname -n $install -s o -l orphaned -d 'Remove orphaned packages'
 
 # Remove options
 complete -c $progname -n $remove -xa "$listinstalled"
-complete -c $progname -n $remove -s u -l uninstall -d 'Automatically remove dependencies which become unneeded after removal of requested packages'
+complete -c $progname -n $remove -s o -l orphaned -d 'Remove orphaned packages'
 
 # Packages options
 complete -c $progname -n $packages -s e -l explicit -d 'List of explicit installed packages'

@@ -1,6 +1,4 @@
 use std::{
-    error::Error,
-    fmt::Display,
     io::{self, Write},
     path::PathBuf,
 };
@@ -17,8 +15,10 @@ pub fn is_root() -> bool {
     getuid().is_root()
 }
 
-pub fn paru_cache_dir() -> Result<PathBuf, ParuCacheDirNotFound> {
-    Ok(dirs::cache_dir().ok_or(ParuCacheDirNotFound)?.join("paru"))
+pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
+    Ok(dirs::cache_dir()
+        .context("Failed to find paru cache dir")?
+        .join("paru"))
 }
 
 pub fn shure(message: &str) -> anyhow::Result<bool> {
@@ -30,14 +30,3 @@ pub fn shure(message: &str) -> anyhow::Result<bool> {
         .context("Failed to read input")?;
     Ok(buf.trim().to_lowercase() == "y")
 }
-
-#[derive(Debug)]
-pub struct ParuCacheDirNotFound;
-
-impl Display for ParuCacheDirNotFound {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "Failed to find paru cache dir")
-    }
-}
-
-impl Error for ParuCacheDirNotFound {}

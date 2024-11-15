@@ -96,7 +96,9 @@ fn cache(uninstalled: bool, aur: bool) -> anyhow::Result<()> {
     if aur {
         return pacrs::clean_paru_cache();
     }
-    pacrs::cache_clean()
+    pacrs::cache_clean()?;
+    println!("For AUR cache clean run 'pacrs clean --aur'");
+    Ok(())
 }
 
 fn remove(remove_target: RemoveTarget, clean_deps: bool) -> anyhow::Result<()> {

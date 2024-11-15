@@ -99,11 +99,9 @@ pub enum Args {
 #[group(required = true)]
 pub struct RemoveTarget {
     pub packages: Vec<String>,
-    /// Remove orphaned packages
-    /// (packages which not installed explicitly and on which no package depends)
-    /// For only print this packages use `pacrs list --orphaned`
+    /// Remove unneeded packages
     #[clap(long, short)]
-    pub orphaned: bool,
+    pub unneeded: bool,
 }
 
 #[derive(Debug, Parser)]

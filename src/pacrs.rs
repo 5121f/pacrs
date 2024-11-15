@@ -82,7 +82,7 @@ pub fn orphaned_packages() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qdtq").execute_and_grub_lines()
 }
 
-pub fn remvoe_orphaned_packages(clean_deps: bool) -> anyhow::Result<()> {
+pub fn remvoe_unneeded_packages(clean_deps: bool) -> anyhow::Result<()> {
     if let Some(paru) = paru_if_present() {
         paru.arg("-c").execute()?;
         return Ok(());

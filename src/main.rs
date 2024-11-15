@@ -100,8 +100,8 @@ fn cache(uninstalled: bool, aur: bool) -> anyhow::Result<()> {
 }
 
 fn remove(remove_target: RemoveTarget, clean_deps: bool) -> anyhow::Result<()> {
-    if remove_target.orphaned {
-        return pacrs::remvoe_orphaned_packages(clean_deps);
+    if remove_target.unneeded {
+        return pacrs::remvoe_unneeded_packages(clean_deps);
     }
     pacrs::remove(remove_target.packages, clean_deps)
 }

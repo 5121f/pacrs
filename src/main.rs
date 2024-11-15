@@ -36,7 +36,7 @@ fn main() -> anyhow::Result<()> {
             not_update_index,
             quiet,
         } => files(package, file, not_update_index, quiet)?,
-        Args::Clean { uninstalled } => cache(uninstalled)?,
+        Args::Clean { uninstalled, aur } => cache(uninstalled, aur)?,
         Args::Mark {
             packages,
             mark_group:
@@ -89,9 +89,12 @@ fn files(
     pacrs::list_of_all_files()
 }
 
-fn cache(uninstalled: bool) -> anyhow::Result<()> {
+fn cache(uninstalled: bool, aur: bool) -> anyhow::Result<()> {
     if uninstalled {
         return pacrs::cache_clean_uninstalled();
+    }
+    if aur {
+        return pacrs::clean_paru_cache();
     }
     pacrs::cache_clean()
 }

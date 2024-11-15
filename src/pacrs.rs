@@ -1,7 +1,7 @@
 use crate::{
     cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman},
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
-    utils::is_root,
+    utils::{is_root, paru_cache_dir, shure},
     PacrsAlpm,
 };
 
@@ -139,5 +139,14 @@ pub fn mark_explicit(packages: Vec<String>) -> anyhow::Result<()> {
 
 pub fn mark_dep(packages: Vec<String>) -> anyhow::Result<()> {
     pacman().args(["-D", "--asdeps"]).args(packages).execute()?;
+    Ok(())
+}
+
+pub fn clean_paru_cache() -> anyhow::Result<()> {
+    if !shure("You really wont to delete AUR (paru) cache?")? {
+        return Ok(());
+    }
+    let cache_dir = paru_cache_dir()?;
+    fs_err::remove_dir_all(cache_dir)?;
     Ok(())
 }

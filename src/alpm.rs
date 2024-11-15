@@ -84,13 +84,13 @@ impl PacrsAlpm {
         bail!("Falied to define package type")
     }
 
-    fn group<'a>(&'a self, group: &str) -> alpm::Result<&'a Group> {
+    fn group<'a>(&'a self, group: &str) -> anyhow::Result<&'a Group> {
         for db in self.0.syncdbs() {
             if let Ok(grp) = db.group(group) {
                 return Ok(grp);
             }
         }
-        self.0.localdb().group("error")
+        bail!("Failed to find group \"{group}\"")
     }
 
     // pub fn localdb_pkg<'a>(&'a self, name: &str) -> anyhow::Result<&'a Package> {

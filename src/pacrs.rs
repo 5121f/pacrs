@@ -121,10 +121,7 @@ pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {
         return Ok(());
     }
     if !quiet {
-        eprintln!(
-            "Info: you run program without root priviliges. \
-            Files index wouldn't be updated."
-        );
+        eprintln!("Running without root priviliges. Files index wouldn't be updated.");
     }
     Ok(())
 }

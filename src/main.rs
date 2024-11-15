@@ -54,7 +54,7 @@ fn update(packages: Vec<String>, quiet: bool) {
 
     match result {
         Ok(()) if !quiet => eprintln!(
-            "Remember: if update system was aborted or error ends, \
+            "Reminder: if update system was aborted or error ends, \
             you need to finish the update before installing packages"
         ),
         Err(error) => {

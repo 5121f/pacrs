@@ -14,7 +14,7 @@ pub enum Args {
         #[clap(flatten)]
         remove_target: RemoveTarget,
         /// Automatically remove dependencies which become unneeded after removal of requested packages.
-        #[clap(long, short = 'u')]
+        #[clap(long, short)]
         clean_deps: bool,
     },
     /// Update installed packages with newer versions

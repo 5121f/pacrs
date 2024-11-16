@@ -1,6 +1,6 @@
 # pacrs
 
-## Differences in the logic with `pacman`
+## Differences with `pacman`
 
 - No need to manage packages index. pacrs do it under the hood.
   - No more risks to forget you performed `pacman -Sy` and installed package
@@ -16,6 +16,11 @@
 - `pacrs packages` supports multiple filters which allows you to find, for
   example AUR packages installed as dependencie -
   `pacrs packages --aur --deps`.
+
+## Differences with `zypper`
+
+- `pacrs -c` works like `zypper -u` (and `pacman -Rs`) while `pacrs -u` works
+  more like `paru -c` and doesn't accept targets.
 
 ## Pros and cons in relation to `pacman` and `paru`
 

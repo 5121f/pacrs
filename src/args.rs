@@ -98,9 +98,10 @@ pub enum Args {
 #[derive(Debug, Parser)]
 #[group(required = true)]
 pub struct RemoveTarget {
+    #[clap(conflicts_with = "unneeded")]
     pub packages: Vec<String>,
     /// Remove unneeded packages
-    #[clap(long, short)]
+    #[clap(long, short, conflicts_with = "packages")]
     pub unneeded: bool,
 }
 

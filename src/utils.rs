@@ -28,5 +28,6 @@ pub fn shure(message: &str) -> anyhow::Result<bool> {
     io::stdin()
         .read_line(&mut buf)
         .context("Failed to read input")?;
-    Ok(buf.trim().to_lowercase() == "y")
+    let answer = buf.trim().to_lowercase();
+    Ok(answer == "y" || answer == "yes")
 }

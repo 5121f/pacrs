@@ -84,12 +84,12 @@ impl<T> IoResultExt<T> for io::Result<T> {
 
 #[derive(Debug)]
 pub struct RunProgramError {
-    command_name: Option<String>,
+    command_name: String,
     source: io::Error,
 }
 impl RunProgramError {
     fn new(command: &Command, source: io::Error) -> Self {
-        let command_name = command.get_program().to_str().map(ToOwned::to_owned);
+        let command_name = command.get_program().to_string_lossy().to_string();
         Self {
             command_name,
             source,
@@ -98,10 +98,12 @@ impl RunProgramError {
 }
 impl Display for RunProgramError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        if let Some(program) = &self.command_name {
-            write!(f, "{program}: ")?;
-        }
-        write!(f, "Failed to run program: {source}", source = self.source)
+        write!(
+            f,
+            "{program}: Failed to run program: {source}",
+            program = self.command_name,
+            source = self.source
+        )
     }
 }
 impl Error for RunProgramError {}

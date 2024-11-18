@@ -11,6 +11,27 @@ use tabled::{settings::Style, Table, Tabled};
 
 use crate::cmds::pacman;
 
+#[derive(PartialEq, Eq, Hash, Tabled)]
+struct Process {
+    pid: Pid,
+    user_name: String,
+    command: String,
+}
+
+impl Process {
+    fn new(process: &sysinfo::Process) -> Self {
+        let pid = process.pid();
+        let command = get_process_command(process);
+        let user_name = user_name_by_process(process).unwrap_or_else(|| String::from("Unknown"));
+
+        Self {
+            pid,
+            user_name,
+            command,
+        }
+    }
+}
+
 fn files_of_installed_pkgs() -> anyhow::Result<Vec<String>> {
     let lines = pacman().arg("-Ql").execute_and_grub_lines()?;
     let mut result = Vec::with_capacity(lines.len());
@@ -22,37 +43,18 @@ fn files_of_installed_pkgs() -> anyhow::Result<Vec<String>> {
     Ok(result)
 }
 
-#[derive(PartialEq, Eq, Hash, Tabled)]
-struct Process {
-    pid: Pid,
-    user_name: String,
-    command: String,
-}
-
-impl Process {
-    fn new(process: &sysinfo::Process) -> Self {
-        let pid = process.pid();
-
-        let command = process
-            .exe()
-            .map(|p| {
-                let file_name = p.file_name().unwrap_or_default().to_string_lossy();
-                file_name
-                    .strip_suffix("(deleted)")
-                    .map(ToString::to_string)
-                    .unwrap_or(file_name.to_string())
-            })
-            .unwrap_or_else(|| process.name().to_string_lossy().to_string())
-            .to_string();
-
-        let user_name = user_name_by_process(process).unwrap_or_else(|| String::from("Unknown"));
-
-        Self {
-            pid,
-            user_name,
-            command,
-        }
-    }
+fn get_process_command(process: &sysinfo::Process) -> String {
+    process
+        .exe()
+        .map(|p| {
+            let file_name = p.file_name().unwrap_or_default().to_string_lossy();
+            file_name
+                .strip_suffix("(deleted)")
+                .map(ToString::to_string)
+                .unwrap_or(file_name.to_string())
+        })
+        .unwrap_or_else(|| process.name().to_string_lossy().to_string())
+        .to_string()
 }
 
 fn user_name_by_process(process: &sysinfo::Process) -> Option<String> {
@@ -62,8 +64,7 @@ fn user_name_by_process(process: &sysinfo::Process) -> Option<String> {
     Some(user.name().to_owned())
 }
 
-/// Returns (process_name, file_name)
-fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, String)>> {
+fn configured_system() -> System {
     let mut system = System::new();
     system.refresh_processes_specifics(
         ProcessesToUpdate::All,
@@ -72,6 +73,12 @@ fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, String)>> {
             .with_user(UpdateKind::OnlyIfNotSet)
             .with_exe(UpdateKind::OnlyIfNotSet),
     );
+    system
+}
+
+/// Returns (process_name, file_name)
+fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, String)>> {
+    let system = configured_system();
     let mut result = Vec::new();
     for (pid, process) in system.processes() {
         let path = Path::new("/proc").join(pid.to_string()).join("maps");

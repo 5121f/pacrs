@@ -21,7 +21,7 @@ use crate::cmds::pacman;
 //     Ok(uids)
 // }
 
-fn pkgs_and_files() -> anyhow::Result<Vec<String>> {
+fn files_of_installed_pkgs() -> anyhow::Result<Vec<String>> {
     let lines = pacman().arg("-Ql").execute_and_grub_lines()?;
     let mut result = Vec::with_capacity(lines.len());
     for line in lines {
@@ -78,7 +78,7 @@ fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(String, String)>> {
 }
 
 pub fn ps() -> anyhow::Result<()> {
-    let pkgs_files = pkgs_and_files()?;
+    let pkgs_files = files_of_installed_pkgs()?;
     let mut processes = HashSet::new();
     for (process, file) in deleted_files_and_his_processes()? {
         if pkgs_files.contains(&file) {

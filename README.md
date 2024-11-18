@@ -1,5 +1,10 @@
 # pacrs
 
+**pacrs** provides some functions of `pacman`, `paru`, some scripts from
+`pacman-contrib` package and also similar to
+[pacman-pstatus](https://gitlab.com/renyuneyun/pacman-ps) functionality.
+**pacrs** has frendly interfase inspired by zypper (OpenSUSE package manager).
+
 ## Differences with `pacman`
 
 - No need to manage packages index. pacrs do it under the hood.

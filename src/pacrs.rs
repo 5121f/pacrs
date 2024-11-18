@@ -5,7 +5,7 @@ use crate::{
     PacrsAlpm,
 };
 
-use anyhow::{bail, Ok};
+use anyhow::{bail, Context, Ok};
 
 pub fn list() -> anyhow::Result<()> {
     pacman().arg("-Qq").execute()?;
@@ -98,7 +98,6 @@ pub fn find_file(file: &str) -> anyhow::Result<()> {
 }
 
 pub fn list_of_all_files() -> anyhow::Result<()> {
-    // What is the difference between '-Fl' and '-Ql'?
     pacman().arg("-Fl").execute()?;
     Ok(())
 }
@@ -112,7 +111,14 @@ pub fn list_deps() -> anyhow::Result<Vec<String>> {
 }
 
 pub fn list_files_of_package(name: &str) -> anyhow::Result<()> {
-    pacman().arg("-Fl").arg(name).execute()?;
+    let lines = pacman().arg("-Fl").arg(name).execute_and_grub_lines()?;
+    for line in lines {
+        let file = line
+            .split(' ')
+            .nth(1)
+            .context("Failed to parse pacman output")?;
+        println!("{file}");
+    }
     Ok(())
 }
 

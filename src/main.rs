@@ -3,10 +3,14 @@ mod args;
 mod cmds;
 mod command;
 mod pacrs;
+mod ps;
 mod temp_db;
 mod utils;
 
-use crate::{alpm::PacrsAlpm, args::Args, command::Cmd};
+use alpm::PacrsAlpm;
+use args::Args;
+use command::Cmd;
+use ps::ps;
 
 use anyhow::bail;
 use args::{MarkGroup, RemoveTarget};
@@ -45,6 +49,7 @@ fn main() -> anyhow::Result<()> {
                     dependencie,
                 },
         } => mark(packages, explicit, dependencie)?,
+        Args::Ps => ps()?,
     }
     Ok(())
 }

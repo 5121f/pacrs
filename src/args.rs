@@ -93,6 +93,7 @@ pub enum Args {
         #[clap(flatten)]
         mark_group: MarkGroup,
     },
+    Ps,
 }
 
 #[derive(Debug, Parser)]

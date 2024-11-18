@@ -10,17 +10,6 @@ use sysinfo::{ProcessesToUpdate, System};
 
 use crate::cmds::pacman;
 
-// fn uids() -> anyhow::Result<Vec<i32>> {
-//     let mut uids = Vec::new();
-//     for dir_entry in fs_err::read_dir("/proc")? {
-//         let dir_entry = dir_entry?;
-//         if let Ok(uid) = dir_entry.file_name().to_string_lossy().parse::<i32>() {
-//             uids.push(uid);
-//         }
-//     }
-//     Ok(uids)
-// }
-
 fn files_of_installed_pkgs() -> anyhow::Result<Vec<String>> {
     let lines = pacman().arg("-Ql").execute_and_grub_lines()?;
     let mut result = Vec::with_capacity(lines.len());

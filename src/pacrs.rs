@@ -98,6 +98,7 @@ pub fn find_file(file: &str) -> anyhow::Result<()> {
 }
 
 pub fn list_of_all_files() -> anyhow::Result<()> {
+    // What is the difference between '-Fl' and '-Ql'?
     pacman().arg("-Fl").execute()?;
     Ok(())
 }

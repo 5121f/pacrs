@@ -40,12 +40,12 @@ impl Cmd {
         self
     }
 
-    pub fn execute(mut self) -> Result<ExitStatus, RunProgramError> {
+    pub fn execute(mut self) -> Result<ExitStatus, ExeProgramError> {
         self.cmd
             .spawn()
-            .run_err_map(&self.cmd)?
+            .exe_err(&self.cmd)?
             .wait()
-            .run_err_map(&self.cmd)
+            .exe_err(&self.cmd)
     }
 
     pub fn execute_and_grub_output(mut self) -> anyhow::Result<String> {
@@ -53,7 +53,7 @@ impl Cmd {
             .cmd
             .stderr(std::io::stderr())
             .output()
-            .run_err_map(&self.cmd)?;
+            .exe_err(&self.cmd)?;
         let output = str::from_utf8(&output.stdout).with_context(|| {
             format!(
                 "{}: Failed to take command output",
@@ -73,21 +73,21 @@ impl Cmd {
 }
 
 trait IoResultExt<T> {
-    fn run_err_map(self, cmd: &Command) -> Result<T, RunProgramError>;
+    fn exe_err(self, cmd: &Command) -> Result<T, ExeProgramError>;
 }
 
 impl<T> IoResultExt<T> for io::Result<T> {
-    fn run_err_map(self, cmd: &Command) -> Result<T, RunProgramError> {
-        self.map_err(|source| RunProgramError::new(cmd, source))
+    fn exe_err(self, cmd: &Command) -> Result<T, ExeProgramError> {
+        self.map_err(|source| ExeProgramError::new(cmd, source))
     }
 }
 
 #[derive(Debug)]
-pub struct RunProgramError {
+pub struct ExeProgramError {
     command_name: String,
     source: io::Error,
 }
-impl RunProgramError {
+impl ExeProgramError {
     fn new(command: &Command, source: io::Error) -> Self {
         let command_name = command.get_program().to_string_lossy().to_string();
         Self {
@@ -96,14 +96,14 @@ impl RunProgramError {
         }
     }
 }
-impl Display for RunProgramError {
+impl Display for ExeProgramError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
-            "{program}: Failed to run program: {source}",
+            "{program}: Failed to execute program: {source}",
             program = self.command_name,
             source = self.source
         )
     }
 }
-impl Error for RunProgramError {}
+impl Error for ExeProgramError {}

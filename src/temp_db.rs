@@ -38,7 +38,7 @@ pub fn initialize_temp_db() -> anyhow::Result<()> {
     let conf = pacmanconf::Config::new().unwrap();
     let temp_local_db = Path::new(TEMP_DB_PATH).join("local");
     if !temp_local_db.exists() {
-        fs_err::os::unix::fs::symlink(Path::new(&conf.db_path).join("local"), temp_local_db)?;
+        fs::os::unix::fs::symlink(Path::new(&conf.db_path).join("local"), temp_local_db)?;
     }
     update_temp_db()
 }

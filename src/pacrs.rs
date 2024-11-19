@@ -6,6 +6,7 @@ use crate::{
 };
 
 use anyhow::{bail, Context, Ok};
+use fs_err as fs;
 
 pub fn list() -> anyhow::Result<()> {
     pacman().arg("-Qq").execute()?;
@@ -151,6 +152,6 @@ pub fn clean_paru_cache() -> anyhow::Result<()> {
         return Ok(());
     }
     let cache_dir = paru_cache_dir()?;
-    fs_err::remove_dir_all(cache_dir)?;
+    fs::remove_dir_all(cache_dir)?;
     Ok(())
 }

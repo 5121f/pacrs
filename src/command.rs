@@ -57,7 +57,7 @@ impl Cmd {
         let output = str::from_utf8(&output.stdout).with_context(|| {
             format!(
                 "{}: Failed to take command output",
-                &self.cmd.get_program().to_str().unwrap_or_default()
+                &self.cmd.get_program().to_string_lossy()
             )
         })?;
         Ok(output.trim().to_owned())

@@ -113,13 +113,12 @@ fn remove(remove_target: RemoveTarget, clean_deps: bool) -> anyhow::Result<()> {
     pacrs::remove(remove_target.packages, clean_deps)
 }
 
-fn list_filter(list: Vec<String>, packages: Vec<String>, changed: bool) -> Vec<String> {
+fn list_filter(list: &mut Vec<String>, packages: Vec<String>, changed: bool) {
     if !(changed || packages.is_empty()) {
-        return packages;
+        *list = packages;
+        return;
     }
-    list.into_iter()
-        .filter(|line| packages.contains(line))
-        .collect()
+    list.retain(|line| packages.contains(line))
 }
 
 fn list(orphaned: bool, aur: bool, explicit: bool, deps: bool) -> anyhow::Result<()> {
@@ -127,19 +126,19 @@ fn list(orphaned: bool, aur: bool, explicit: bool, deps: bool) -> anyhow::Result
     let mut list = Vec::new();
 
     if orphaned {
-        list = list_filter(list, pacrs::orphaned_packages()?, changed);
+        list_filter(&mut list, pacrs::orphaned_packages()?, changed);
         changed = true;
     }
     if aur {
-        list = list_filter(list, pacrs::list_aur()?, changed);
+        list_filter(&mut list, pacrs::list_aur()?, changed);
         changed = true;
     }
     if explicit {
-        list = list_filter(list, pacrs::list_explicit_packages()?, changed);
+        list_filter(&mut list, pacrs::list_explicit_packages()?, changed);
         changed = true;
     }
     if deps {
-        list = list_filter(list, pacrs::list_deps()?, changed);
+        list_filter(&mut list, pacrs::list_deps()?, changed);
         changed = true;
     }
 

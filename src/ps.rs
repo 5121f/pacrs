@@ -76,7 +76,6 @@ fn configured_system() -> System {
     system
 }
 
-/// Returns (process_name, file_name)
 fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, String)>> {
     let system = configured_system();
     let mut result = Vec::new();

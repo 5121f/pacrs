@@ -35,6 +35,7 @@ complete -c $progname -a 'list-updates' -d 'List available updates'
 complete -c $progname -a 'files' -d 'Print list of files'
 complete -c $progname -a 'clean' -d 'Clean cache'
 complete -c $progname -a 'mark' -d 'Mark packages'
+complete -c $progname -a 'ps' -d 'Processes which continue to use deleted files'
 complete -c $progname -a 'help' -d 'Print this message or the help of the given subcommand(s)'
 
 # General options

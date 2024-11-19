@@ -118,7 +118,7 @@ pub fn ps() -> anyhow::Result<()> {
     if processes.is_empty() {
         return Ok(());
     }
-    let table = Table::new(&processes).with(Style::rounded()).to_string();
+    let table = Table::new(&processes).with(Style::psql()).to_string();
     println!("{table}");
     Ok(())
 }

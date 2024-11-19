@@ -99,7 +99,7 @@ impl PacrsAlpm {
         self.0
             .syncdbs()
             .pkg(package)
-            .with_context(|| format!("Package {package} not found"))
+            .with_context(|| format!("{package}: Package not found"))
     }
 }
 

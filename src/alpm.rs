@@ -29,11 +29,7 @@ impl PacrsAlpm {
     //     localdb.pkg(package).is_ok() || localdb.group(package).is_ok()
     // }
 
-    pub fn package_was_updated_in_db(
-        &self,
-        alpm_tmp: &TempAlpm,
-        package: &str,
-    ) -> anyhow::Result<bool> {
+    pub fn package_was_updated(&self, alpm_tmp: &TempAlpm, package: &str) -> anyhow::Result<bool> {
         let pkg = self.syncdb_pkg(package)?;
         let pkg_tmp = alpm_tmp.syncdb_pkg(package)?;
         Ok(pkg.version() < pkg_tmp.version())
@@ -44,16 +40,15 @@ impl PacrsAlpm {
         alpm_tmp: &TempAlpm,
         packages: Vec<&str>,
     ) -> anyhow::Result<bool> {
-        let mut packages_for_check = packages;
-        let mut packages_we_already_checked = Vec::with_capacity(packages_for_check.len());
-        while let Some(pkg) = packages_for_check.pop() {
-            let already_checked = packages_we_already_checked.contains(&pkg);
-            if !already_checked {
-                let package_was_updated = self
+        let mut for_check = packages;
+        let mut already_checked = Vec::with_capacity(for_check.len());
+        while let Some(pkg) = for_check.pop() {
+            if !already_checked.contains(&pkg) {
+                let was_updated = self
                     // We assume that if package not finded in syncdb, then the package from AUR and we ignore it
-                    .package_was_updated_in_db(alpm_tmp, pkg)
+                    .package_was_updated(alpm_tmp, pkg)
                     .unwrap_or(false);
-                if package_was_updated {
+                if was_updated {
                     return Ok(true);
                 }
                 let deps = self
@@ -62,9 +57,9 @@ impl PacrsAlpm {
                     .unwrap_or_default()
                     .into_iter()
                     .map(|dep| dep.name());
-                packages_for_check.extend(deps);
+                for_check.extend(deps);
             }
-            packages_we_already_checked.push(pkg);
+            already_checked.push(pkg);
         }
         Ok(false)
     }

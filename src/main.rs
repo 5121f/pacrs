@@ -102,7 +102,7 @@ fn cache(uninstalled: bool, aur: bool) -> anyhow::Result<()> {
         return pacrs::clean_paru_cache();
     }
     pacrs::cache_clean()?;
-    println!("For AUR cache clean run 'pacrs clean --aur'");
+    println!("You can also clean AUR cache with 'pacrs clean --aur'");
     Ok(())
 }
 

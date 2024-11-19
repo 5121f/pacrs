@@ -93,6 +93,9 @@ pub enum Args {
         #[clap(flatten)]
         mark_group: MarkGroup,
     },
+    /// Processes which continue to use deleted files.
+    /// This command is actual after updating the system and they can indicate the processes that
+    /// should be restarted.
     Ps,
 }
 

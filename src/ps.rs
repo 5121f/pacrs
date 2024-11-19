@@ -19,10 +19,11 @@ struct Process {
 }
 
 impl Process {
-    fn new(process: &sysinfo::Process) -> Self {
+    fn new(process: &sysinfo::Process, users: &Users) -> Self {
         let pid = process.pid();
         let command = get_process_command(process);
-        let user_name = user_name_by_process(process).unwrap_or_else(|| String::from("Unknown"));
+        let user_name =
+            user_name_by_process(process, users).unwrap_or_else(|| String::from("Unknown"));
 
         Self {
             pid,
@@ -58,9 +59,8 @@ fn get_process_command(process: &sysinfo::Process) -> String {
         .to_string()
 }
 
-fn user_name_by_process(process: &sysinfo::Process) -> Option<String> {
+fn user_name_by_process(process: &sysinfo::Process, users: &Users) -> Option<String> {
     let uid = process.user_id()?;
-    let users = Users::new_with_refreshed_list();
     let user = users.get_user_by_id(uid)?;
     Some(user.name().to_owned())
 }
@@ -79,6 +79,7 @@ fn configured_system() -> System {
 
 fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, String)>> {
     let system = configured_system();
+    let users = Users::new_with_refreshed_list();
     let mut result = Vec::new();
     for (pid, process) in system.processes() {
         let path = Path::new("/proc").join(pid.to_string()).join("maps");
@@ -102,7 +103,7 @@ fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, String)>> {
                 continue;
             }
 
-            result.push((Process::new(process), fname.to_owned()));
+            result.push((Process::new(process, &users), fname.to_owned()));
         }
     }
     Ok(result)

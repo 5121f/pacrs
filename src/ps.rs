@@ -32,13 +32,14 @@ impl Process {
     }
 }
 
-fn files_of_installed_pkgs() -> anyhow::Result<Vec<String>> {
+fn files_of_installed_pkgs() -> anyhow::Result<HashSet<String>> {
     let lines = pacman().arg("-Ql").execute_and_grub_lines()?;
-    let mut result = Vec::with_capacity(lines.len());
+    // We assume that one file corresponds to one package
+    let mut result = HashSet::with_capacity(lines.len());
     for line in lines {
         let mut parts = line.split(' ');
         let file = parts.nth(1).context("Unable to parse pacman output")?;
-        result.push(file.to_owned());
+        result.insert(file.to_owned());
     }
     Ok(result)
 }

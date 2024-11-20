@@ -84,13 +84,13 @@ pub fn orphaned_pkgs() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qdtq").execute_and_grub_lines_ignore_status()
 }
 
-pub fn remvoe_unneeded_pkgs(clean_deps: bool) -> anyhow::Result<()> {
+pub fn autoremove() -> anyhow::Result<()> {
     if let Some(paru) = paru_if_present() {
         paru.arg("-c").execute()?;
         return Ok(());
     }
     let orphaned_packages = orphaned_pkgs()?;
-    remove(orphaned_packages, clean_deps)?;
+    remove(orphaned_packages, true)?;
     Ok(())
 }
 

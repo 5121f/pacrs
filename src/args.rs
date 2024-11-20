@@ -11,12 +11,15 @@ pub enum Args {
     /// Remove (uninstall) packages
     #[clap(visible_alias = "rm")]
     Remove {
-        #[clap(flatten)]
-        remove_target: RemoveTarget,
+        #[clap(required = true)]
+        packages: Vec<String>,
         /// Automatically remove dependencies which become unneeded after removal of requested packages.
         #[clap(long, short)]
         clean_deps: bool,
     },
+    /// Remove unneeded packages
+    #[clap(visible_alias = "arm")]
+    Autoremove,
     /// Update installed packages with newer versions
     #[clap(visible_alias = "up")]
     Update {
@@ -97,16 +100,6 @@ pub enum Args {
     /// This command is actual after updating the system and they can indicate the processes that
     /// should be restarted.
     Ps,
-}
-
-#[derive(Debug, Parser)]
-#[group(required = true)]
-pub struct RemoveTarget {
-    #[clap(conflicts_with = "unneeded")]
-    pub packages: Vec<String>,
-    /// Remove unneeded packages
-    #[clap(long, short, conflicts_with = "packages")]
-    pub unneeded: bool,
 }
 
 #[derive(Debug, Parser)]

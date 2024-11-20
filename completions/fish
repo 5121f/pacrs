@@ -13,6 +13,7 @@ set -l listinstalled "(pacman -Q | string replace ' ' \t)"
 
 set -l install '__fish_seen_subcommand_from in install'
 set -l remove '__fish_seen_subcommand_from rm remove'
+set -l remove '__fish_seen_subcommand_from arm autoremove'
 set -l update '__fish_seen_subcommand_from up update'
 set -l packages '__fish_seen_subcommand_from pa packages'
 set -l search '__fish_seen_subcommand_from se search'
@@ -27,6 +28,7 @@ complete -c $progname -f # Disable file completions for entire command
 # Primary operations
 complete -c $progname -a 'install' -d 'Install packages'
 complete -c $progname -a 'remove' -d 'Remove (uninstall) packages'
+complete -c $progname -a 'autoremove' -d 'Remove unneeded packages'
 complete -c $progname -a 'update' -d 'Update installed packages with newer versions'
 complete -c $progname -a 'packages' -d 'List all available packages'
 complete -c $progname -a 'info' -d 'Displays detailed information about the specified packages'
@@ -46,7 +48,6 @@ complete -c $progname -n $install -s o -l orphaned -d 'Remove orphaned packages'
 
 # Remove options
 complete -c $progname -n $remove -xa "$listinstalled"
-complete -c $progname -n $remove -s u -l unneeded -d 'Remove unneeded packages'
 
 # Packages options
 complete -c $progname -n $packages -s e -l explicit -d 'List of explicit installed packages'

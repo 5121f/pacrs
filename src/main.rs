@@ -14,7 +14,7 @@ use command::Cmd;
 use ps::ps;
 
 use anyhow::bail;
-use args::{MarkGroup, RemoveTarget};
+use args::MarkGroup;
 use clap::Parser;
 
 #[tokio::main]
@@ -29,9 +29,10 @@ async fn main() -> anyhow::Result<()> {
         } => list(orphaned, aur, explicit, deps)?,
         Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove {
-            remove_target,
+            packages,
             clean_deps,
-        } => remove(remove_target, clean_deps)?,
+        } => pacrs::remove(packages, clean_deps)?,
+        Args::Autoremove => pacrs::autoremove()?,
         Args::Update { packages, quiet } => update(packages, quiet),
         Args::Info { package } => pacrs::info(package)?,
         Args::Search { package } => pacrs::search(package)?,
@@ -105,13 +106,6 @@ fn cache(uninstalled: bool, aur: bool) -> anyhow::Result<()> {
     pacrs::clean_cache()?;
     println!("You can also clean AUR cache with 'pacrs clean --aur'");
     Ok(())
-}
-
-fn remove(remove_target: RemoveTarget, clean_deps: bool) -> anyhow::Result<()> {
-    if remove_target.unneeded {
-        return pacrs::remvoe_unneeded_pkgs(clean_deps);
-    }
-    pacrs::remove(remove_target.packages, clean_deps)
 }
 
 fn list_filter(list: &mut Vec<String>, packages: Vec<String>, changed: bool) {

@@ -1,6 +1,6 @@
 use crate::{
     cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman},
-    command, pacman,
+    pacman,
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
     utils::{is_root, paru_cache_dir, shure},
     PacrsAlpm,
@@ -96,19 +96,6 @@ pub fn autoremove() -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn find_file(file: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
-    if update_index {
-        update_files_index(quiet)?;
-    }
-    pacman().arg("-F").arg(file).execute()?;
-    Ok(())
-}
-
-// pub fn all_files() -> anyhow::Result<()> {
-//     pacman().arg("-Fl").execute()?;
-//     Ok(())
-// }
-
 pub fn explicit_pkgs() -> anyhow::Result<Vec<String>> {
     let lines = pacman().arg("-Qeq").execute_and_grub_lines()?;
     Ok(lines)
@@ -122,53 +109,6 @@ pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
 pub fn deps() -> anyhow::Result<Vec<String>> {
     let lines = pacman().arg("-Qdq").execute_and_grub_lines()?;
     Ok(lines)
-}
-
-fn package_files_global(
-    name: &str,
-    update_index: bool,
-    quiet: bool,
-) -> anyhow::Result<Vec<String>> {
-    if update_index {
-        update_files_index(quiet)?
-    }
-
-    let lines = pacman()
-        .arg("-Fl")
-        .arg(name)
-        .pipe_stderr()
-        .execute_and_grub_lines()?;
-
-    let lines = parse_pacman_files_output(lines)?;
-
-    Ok(lines)
-}
-
-fn _package_files_local(name: &str) -> Result<Vec<String>, command::Error> {
-    pacman::files_of_installed_pkgs()
-        .arg(name)
-        .execute_and_grub_lines()
-}
-
-pub fn packages_files_local() -> anyhow::Result<Vec<String>> {
-    let lines = pacman::files_of_installed_pkgs().execute_and_grub_lines()?;
-    parse_pacman_files_output(lines)
-}
-
-pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
-    let lines = match _package_files_local(name) {
-        Ok(lines) => parse_pacman_files_output(lines)?,
-        Err(command::Error::EndedWithNonZero {
-            exit_status: _,
-            command_name: _,
-        }) => package_files_global(name, update_index, quiet)?,
-        Err(err) => return Err(err.into()),
-    };
-
-    for line in lines {
-        println!("{line}");
-    }
-    Ok(())
 }
 
 pub fn parse_pacman_files_output(lines: Vec<String>) -> anyhow::Result<Vec<String>> {

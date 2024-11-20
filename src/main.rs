@@ -2,6 +2,7 @@ mod alpm;
 mod args;
 mod cmds;
 mod command;
+mod files;
 mod pacman;
 mod pacrs;
 mod ps;
@@ -11,6 +12,7 @@ mod utils;
 use alpm::PacrsAlpm;
 use args::Args;
 use command::Cmd;
+use files::{find_file, package_files};
 use ps::ps;
 
 use anyhow::bail;
@@ -86,10 +88,10 @@ fn files(
     let update_index = !not_update_index;
 
     if let Some(package) = package {
-        return pacrs::package_files(&package, update_index, quiet);
+        return package_files(&package, update_index, quiet);
     }
     if let Some(file) = file {
-        return pacrs::find_file(&file, update_index, quiet);
+        return find_file(&file, update_index, quiet);
     }
 
     pacrs::files_of_installed_pkgs()?;

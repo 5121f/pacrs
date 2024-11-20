@@ -8,7 +8,7 @@ use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{settings::Style, Table, Tabled};
 
-use crate::pacrs;
+use crate::files::packages_files_local;
 
 #[derive(PartialEq, Eq, Hash, Tabled)]
 struct Process {
@@ -33,7 +33,7 @@ impl Process {
 }
 
 fn files_of_installed_pkgs() -> anyhow::Result<HashSet<String>> {
-    let files = pacrs::packages_files_local()?;
+    let files = packages_files_local()?;
     // We assume that one file corresponds to one package
     let lines = HashSet::from_iter(files);
     Ok(lines)

@@ -69,7 +69,7 @@ pub enum Args {
         #[clap(long, short, conflicts_with = "package")]
         find: Option<String>,
         /// Don't update files index
-        #[clap(long, short = 'u')]
+        #[clap(long, short = 'U')]
         not_update_index: bool,
         /// Don't show additional messages
         #[clap(long, short)]

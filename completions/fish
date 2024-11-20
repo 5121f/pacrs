@@ -57,7 +57,7 @@ complete -c $progname -n $packages -s a -l aur -d 'Print list of AUR packages'
 # Files options
 complete -c $progname -n $files -xa "(listall)"
 complete -c $progname -n $files -s f -l find -d 'Find specific file among all packages'
-complete -c $progname -n $files -s u -l 'not-update-index' -d 'Don\'t update files index'
+complete -c $progname -n $files -s U -l 'not-update-index' -d 'Don\'t update files index'
 
 # Clean options
 complete -c $progname -n $clean -s u -l uninstalled -d 'Clean only cache of uninstalled packages'

@@ -8,7 +8,10 @@ use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{settings::Style, Table, Tabled};
 
-use crate::{pacman, pacrs::parse_pacman_files_output};
+use crate::{
+    pacman,
+    pacrs::{self, parse_pacman_files_output},
+};
 
 #[derive(PartialEq, Eq, Hash, Tabled)]
 struct Process {
@@ -33,10 +36,9 @@ impl Process {
 }
 
 fn files_of_installed_pkgs() -> anyhow::Result<HashSet<String>> {
-    let lines = pacman::files_of_installed_pkgs().execute_and_grub_lines()?;
-    let lines = parse_pacman_files_output(lines)?;
+    let files = pacrs::package_files_local("")?;
     // We assume that one file corresponds to one package
-    let lines = HashSet::from_iter(lines);
+    let lines = HashSet::from_iter(files);
     Ok(lines)
 }
 

@@ -55,7 +55,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
 }
 
 pub fn list_aur_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qmq").execute_and_grub_lines()
+    pacman().arg("-Qmq").execute_and_grub_lines_ignore_status()
 }
 
 pub fn remove(packages: Vec<String>, clean_deps: bool) -> anyhow::Result<()> {
@@ -81,7 +81,7 @@ pub fn list_updates() -> anyhow::Result<()> {
 }
 
 pub fn orphaned_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qdtq").execute_and_grub_lines()
+    pacman().arg("-Qdtq").execute_and_grub_lines_ignore_status()
 }
 
 pub fn remvoe_unneeded_pkgs(clean_deps: bool) -> anyhow::Result<()> {
@@ -105,7 +105,7 @@ pub fn find_file(file: &str) -> anyhow::Result<()> {
 // }
 
 pub fn explicit_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qeq").execute_and_grub_lines()
+    pacman().arg("-Qeq").execute_and_grub_lines_ignore_status()
 }
 
 pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
@@ -114,11 +114,14 @@ pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
 }
 
 pub fn deps() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qdq").execute_and_grub_lines()
+    pacman().arg("-Qdq").execute_and_grub_lines_ignore_status()
 }
 
 pub fn files_of_package(name: &str) -> anyhow::Result<()> {
-    let lines = pacman().arg("-Fl").arg(name).execute_and_grub_lines()?;
+    let lines = pacman()
+        .arg("-Fl")
+        .arg(name)
+        .execute_and_grub_lines_ignore_status()?;
     for line in lines {
         let file = line
             .split(' ')

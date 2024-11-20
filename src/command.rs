@@ -49,27 +49,30 @@ impl Cmd {
             .map_err(|source| ExeProgramError::new(&self.cmd, source))
     }
 
-    pub fn execute_and_grub_output(mut self) -> anyhow::Result<String> {
+    pub fn execute_and_grub_output(mut self) -> anyhow::Result<(ExitStatus, String)> {
         let output = self
             .cmd
             .stderr(std::io::stderr())
             .output()
             .map_err(|source| ExeProgramError::new(&self.cmd, source))?;
-        let output = str::from_utf8(&output.stdout).with_context(|| {
+        let string = str::from_utf8(&output.stdout).with_context(|| {
             format!(
                 "{}: Failed to take command output",
                 &self.cmd.get_program().to_string_lossy()
             )
         })?;
-        Ok(output.trim().to_owned())
+        Ok((output.status, string.trim().to_owned()))
     }
 
-    pub fn execute_and_grub_lines(self) -> anyhow::Result<Vec<String>> {
-        Ok(self
-            .execute_and_grub_output()?
-            .split("\n")
-            .map(ToOwned::to_owned)
-            .collect())
+    pub fn execute_and_grub_lines(self) -> anyhow::Result<(ExitStatus, Vec<String>)> {
+        let (status, output) = self.execute_and_grub_output()?;
+        let lines = output.split("\n").map(ToOwned::to_owned).collect();
+        Ok((status, lines))
+    }
+
+    pub fn execute_and_grub_lines_ignore_status(self) -> anyhow::Result<Vec<String>> {
+        let (_, lines) = self.execute_and_grub_lines()?;
+        Ok(lines)
     }
 }
 

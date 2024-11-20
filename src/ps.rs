@@ -34,7 +34,7 @@ impl Process {
 }
 
 fn files_of_installed_pkgs() -> anyhow::Result<HashSet<String>> {
-    let lines = pacman::files_of_installed_pkgs().execute_and_grub_lines()?;
+    let lines = pacman::files_of_installed_pkgs().execute_and_grub_lines_ignore_status()?;
     // We assume that one file corresponds to one package
     let mut result = HashSet::with_capacity(lines.len());
     for line in lines {

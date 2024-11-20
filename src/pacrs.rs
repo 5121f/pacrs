@@ -157,7 +157,7 @@ pub fn packages_files_local() -> anyhow::Result<Vec<String>> {
 
 pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
     let lines = match _package_files_local(name) {
-        Ok(lines) => lines,
+        Ok(lines) => parse_pacman_files_output(lines)?,
         Err(command::Error::EndedWithNonZero {
             exit_status: _,
             command_name: _,

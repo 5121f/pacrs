@@ -8,10 +8,7 @@ use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{settings::Style, Table, Tabled};
 
-use crate::{
-    pacman,
-    pacrs::{self, parse_pacman_files_output},
-};
+use crate::pacrs;
 
 #[derive(PartialEq, Eq, Hash, Tabled)]
 struct Process {

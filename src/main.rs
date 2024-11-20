@@ -94,7 +94,7 @@ fn files(
         return pacrs::find_file(&file);
     }
 
-    pacman::files_of_installed_pkgs().execute()?;
+    pacrs::files_of_installed_pkgs()?;
     Ok(())
 }
 

@@ -1,5 +1,6 @@
 use crate::{
     cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman},
+    pacman,
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
     utils::{is_root, paru_cache_dir, shure},
     PacrsAlpm,
@@ -105,6 +106,11 @@ pub fn find_file(file: &str) -> anyhow::Result<()> {
 
 pub fn list_explicit_packages() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qeq").execute_and_grub_lines()
+}
+
+pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
+    pacman::files_of_installed_pkgs().execute()?;
+    Ok(())
 }
 
 pub fn list_deps() -> anyhow::Result<Vec<String>> {

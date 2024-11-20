@@ -77,9 +77,13 @@ fn configured_system() -> System {
     system
 }
 
-fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, String)>> {
-    let system = configured_system();
-    let users = Users::new_with_refreshed_list();
+async fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, String)>> {
+    let system_handler = tokio::spawn(async { configured_system() });
+    let users_handler = tokio::spawn(async { Users::new_with_refreshed_list() });
+
+    let system = system_handler.await?;
+    let users = users_handler.await?;
+
     let mut result = Vec::new();
     for (pid, process) in system.processes() {
         let path = Path::new("/proc").join(pid.to_string()).join("maps");
@@ -109,18 +113,26 @@ fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, String)>> {
     Ok(result)
 }
 
-pub fn ps() -> anyhow::Result<()> {
-    let pkgs_files = files_of_installed_pkgs()?;
+pub async fn ps() -> anyhow::Result<()> {
+    let pkgs_files_handler = tokio::spawn(async { files_of_installed_pkgs() });
+    let deleted_files_and_his_processes_handler = tokio::spawn(deleted_files_and_his_processes());
+
+    let pkgs_files = pkgs_files_handler.await??;
+    let deleted_files_and_his_processes = deleted_files_and_his_processes_handler.await??;
+
     let mut processes = HashSet::new();
-    for (process, file) in deleted_files_and_his_processes()? {
+    for (process, file) in deleted_files_and_his_processes {
         if pkgs_files.contains(&file) {
             processes.insert(process);
         }
     }
+
     if processes.is_empty() {
         return Ok(());
     }
+
     let table = Table::new(&processes).with(Style::psql()).to_string();
     println!("{table}");
+
     Ok(())
 }

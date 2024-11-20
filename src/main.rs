@@ -16,7 +16,8 @@ use anyhow::bail;
 use args::{MarkGroup, RemoveTarget};
 use clap::Parser;
 
-fn main() -> anyhow::Result<()> {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args {
         Args::Packages {
@@ -49,7 +50,7 @@ fn main() -> anyhow::Result<()> {
                     dependencie,
                 },
         } => mark(packages, explicit, dependencie)?,
-        Args::Ps => ps()?,
+        Args::Ps => ps().await?,
     }
     Ok(())
 }

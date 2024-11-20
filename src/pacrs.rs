@@ -9,6 +9,8 @@ use crate::{
 use anyhow::{bail, Context, Ok};
 use fs_err as fs;
 
+use std::process::ExitStatus;
+
 pub fn installed_pkgs() -> anyhow::Result<()> {
     pacman().arg("-Qq").execute()?;
     Ok(())
@@ -120,27 +122,46 @@ pub fn deps() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qdq").execute_and_grub_lines_ignore_status()
 }
 
-pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
-    let (status, lines) = pacman::files_of_installed_pkgs()
+fn package_files_global(
+    name: &str,
+    update_index: bool,
+    quiet: bool,
+) -> anyhow::Result<Vec<String>> {
+    if update_index {
+        update_files_index(quiet)?
+    }
+
+    let (status, lines) = pacman()
+        .arg("-Fl")
+        .arg(name)
+        .pipe_stderr()
+        .execute_and_grub_lines()?;
+
+    if !status.success() {
+        bail!("pacman call ended with error");
+    }
+
+    Ok(lines)
+}
+
+fn package_files_local(
+    name: &str,
+    update_index: bool,
+    quiet: bool,
+) -> anyhow::Result<(ExitStatus, Vec<String>)> {
+    pacman::files_of_installed_pkgs()
         .arg(name)
         .hide_output()
-        .execute_and_grub_lines()?;
+        .execute_and_grub_lines()
+}
+
+pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
+    let (status, lines) = package_files_local(name, update_index, quiet)?;
 
     let files = if status.success() {
         lines
     } else {
-        if update_index {
-            update_files_index(quiet)?
-        }
-        let (status, lines) = pacman()
-            .arg("-Fl")
-            .arg(name)
-            .pipe_stderr()
-            .execute_and_grub_lines()?;
-        if !status.success() {
-            bail!("pacman call ended with error");
-        }
-        lines
+        package_files_global(name, update_index, quiet)?
     };
 
     for line in files {

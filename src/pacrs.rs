@@ -9,7 +9,7 @@ use crate::{
 use anyhow::{bail, Context, Ok};
 use fs_err as fs;
 
-pub fn list() -> anyhow::Result<()> {
+pub fn installed_pkgs() -> anyhow::Result<()> {
     pacman().arg("-Qq").execute()?;
     Ok(())
 }
@@ -30,12 +30,12 @@ pub fn search(package: String) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn cache_clean() -> anyhow::Result<()> {
+pub fn clean_cache() -> anyhow::Result<()> {
     pacman().arg("-Scc").execute()?;
     Ok(())
 }
 
-pub fn cache_clean_uninstalled() -> anyhow::Result<()> {
+pub fn clean_cache_uninstalled() -> anyhow::Result<()> {
     pacman().arg("-Sc").execute()?;
     Ok(())
 }
@@ -54,7 +54,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn list_aur() -> anyhow::Result<Vec<String>> {
+pub fn list_aur_pkgs() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qmq").execute_and_grub_lines()
 }
 
@@ -80,16 +80,16 @@ pub fn list_updates() -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn orphaned_packages() -> anyhow::Result<Vec<String>> {
+pub fn orphaned_pkgs() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qdtq").execute_and_grub_lines()
 }
 
-pub fn remvoe_unneeded_packages(clean_deps: bool) -> anyhow::Result<()> {
+pub fn remvoe_unneeded_pkgs(clean_deps: bool) -> anyhow::Result<()> {
     if let Some(paru) = paru_if_present() {
         paru.arg("-c").execute()?;
         return Ok(());
     }
-    let orphaned_packages = orphaned_packages()?;
+    let orphaned_packages = orphaned_pkgs()?;
     remove(orphaned_packages, clean_deps)?;
     Ok(())
 }
@@ -99,12 +99,12 @@ pub fn find_file(file: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-// pub fn list_of_all_files() -> anyhow::Result<()> {
+// pub fn all_files() -> anyhow::Result<()> {
 //     pacman().arg("-Fl").execute()?;
 //     Ok(())
 // }
 
-pub fn list_explicit_packages() -> anyhow::Result<Vec<String>> {
+pub fn explicit_pkgs() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qeq").execute_and_grub_lines()
 }
 
@@ -113,11 +113,11 @@ pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn list_deps() -> anyhow::Result<Vec<String>> {
+pub fn deps() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qdq").execute_and_grub_lines()
 }
 
-pub fn list_files_of_package(name: &str) -> anyhow::Result<()> {
+pub fn files_of_package(name: &str) -> anyhow::Result<()> {
     let lines = pacman().arg("-Fl").arg(name).execute_and_grub_lines()?;
     for line in lines {
         let file = line
@@ -140,7 +140,7 @@ pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn mark_explicit(packages: Vec<String>) -> anyhow::Result<()> {
+pub fn mark_as_explicit(packages: Vec<String>) -> anyhow::Result<()> {
     pacman()
         .args(["-D", "--asexplicit"])
         .args(packages)
@@ -148,7 +148,7 @@ pub fn mark_explicit(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn mark_dep(packages: Vec<String>) -> anyhow::Result<()> {
+pub fn mark_as_dep(packages: Vec<String>) -> anyhow::Result<()> {
     pacman().args(["-D", "--asdeps"]).args(packages).execute()?;
     Ok(())
 }

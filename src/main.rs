@@ -88,7 +88,7 @@ fn files(
     }
 
     if let Some(package) = package {
-        return pacrs::list_files_of_package(&package);
+        return pacrs::files_of_package(&package);
     }
     if let Some(file) = file {
         return pacrs::find_file(&file);
@@ -100,19 +100,19 @@ fn files(
 
 fn cache(uninstalled: bool, aur: bool) -> anyhow::Result<()> {
     if uninstalled {
-        return pacrs::cache_clean_uninstalled();
+        return pacrs::clean_cache_uninstalled();
     }
     if aur {
         return pacrs::clean_paru_cache();
     }
-    pacrs::cache_clean()?;
+    pacrs::clean_cache()?;
     println!("You can also clean AUR cache with 'pacrs clean --aur'");
     Ok(())
 }
 
 fn remove(remove_target: RemoveTarget, clean_deps: bool) -> anyhow::Result<()> {
     if remove_target.unneeded {
-        return pacrs::remvoe_unneeded_packages(clean_deps);
+        return pacrs::remvoe_unneeded_pkgs(clean_deps);
     }
     pacrs::remove(remove_target.packages, clean_deps)
 }
@@ -130,24 +130,24 @@ fn list(orphaned: bool, aur: bool, explicit: bool, deps: bool) -> anyhow::Result
     let mut list = Vec::new();
 
     if orphaned {
-        list_filter(&mut list, pacrs::orphaned_packages()?, changed);
+        list_filter(&mut list, pacrs::orphaned_pkgs()?, changed);
         changed = true;
     }
     if aur {
-        list_filter(&mut list, pacrs::list_aur()?, changed);
+        list_filter(&mut list, pacrs::list_aur_pkgs()?, changed);
         changed = true;
     }
     if explicit {
-        list_filter(&mut list, pacrs::list_explicit_packages()?, changed);
+        list_filter(&mut list, pacrs::explicit_pkgs()?, changed);
         changed = true;
     }
     if deps {
-        list_filter(&mut list, pacrs::list_deps()?, changed);
+        list_filter(&mut list, pacrs::deps()?, changed);
         changed = true;
     }
 
     if !changed {
-        pacrs::list()?;
+        pacrs::installed_pkgs()?;
         return Ok(());
     }
 
@@ -160,10 +160,10 @@ fn list(orphaned: bool, aur: bool, explicit: bool, deps: bool) -> anyhow::Result
 
 fn mark(packages: Vec<String>, explicit: bool, dependencie: bool) -> anyhow::Result<()> {
     if explicit {
-        return pacrs::mark_explicit(packages);
+        return pacrs::mark_as_explicit(packages);
     }
     if dependencie {
-        return pacrs::mark_dep(packages);
+        return pacrs::mark_as_dep(packages);
     }
     bail!("No one parameter specified");
 }

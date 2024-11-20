@@ -3,7 +3,7 @@
 **pacrs** provides some functions of `pacman`, `paru`, some scripts from
 `pacman-contrib` package and also similar to
 [pacman-pstatus](https://gitlab.com/renyuneyun/pacman-ps) functionality.
-**pacrs** has frendly interfase inspired by zypper (OpenSUSE package manager).
+**pacrs** has frendly interfase inspired by zypper and apt.
 
 ## Differences with `pacman`
 
@@ -21,11 +21,6 @@
 - `pacrs packages` supports multiple filters which allows you to find, for
   example AUR packages installed as dependencie -
   `pacrs packages --aur --deps`.
-
-## Differences with `zypper`
-
-- `pacrs -c` works like `zypper -u` (and `pacman -Rs`) while `pacrs -u` works
-  more like `paru -c` and doesn't accept targets.
 
 ## Pros and cons in relation to `pacman` and `paru`
 

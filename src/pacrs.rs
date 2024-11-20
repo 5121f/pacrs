@@ -1,15 +1,13 @@
 use crate::{
     cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman},
-    pacman,
+    command, pacman,
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
     utils::{is_root, paru_cache_dir, shure},
     PacrsAlpm,
 };
 
-use anyhow::{bail, Context, Ok};
+use anyhow::{bail, Context};
 use fs_err as fs;
-
-use std::process::ExitStatus;
 
 pub fn installed_pkgs() -> anyhow::Result<()> {
     pacman().arg("-Qq").execute()?;
@@ -57,7 +55,8 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
 }
 
 pub fn list_aur_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qmq").execute_and_grub_lines_ignore_status()
+    let lines = pacman().arg("-Qmq").execute_and_grub_lines()?;
+    Ok(lines)
 }
 
 pub fn remove(packages: Vec<String>, clean_deps: bool) -> anyhow::Result<()> {
@@ -83,7 +82,8 @@ pub fn list_updates() -> anyhow::Result<()> {
 }
 
 pub fn orphaned_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qdtq").execute_and_grub_lines_ignore_status()
+    let lines = pacman().arg("-Qdtq").execute_and_grub_lines()?;
+    Ok(lines)
 }
 
 pub fn autoremove() -> anyhow::Result<()> {
@@ -110,7 +110,8 @@ pub fn find_file(file: &str, update_index: bool, quiet: bool) -> anyhow::Result<
 // }
 
 pub fn explicit_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qeq").execute_and_grub_lines_ignore_status()
+    let lines = pacman().arg("-Qeq").execute_and_grub_lines()?;
+    Ok(lines)
 }
 
 pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
@@ -119,7 +120,8 @@ pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
 }
 
 pub fn deps() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qdq").execute_and_grub_lines_ignore_status()
+    let lines = pacman().arg("-Qdq").execute_and_grub_lines()?;
+    Ok(lines)
 }
 
 fn package_files_global(
@@ -131,37 +133,29 @@ fn package_files_global(
         update_files_index(quiet)?
     }
 
-    let (status, lines) = pacman()
+    let lines = pacman()
         .arg("-Fl")
         .arg(name)
         .pipe_stderr()
         .execute_and_grub_lines()?;
 
-    if !status.success() {
-        bail!("pacman call ended with error");
-    }
-
     Ok(lines)
 }
 
-fn package_files_local(
-    name: &str,
-    update_index: bool,
-    quiet: bool,
-) -> anyhow::Result<(ExitStatus, Vec<String>)> {
+fn package_files_local(name: &str) -> Result<Vec<String>, command::Error> {
     pacman::files_of_installed_pkgs()
         .arg(name)
-        .hide_output()
         .execute_and_grub_lines()
 }
 
 pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
-    let (status, lines) = package_files_local(name, update_index, quiet)?;
-
-    let files = if status.success() {
-        lines
-    } else {
-        package_files_global(name, update_index, quiet)?
+    let files = match package_files_local(name) {
+        Ok(lines) => lines,
+        Err(command::Error::EndedWithNonZero {
+            exit_status: _,
+            command_name: _,
+        }) => package_files_global(name, update_index, quiet)?,
+        Err(err) => return Err(err.into()),
     };
 
     for line in files {

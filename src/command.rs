@@ -1,13 +1,9 @@
 use std::{
-    error::Error,
     ffi::OsStr,
-    fmt::Display,
     io,
     process::{Command, ExitStatus, Stdio},
-    str,
+    str::{self, Utf8Error},
 };
-
-use anyhow::Context;
 
 pub struct Cmd {
     cmd: Command,
@@ -45,64 +41,87 @@ impl Cmd {
         self
     }
 
-    pub fn _execute(&mut self) -> Result<ExitStatus, io::Error> {
+    pub fn _execute(&mut self) -> std::result::Result<ExitStatus, io::Error> {
         self.cmd.spawn()?.wait()
     }
 
-    pub fn execute(mut self) -> Result<ExitStatus, ExeProgramError> {
+    pub fn execute(mut self) -> Result<ExitStatus> {
         self._execute()
-            .map_err(|source| ExeProgramError::new(&self.cmd, source))
+            .map_err(|source| Error::execute(&self.cmd, source))
     }
 
-    pub fn execute_and_grub_output(mut self) -> anyhow::Result<(ExitStatus, String)> {
+    pub fn execute_and_grub_output(mut self) -> Result<String> {
         let output = self
             .cmd
-            // .stderr(std::io::stderr())
             .output()
-            .map_err(|source| ExeProgramError::new(&self.cmd, source))?;
-        let string = str::from_utf8(&output.stdout).with_context(|| {
-            format!(
-                "{}: Failed to take command output",
-                &self.cmd.get_program().to_string_lossy()
-            )
-        })?;
-        Ok((output.status, string.trim().to_owned()))
+            .map_err(|source| Error::execute(&self.cmd, source))?;
+
+        let string =
+            str::from_utf8(&output.stdout).map_err(|source| Error::parse(&self.cmd, source))?;
+
+        if !output.status.success() {
+            return Err(Error::edned_with_non_zero(&self.cmd, output.status));
+        }
+
+        Ok(string.trim().to_owned())
     }
 
-    pub fn execute_and_grub_lines(self) -> anyhow::Result<(ExitStatus, Vec<String>)> {
-        let (status, output) = self.execute_and_grub_output()?;
-        let lines = output.split("\n").map(ToOwned::to_owned).collect();
-        Ok((status, lines))
-    }
-
-    pub fn execute_and_grub_lines_ignore_status(self) -> anyhow::Result<Vec<String>> {
-        let (_, lines) = self.execute_and_grub_lines()?;
-        Ok(lines)
+    pub fn execute_and_grub_lines(self) -> Result<Vec<String>> {
+        Ok(self
+            .execute_and_grub_output()?
+            .split("\n")
+            .map(ToOwned::to_owned)
+            .collect())
     }
 }
 
-#[derive(Debug)]
-pub struct ExeProgramError {
-    command_name: String,
-    source: io::Error,
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("{command_name}: Failed to execute program: {source}")]
+    Execute {
+        source: io::Error,
+        command_name: String,
+    },
+    #[error("{command_name}: Parse output failed: {source}")]
+    Parse {
+        source: Utf8Error,
+        command_name: String,
+    },
+    #[error("{command_name}: Command ended with error: {exit_status}")]
+    EndedWithNonZero {
+        exit_status: ExitStatus,
+        command_name: String,
+    },
 }
-impl ExeProgramError {
-    fn new(command: &Command, source: io::Error) -> Self {
-        let command_name = command.get_program().to_string_lossy().to_string();
-        Self {
+
+impl Error {
+    fn execute(command: &Command, source: io::Error) -> Self {
+        let command_name = get_command_name(command);
+        Self::Execute {
+            source,
+            command_name,
+        }
+    }
+
+    fn parse(command: &Command, source: Utf8Error) -> Self {
+        let command_name = get_command_name(command);
+        Self::Parse {
             command_name,
             source,
         }
     }
-}
-impl Display for ExeProgramError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            f,
-            "{program}: Failed to execute program: {source}",
-            program = self.command_name,
-            source = self.source
-        )
+
+    fn edned_with_non_zero(command: &Command, exit_status: ExitStatus) -> Self {
+        let command_name = get_command_name(command);
+        Self::EndedWithNonZero {
+            exit_status,
+            command_name,
+        }
     }
 }
-impl Error for ExeProgramError {}
+
+type Result<T> = std::result::Result<T, Error>;
+
+fn get_command_name(command: &Command) -> String {
+    command.get_program().to_string_lossy().to_string()
+}

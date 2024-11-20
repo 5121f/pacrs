@@ -149,7 +149,7 @@ fn package_files_local(name: &str) -> Result<Vec<String>, command::Error> {
 }
 
 pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
-    let files = match package_files_local(name) {
+    let lines = match package_files_local(name) {
         Ok(lines) => lines,
         Err(command::Error::EndedWithNonZero {
             exit_status: _,
@@ -158,14 +158,24 @@ pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Res
         Err(err) => return Err(err.into()),
     };
 
-    for line in files {
-        let file = line
+    for line in parse_pacman_files_output(lines)? {
+        println!("{line}");
+    }
+    Ok(())
+}
+
+pub fn parse_pacman_files_output(lines: Vec<String>) -> anyhow::Result<Vec<String>> {
+    let mut res = Vec::with_capacity(lines.len());
+
+    for line in lines {
+        let pkg_name = line
             .split(' ')
             .nth(1)
             .context("Failed to parse pacman output")?;
-        println!("{file}");
+        res.push(pkg_name.to_owned());
     }
-    Ok(())
+
+    Ok(res)
 }
 
 pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {

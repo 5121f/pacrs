@@ -4,12 +4,11 @@ use std::{
     path::Path,
 };
 
-use anyhow::Context;
 use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{settings::Style, Table, Tabled};
 
-use crate::pacman;
+use crate::{pacman, pacrs::parse_pacman_files_output};
 
 #[derive(PartialEq, Eq, Hash, Tabled)]
 struct Process {
@@ -35,14 +34,10 @@ impl Process {
 
 fn files_of_installed_pkgs() -> anyhow::Result<HashSet<String>> {
     let lines = pacman::files_of_installed_pkgs().execute_and_grub_lines()?;
+    let lines = parse_pacman_files_output(lines)?;
     // We assume that one file corresponds to one package
-    let mut result = HashSet::with_capacity(lines.len());
-    for line in lines {
-        let mut parts = line.split(' ');
-        let file = parts.nth(1).context("Unable to parse pacman output")?;
-        result.insert(file.to_owned());
-    }
-    Ok(result)
+    let lines = HashSet::from_iter(lines);
+    Ok(lines)
 }
 
 fn get_process_command(process: &sysinfo::Process) -> String {

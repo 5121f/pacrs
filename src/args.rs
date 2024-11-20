@@ -14,7 +14,7 @@ pub enum Args {
         #[clap(required = true)]
         packages: Vec<String>,
         /// Automatically remove dependencies which become unneeded after removal of requested packages.
-        #[clap(long, short)]
+        #[clap(long, short, short = 'u')]
         clean_deps: bool,
     },
     /// Remove unneeded packages

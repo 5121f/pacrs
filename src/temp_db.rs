@@ -35,7 +35,7 @@ impl Deref for TempAlpm {
 
 pub fn initialize_temp_db() -> anyhow::Result<()> {
     fs::create_dir_all(TEMP_DB_PATH)?;
-    let conf = pacmanconf::Config::new().unwrap();
+    let conf = pacmanconf()?;
     let temp_local_db = Path::new(TEMP_DB_PATH).join("local");
     if !temp_local_db.exists() {
         fs::os::unix::fs::symlink(Path::new(&conf.db_path).join("local"), temp_local_db)?;

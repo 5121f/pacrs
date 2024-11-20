@@ -9,7 +9,7 @@ use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{settings::Style, Table, Tabled};
 
-use crate::cmds::pacman;
+use crate::pacman;
 
 #[derive(PartialEq, Eq, Hash, Tabled)]
 struct Process {
@@ -34,7 +34,7 @@ impl Process {
 }
 
 fn files_of_installed_pkgs() -> anyhow::Result<HashSet<String>> {
-    let lines = pacman().arg("-Ql").execute_and_grub_lines()?;
+    let lines = pacman::files_of_installed_pkgs().execute_and_grub_lines()?;
     // We assume that one file corresponds to one package
     let mut result = HashSet::with_capacity(lines.len());
     for line in lines {

@@ -98,10 +98,10 @@ pub fn find_file(file: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn list_of_all_files() -> anyhow::Result<()> {
-    pacman().arg("-Fl").execute()?;
-    Ok(())
-}
+// pub fn list_of_all_files() -> anyhow::Result<()> {
+//     pacman().arg("-Fl").execute()?;
+//     Ok(())
+// }
 
 pub fn list_explicit_packages() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qeq").execute_and_grub_lines()

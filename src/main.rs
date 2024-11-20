@@ -2,6 +2,7 @@ mod alpm;
 mod args;
 mod cmds;
 mod command;
+mod pacman;
 mod pacrs;
 mod ps;
 mod temp_db;
@@ -92,7 +93,9 @@ fn files(
     if let Some(file) = file {
         return pacrs::find_file(&file);
     }
-    pacrs::list_of_all_files()
+
+    pacman::files_of_installed_pkgs().execute()?;
+    Ok(())
 }
 
 fn cache(uninstalled: bool, aur: bool) -> anyhow::Result<()> {

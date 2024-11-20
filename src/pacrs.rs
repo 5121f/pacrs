@@ -132,10 +132,15 @@ pub fn files_of_package(name: &str, update_index: bool, quiet: bool) -> anyhow::
         if update_index {
             update_files_index(quiet)?
         }
-        pacman()
+        let (status, lines) = pacman()
             .arg("-Fl")
             .arg(name)
-            .execute_and_grub_lines_ignore_status()?
+            .pipe_stderr()
+            .execute_and_grub_lines()?;
+        if !status.success() {
+            bail!("pacman call ended with error");
+        }
+        lines
     };
 
     for line in files {

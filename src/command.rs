@@ -40,6 +40,11 @@ impl Cmd {
         self
     }
 
+    pub fn pipe_stderr(mut self) -> Self {
+        self.cmd.stderr(std::io::stderr());
+        self
+    }
+
     pub fn _execute(&mut self) -> Result<ExitStatus, io::Error> {
         self.cmd.spawn()?.wait()
     }

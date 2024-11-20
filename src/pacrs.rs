@@ -150,8 +150,8 @@ fn _package_files_local(name: &str) -> Result<Vec<String>, command::Error> {
         .execute_and_grub_lines()
 }
 
-pub fn package_files_local(name: &str) -> anyhow::Result<Vec<String>> {
-    let lines = _package_files_local(name)?;
+pub fn packages_files_local() -> anyhow::Result<Vec<String>> {
+    let lines = pacman::files_of_installed_pkgs().execute_and_grub_lines()?;
     parse_pacman_files_output(lines)
 }
 

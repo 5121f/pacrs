@@ -36,7 +36,7 @@ impl Process {
 }
 
 fn files_of_installed_pkgs() -> anyhow::Result<HashSet<String>> {
-    let files = pacrs::package_files_local("")?;
+    let files = pacrs::packages_files_local()?;
     // We assume that one file corresponds to one package
     let lines = HashSet::from_iter(files);
     Ok(lines)

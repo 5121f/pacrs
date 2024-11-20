@@ -83,15 +83,12 @@ fn files(
     quiet: bool,
 ) -> anyhow::Result<()> {
     let update_index = !not_update_index;
-    if update_index {
-        pacrs::update_files_index(quiet)?;
-    }
 
     if let Some(package) = package {
-        return pacrs::files_of_package(&package);
+        return pacrs::files_of_package(&package, update_index, quiet);
     }
     if let Some(file) = file {
-        return pacrs::find_file(&file);
+        return pacrs::find_file(&file, update_index, quiet);
     }
 
     pacrs::files_of_installed_pkgs()?;

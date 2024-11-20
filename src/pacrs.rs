@@ -94,7 +94,10 @@ pub fn remvoe_unneeded_pkgs(clean_deps: bool) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn find_file(file: &str) -> anyhow::Result<()> {
+pub fn find_file(file: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
+    if update_index {
+        update_files_index(quiet)?;
+    }
     pacman().arg("-F").arg(file).execute()?;
     Ok(())
 }
@@ -117,12 +120,25 @@ pub fn deps() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qdq").execute_and_grub_lines_ignore_status()
 }
 
-pub fn files_of_package(name: &str) -> anyhow::Result<()> {
-    let lines = pacman()
-        .arg("-Fl")
+pub fn files_of_package(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
+    let (status, lines) = pacman::files_of_installed_pkgs()
         .arg(name)
-        .execute_and_grub_lines_ignore_status()?;
-    for line in lines {
+        .hide_output()
+        .execute_and_grub_lines()?;
+
+    let files = if status.success() {
+        lines
+    } else {
+        if update_index {
+            update_files_index(quiet)?
+        }
+        pacman()
+            .arg("-Fl")
+            .arg(name)
+            .execute_and_grub_lines_ignore_status()?
+    };
+
+    for line in files {
         let file = line
             .split(' ')
             .nth(1)

@@ -52,7 +52,7 @@ impl Cmd {
     pub fn execute_and_grub_output(mut self) -> anyhow::Result<(ExitStatus, String)> {
         let output = self
             .cmd
-            .stderr(std::io::stderr())
+            // .stderr(std::io::stderr())
             .output()
             .map_err(|source| ExeProgramError::new(&self.cmd, source))?;
         let string = str::from_utf8(&output.stdout).with_context(|| {

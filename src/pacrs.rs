@@ -120,7 +120,7 @@ pub fn deps() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qdq").execute_and_grub_lines_ignore_status()
 }
 
-pub fn files_of_package(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
+pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
     let (status, lines) = pacman::files_of_installed_pkgs()
         .arg(name)
         .hide_output()

@@ -6,12 +6,11 @@ use crate::{
     PacrsAlpm,
 };
 
-use alpm_utils::DbListExt;
 use anyhow::{bail, Context};
 use fs_err as fs;
 
 pub fn installed_pkgs() -> anyhow::Result<()> {
-    pacman().arg("-Qq").execute()?;
+    pacman::installed_packages().execute()?;
     Ok(())
 }
 
@@ -53,7 +52,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
 
     let pkgs = packages.iter().map(String::as_str).collect();
 
-    let installed_pkgs = pacman().arg("-Qq").execute_and_grub_lines()?;
+    let installed_pkgs = pacman::installed_packages().execute_and_grub_lines()?;
     let updated_pkgs = alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, pkgs)?;
 
     let all_updated_pkgs_is_installed = updated_pkgs.iter().all(|p| installed_pkgs.contains(p));

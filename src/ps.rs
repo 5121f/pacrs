@@ -4,7 +4,6 @@ use std::{
     path::Path,
 };
 
-use anyhow::Context;
 use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{settings::Style, Table, Tabled};

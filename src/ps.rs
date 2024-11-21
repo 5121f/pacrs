@@ -7,6 +7,7 @@ use std::{
 use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{settings::Style, Table, Tabled};
+use tokio::join;
 
 use crate::files::packages_files_local;
 
@@ -72,11 +73,11 @@ fn configured_system() -> System {
 }
 
 async fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, String)>> {
-    let system_handler = tokio::spawn(async { configured_system() });
-    let users_handler = tokio::spawn(async { Users::new_with_refreshed_list() });
-
-    let system = system_handler.await?;
-    let users = users_handler.await?;
+    let (system, users) = join!(
+        tokio::spawn(async { configured_system() }),
+        tokio::spawn(async { Users::new_with_refreshed_list() })
+    );
+    let (system, users) = (system?, users?);
 
     let mut result = Vec::new();
     for (pid, process) in system.processes() {
@@ -108,11 +109,13 @@ async fn deleted_files_and_his_processes() -> anyhow::Result<Vec<(Process, Strin
 }
 
 pub async fn ps() -> anyhow::Result<()> {
-    let pkgs_files_handler = tokio::spawn(async { files_of_installed_pkgs() });
-    let deleted_files_and_his_processes_handler = tokio::spawn(deleted_files_and_his_processes());
+    let (pkgs_files, deleted_files_and_his_processes) = join!(
+        tokio::spawn(async { files_of_installed_pkgs() }),
+        tokio::spawn(deleted_files_and_his_processes())
+    );
 
-    let pkgs_files = pkgs_files_handler.await??;
-    let deleted_files_and_his_processes = deleted_files_and_his_processes_handler.await??;
+    let pkgs_files = pkgs_files??;
+    let deleted_files_and_his_processes = deleted_files_and_his_processes??;
 
     let mut processes = HashSet::new();
     for (process, file) in deleted_files_and_his_processes {

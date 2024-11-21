@@ -43,22 +43,23 @@ impl PacrsAlpm {
         let mut for_check = packages;
         let mut already_checked = Vec::with_capacity(for_check.len());
         while let Some(pkg) = for_check.pop() {
-            if !already_checked.contains(&pkg) {
-                let was_updated = self
-                    // We assume that if package not finded in syncdb, then the package from AUR and we ignore it
-                    .package_was_updated(alpm_tmp, pkg)
-                    .unwrap_or(false);
-                if was_updated {
-                    return Ok(true);
-                }
-                let deps = self
-                    .dependencies(pkg)
-                    // We assume that if you could not find dependencies, then the package from AUR and we ignore it
-                    .unwrap_or_default()
-                    .into_iter()
-                    .map(|dep| dep.name());
-                for_check.extend(deps);
+            if already_checked.contains(&pkg) {
+                continue;
             }
+            let was_updated = self
+                // We assume that if package not finded in syncdb, then the package from AUR and we ignore it
+                .package_was_updated(alpm_tmp, pkg)
+                .unwrap_or(false);
+            if was_updated {
+                return Ok(true);
+            }
+            let deps = self
+                .dependencies(pkg)
+                // We assume that if you could not find dependencies, then the package from AUR and we ignore it
+                .unwrap_or_default()
+                .into_iter()
+                .map(|dep| dep.name());
+            for_check.extend(deps);
             already_checked.push(pkg);
         }
         Ok(false)

@@ -6,6 +6,7 @@ use crate::{
     PacrsAlpm,
 };
 
+use alpm_utils::DbListExt;
 use anyhow::{bail, Context};
 use fs_err as fs;
 
@@ -43,13 +44,27 @@ pub fn clean_cache_uninstalled() -> anyhow::Result<()> {
 pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::new()?;
+
+    for package in &packages {
+        if !alpm.valid_package(package) {
+            bail!("{package}: Unknown package")
+        }
+    }
+
     let pkgs = packages.iter().map(String::as_str).collect();
-    if alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, pkgs)? {
+
+    let installed_pkgs = pacman().arg("-Qq").execute_and_grub_lines()?;
+    let updated_pkgs = alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, pkgs)?;
+
+    let all_updated_pkgs_is_installed = updated_pkgs.iter().all(|p| installed_pkgs.contains(p));
+
+    if !all_updated_pkgs_is_installed {
         bail!(
             "One or more package you will want to install or their dependencies was updated in \
             the repo. Upgrade your system with 'pacrs upgrade' befor install it."
         );
     }
+
     paru_or_sudo_pacman().arg("-S").args(packages).execute()?;
     Ok(())
 }

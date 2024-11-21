@@ -24,19 +24,10 @@ impl PacrsAlpm {
         Self(alpm)
     }
 
-    // pub fn installed(&self, package: &str) -> bool {
-    //     let localdb = self.0.localdb();
-    //     localdb.pkg(package).is_ok() || localdb.group(package).is_ok()
-    // }
-
     pub fn package_was_updated(&self, alpm_tmp: &TempAlpm, package: &str) -> anyhow::Result<bool> {
         let pkg = self.syncdb_pkg(package)?;
         let pkg_tmp = alpm_tmp.syncdb_pkg(package)?;
         Ok(pkg.version() < pkg_tmp.version())
-    }
-
-    pub fn valid_package(&self, name: &str) -> bool {
-        self.syncdbs().pkg(name).is_ok() || self.group(name).is_ok()
     }
 
     pub fn pkgs_or_their_deps_was_updated_in_db(

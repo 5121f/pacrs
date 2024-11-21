@@ -44,12 +44,6 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::new()?;
 
-    for package in &packages {
-        if !alpm.valid_package(package) {
-            bail!("{package}: Unknown package")
-        }
-    }
-
     let pkgs = packages.iter().map(String::as_str).collect();
 
     let installed_pkgs = pacman::installed_packages().execute_and_grub_lines()?;

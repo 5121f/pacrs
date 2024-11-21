@@ -1,5 +1,5 @@
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{BTreeSet, HashMap, HashSet},
     io::{BufRead, BufReader},
     path::Path,
 };
@@ -33,10 +33,10 @@ impl Process {
     }
 }
 
-fn files_of_installed_pkgs() -> anyhow::Result<HashSet<String>> {
+fn files_of_installed_pkgs() -> anyhow::Result<BTreeSet<String>> {
     let files = packages_files_local()?;
     // We assume that one file corresponds to one package
-    let lines = HashSet::from_iter(files);
+    let lines = BTreeSet::from_iter(files);
     Ok(lines)
 }
 

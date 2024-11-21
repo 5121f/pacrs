@@ -4,6 +4,7 @@ use std::{
     path::Path,
 };
 
+use anyhow::Context;
 use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{settings::Style, Table, Tabled};
@@ -81,11 +82,19 @@ fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
     let reader = BufReader::new(file);
     for line in reader.lines() {
         let line = line?;
-        let parts: Vec<&str> = line.split(' ').filter(|s| !s.is_empty()).collect();
-        if parts[parts.len() - 1] != "(deleted)" {
+        let mut parts = line.split(' ').skip(5).filter(|s| !s.is_empty());
+
+        let Some(fname) = parts.next() else {
+            continue;
+        };
+
+        // next part should be "(deleted)"
+        // if not present - skip
+        let deleted = parts.next().is_some();
+        if deleted {
             continue;
         }
-        let fname = parts[parts.len() - 2];
+
         if fname.starts_with("/dev")
             || fname.starts_with("/run")
             || fname.starts_with("/drm")

@@ -1,6 +1,7 @@
 use clap::Parser;
 
 #[derive(Parser)]
+#[command(version = clap::crate_version!(), about = clap::crate_description!())]
 pub enum Args {
     /// Install packages
     #[clap(visible_alias = "in")]

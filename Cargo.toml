@@ -7,7 +7,7 @@ edition = "2021"
 alpm = "4.0.1"
 alpm-utils = "4.0.1"
 anyhow = "1.0.93"
-clap = { version = "4.5.21", features = ["derive"] }
+clap = { version = "4.5.21", features = ["derive", "cargo", "wrap_help"] }
 dirs = "5.0.1"
 fs-err = "3.0.0"
 nix = { version = "0.29.0", features = ["user"] }

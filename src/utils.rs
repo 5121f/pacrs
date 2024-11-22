@@ -5,10 +5,11 @@ use std::{
 
 use anyhow::Context;
 use nix::unistd::getuid;
-use which::which;
 
-pub fn program_is_present(program: &str) -> bool {
-    which(program).is_ok()
+use crate::command::Cmd;
+
+pub fn which(program: &str) -> Option<Cmd> {
+    which::which(program).is_ok().then(|| Cmd::new(program))
 }
 
 pub fn is_root() -> bool {

@@ -1,5 +1,5 @@
 use crate::{
-    utils::{is_root, program_is_present},
+    utils::{is_root, which},
     Cmd,
 };
 
@@ -19,7 +19,7 @@ pub fn sudo_pacman() -> Cmd {
 }
 
 pub fn paru_if_present() -> Option<Cmd> {
-    program_is_present(PARU_BIN).then(paru)
+    which(PARU_BIN)
 }
 
 pub fn paru_or_sudo_pacman() -> Cmd {
@@ -28,10 +28,6 @@ pub fn paru_or_sudo_pacman() -> Cmd {
 
 pub fn paru_or_pacman() -> Cmd {
     paru_if_present().unwrap_or_else(pacman)
-}
-
-fn paru() -> Cmd {
-    Cmd::new(PARU_BIN)
 }
 
 fn sudo() -> Cmd {

@@ -3,6 +3,8 @@ name = "pacrs"
 version = "0.1.0"
 edition = "2021"
 
+description = "pacman wrapper with CLI inspired by zypper and apt"
+
 [dependencies]
 alpm = "4.0.1"
 alpm-utils = "4.0.1"

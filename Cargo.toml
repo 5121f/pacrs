@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 description = "pacman wrapper with CLI inspired by zypper and apt"
+license = "GPL-3.0-only"
+keywords = ["archlinux", "arch", "pacman", "aur", "zypper", "apt"]
 
 [dependencies]
 alpm = "4.0.1"

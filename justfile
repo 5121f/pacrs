@@ -1,6 +1,6 @@
 progname := 'pacrs'
 target_bin := '/usr/bin' / progname
-target_fish_completion :=  '/usr/share/fish/completions' / progname + '.fish'
+target_fish_completion :=  '/usr/share/fish/vendor_completions.d' / progname + '.fish'
 
 install:
     install -Dm0755 target/release/{{progname}} {{target_bin}}

@@ -54,7 +54,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     if !all_updated_pkgs_is_installed {
         bail!(
             "One or more package you will want to install or their dependencies was updated in \
-            the repo. Upgrade your system with 'pacrs upgrade' befor install it."
+            the repo. Update your system with 'pacrs update' befor install it."
         );
     }
 

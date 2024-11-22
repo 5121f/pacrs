@@ -24,7 +24,7 @@ pub enum Args {
     /// Update installed packages with newer versions
     #[clap(visible_alias = "up")]
     Update {
-        /// Packages to install with upgrade
+        /// Packages to install with update
         packages: Vec<String>,
         /// Don't show additional messages
         #[clap(long, short)]

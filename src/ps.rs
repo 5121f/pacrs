@@ -126,7 +126,7 @@ async fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, Ha
     Ok(result)
 }
 
-pub async fn ps() -> anyhow::Result<()> {
+pub async fn ps(quiet: bool) -> anyhow::Result<()> {
     let (pkgs_files, deleted_files_and_his_processes) = join!(
         tokio::spawn(async { files_of_installed_pkgs() }),
         tokio::spawn(deleted_files_and_his_processes())
@@ -143,6 +143,16 @@ pub async fn ps() -> anyhow::Result<()> {
     }
 
     if processes.is_empty() {
+        return Ok(());
+    }
+
+    if quiet {
+        let mut command_names: Vec<String> = processes.into_iter().map(|p| p.command).collect();
+        command_names.sort();
+        command_names.dedup();
+        for command in command_names {
+            println!("{command}");
+        }
         return Ok(());
     }
 

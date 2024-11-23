@@ -21,6 +21,7 @@ set -l info '__fish_seen_subcommand_from i info'
 set -l files '__fish_seen_subcommand_from f files'
 set -l clean '__fish_seen_subcommand_from cc clean'
 set -l mark '__fish_seen_subcommand_from m mark'
+set -l ps '__fish_seen_subcommand_from ps'
 
 complete -c $progname -e # Erase old completion
 complete -c $progname -f # Disable file completions for entire command
@@ -68,6 +69,8 @@ complete -c $progname -n $clean -s a -l aur -d 'Clean AUR cache'
 # Mark options
 complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed explicit'
 complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependencie'
+
+complete -c $progname -n $ps -s q -l quiet -d 'Show less inforamation'
 
 for condition in $install $search $info
     complete -c $progname -n $condition -xa "(listall) $listgroups"

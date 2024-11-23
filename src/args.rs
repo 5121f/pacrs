@@ -100,7 +100,11 @@ pub enum Args {
     /// Processes which continue to use deleted files.
     /// This command is actual after updating the system and they can indicate the processes that
     /// should be restarted.
-    Ps,
+    Ps {
+        /// Show less inforamation
+        #[clap(long, short)]
+        quiet: bool,
+    },
 }
 
 #[derive(Debug, Parser)]

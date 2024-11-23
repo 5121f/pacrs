@@ -54,7 +54,7 @@ async fn main() -> anyhow::Result<()> {
                     dependencie,
                 },
         } => mark(packages, explicit, dependencie)?,
-        Args::Ps => ps().await?,
+        Args::Ps { quiet } => ps(quiet).await?,
     }
     Ok(())
 }

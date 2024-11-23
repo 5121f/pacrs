@@ -72,11 +72,12 @@ complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependen
 
 # ps options
 complete -c $progname -n $ps -s s -l sort-by -d 'Sort output'
+complete -c $progname -n $ps -s o -l shorter -d 'Show only list of commands instead of table'
 
 for condition in $install $search $info
     complete -c $progname -n $condition -xa "(listall) $listgroups"
 end
 
 for confition in $update $files $ps
-    complete -c $progname -n $confition -s q -l quiet -d 'Show less inforamation'
+    complete -c $progname -n $confition -s q -l quiet -d 'Don\'t show additional messages'
 end

@@ -104,9 +104,9 @@ pub enum Args {
         /// Sort output
         #[clap(long, short, value_parser = ["pid", "user", "command"])]
         sort_by: Option<String>,
-        /// Show less inforamation
-        #[clap(long, short)]
-        quiet: bool,
+        /// Show only list of commands instead of table
+        #[clap(long, short = 'h')]
+        shorter: bool,
     },
 }
 

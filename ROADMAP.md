@@ -6,8 +6,3 @@
   - show cleaned size.
   - `--keep <n>` key for save last 'n' package caches.
   - Configuration for automaticly clean.
-- `pacrs repo` command.
-  - `--list` print list of repos.
-  - `--clean` remove unused repos (like it `pacman -Sc` does).
-  - `--add` add repo in `pacmanconf`?
-  - `--remove` remove repo from `pacmanconf`?

@@ -98,6 +98,7 @@ fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
             || fname.starts_with("/drm")
             || fname.starts_with("/memfd")
             || fname.starts_with("/SYSV")
+            || fname.starts_with("[")
         {
             continue;
         }

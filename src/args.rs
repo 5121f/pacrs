@@ -54,7 +54,7 @@ pub enum Args {
         package: String,
     },
     /// Displays detailed information about the specified packages
-    #[clap(visible_alias = "i")]
+    #[clap(visible_alias = "if")]
     Info {
         #[clap(required = true)]
         package: String,

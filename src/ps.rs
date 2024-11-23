@@ -87,11 +87,9 @@ fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
             continue;
         };
 
-        // next part should be "(deleted)"
-        // if not present - skip
-        let deleted = parts.next().is_some();
-        if deleted {
-            continue;
+        match parts.next() {
+            Some("(deleted)") => {}
+            _ => continue,
         }
 
         if fname.starts_with("/dev")
@@ -102,6 +100,10 @@ fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
             || fname.starts_with("[")
         {
             continue;
+        }
+
+        if pid.as_u32() == 48944 {
+            println!("{fname}");
         }
 
         result.insert(fname.to_owned());

@@ -102,10 +102,10 @@ pub enum Args {
     /// should be restarted.
     Ps {
         /// Sort output
-        #[clap(long, short, value_parser = ["pid", "user", "command"])]
+        #[clap(long, short, value_parser = ["pid", "user", "command"], conflicts_with = "shorter")]
         sort_by: Option<String>,
         /// Show only list of commands instead of table
-        #[clap(long, short = 'o')]
+        #[clap(long, short = 'o', conflicts_with = "sort_by")]
         shorter: bool,
         /// Don't show additional messages
         #[clap(long, short)]

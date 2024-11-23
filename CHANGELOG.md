@@ -1,5 +1,12 @@
 # pacrs changelog
 
+## Unreleased
+
+- change some aliases
+  - `i` for `info` to `if` (like in zypper)
+  - `f` for `files` to `fl`
+  - `m` for `mark` to `mr`
+
 ## v0.2.0 - 2024-11-23
 
 - `ps` command changes

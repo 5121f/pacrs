@@ -48,7 +48,7 @@ complete -c $progname -s h -l help -d 'Print help message'
 complete -c $progname -n $install -s o -l orphaned -d 'Remove orphaned packages'
 
 # Remove options
-complete -c $progname -n $remove -xa "$listinstalled"
+complete -c $progname -n $remove -xa $listinstalled
 complete -c $progname -n $remove -s u -l clean-deps -d 'Automatically remove dependencies which become unneeded after removal of requested packages'
 
 # Packages options
@@ -60,7 +60,7 @@ complete -c $progname -n $packages -s a -l aur -d 'Print list of AUR packages'
 # Files options
 complete -c $progname -n $files -xa "(listall)"
 complete -c $progname -n $files -s f -l find -d 'Find specific file among all packages'
-complete -c $progname -n $files -s U -l 'not-update-index' -d 'Don\'t update files index'
+complete -c $progname -n $files -s U -l not-update-index -d 'Don\'t update files index'
 
 # Clean options
 complete -c $progname -n $clean -s u -l uninstalled -d 'Clean only cache of uninstalled packages'

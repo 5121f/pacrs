@@ -107,6 +107,8 @@ pub enum Args {
         /// Show only list of commands instead of table
         #[clap(long, short = 'h')]
         shorter: bool,
+        /// Don't show additional messages
+        quiet: bool,
     },
 }
 

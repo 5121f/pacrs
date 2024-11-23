@@ -9,7 +9,7 @@ use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Us
 use tabled::{settings::Style, Table, Tabled};
 use tokio::join;
 
-use crate::files::packages_files_local;
+use crate::{files::packages_files_local, utils::is_root};
 
 #[derive(PartialEq, Eq, Hash, Tabled)]
 struct Process {
@@ -129,7 +129,11 @@ async fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, Ha
     Ok(result)
 }
 
-pub async fn ps(sort_by: Option<String>, shorter: bool) -> anyhow::Result<()> {
+pub async fn ps(sort_by: Option<String>, shorter: bool, quiet: bool) -> anyhow::Result<()> {
+    if !quiet && !is_root() {
+        eprintln!("Running without root privileges. Not all processes can be displayed.\n")
+    }
+
     let (pkgs_files, deleted_files_and_his_processes) = join!(
         tokio::spawn(async { files_of_installed_pkgs() }),
         tokio::spawn(deleted_files_and_his_processes())

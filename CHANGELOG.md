@@ -1,6 +1,6 @@
 # pacrs changelog
 
-## New changes
+## v0.2.0 - 2024-11-23
 
 - `ps` command changes
   - fix incorrect data output

@@ -3,6 +3,7 @@ use std::{
     io::{BufRead, BufReader},
 };
 
+use anyhow::bail;
 use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{settings::Style, Table, Tabled};
@@ -126,7 +127,7 @@ async fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, Ha
     Ok(result)
 }
 
-pub async fn ps(quiet: bool) -> anyhow::Result<()> {
+pub async fn ps(sort_by: Option<String>, quiet: bool) -> anyhow::Result<()> {
     let (pkgs_files, deleted_files_and_his_processes) = join!(
         tokio::spawn(async { files_of_installed_pkgs() }),
         tokio::spawn(deleted_files_and_his_processes())
@@ -135,10 +136,10 @@ pub async fn ps(quiet: bool) -> anyhow::Result<()> {
     let pkgs_files = pkgs_files??;
     let deleted_files_and_his_processes = deleted_files_and_his_processes??;
 
-    let mut processes = HashSet::new();
+    let mut processes = Vec::new();
     for (process, files) in deleted_files_and_his_processes {
         if files.iter().any(|f| pkgs_files.contains(f)) {
-            processes.insert(process);
+            processes.push(process);
         }
     }
 
@@ -154,6 +155,15 @@ pub async fn ps(quiet: bool) -> anyhow::Result<()> {
             println!("{command}");
         }
         return Ok(());
+    }
+
+    if let Some(sort_by) = sort_by {
+        match sort_by.as_str() {
+            "pid" => processes.sort_by(|a, b| a.pid.cmp(&b.pid)),
+            "user" => processes.sort_by(|a, b| a.user_name.cmp(&b.user_name)),
+            "command" => processes.sort_by(|a, b| a.command.cmp(&b.command)),
+            _ => bail!("Wrong sort-by value"),
+        }
     }
 
     let table = Table::new(&processes).with(Style::psql()).to_string();

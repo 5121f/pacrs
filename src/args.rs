@@ -101,6 +101,9 @@ pub enum Args {
     /// This command is actual after updating the system and they can indicate the processes that
     /// should be restarted.
     Ps {
+        /// Sort output
+        #[clap(long, short, value_parser = ["pid", "user", "command"])]
+        sort_by: Option<String>,
         /// Show less inforamation
         #[clap(long, short)]
         quiet: bool,

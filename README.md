@@ -7,10 +7,10 @@ paru is optional dependencie needed for AUR support.
 
 Some features and peculiarities:
 
-- Semi-automatic index update. It's good because `pacman -Sy` command runned
+- Semi-automatic index update. It's good because `pacman -Sy` command ran
   without further update is potentially fearing (see
-    [Arch Wiki](https://wiki.archlinux.org/title/System_maintenance#Partial_upgrades_are_unsupported)
-    for more info).
+  [Arch Wiki](https://wiki.archlinux.org/title/System_maintenance#Partial_upgrades_are_unsupported)
+  for more info).
 - If you try to install package which updated in the repo pacrs inform you
   what you needed to update system before.
 - `apt autoremove` command which works like `apt autoremove` or `paru -c`.

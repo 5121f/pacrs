@@ -22,7 +22,7 @@ pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
         .join("paru"))
 }
 
-pub fn shure(message: &str) -> anyhow::Result<bool> {
+pub fn sure(message: &str) -> anyhow::Result<bool> {
     print!("{message} [y/N] ");
     io::stdout().flush().context("Failed to read input")?;
     let mut buf = String::new();

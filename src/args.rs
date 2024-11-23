@@ -43,7 +43,7 @@ pub enum Args {
         /// (packages which not installed explicitly and on which no package depends)
         #[clap(long, short)]
         orphaned: bool,
-        /// Print list of packages which not finded in databases. In most cases it's AUR packages
+        /// Print list of packages which not found in databases. In most cases it's AUR packages
         #[clap(long, short)]
         aur: bool,
     },

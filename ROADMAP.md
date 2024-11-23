@@ -5,4 +5,4 @@
 - Extended clean cache functionality.
   - show cleaned size.
   - `--keep <n>` key for save last 'n' package caches.
-  - Configuration for automaticly clean.
+  - Configuration for automatically clean.

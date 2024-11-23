@@ -2,7 +2,7 @@ use crate::{
     cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman},
     pacman,
     temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
-    utils::{is_root, paru_cache_dir, shure},
+    utils::{is_root, paru_cache_dir, sure},
     PacrsAlpm,
 };
 
@@ -54,7 +54,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     if !all_updated_pkgs_is_installed {
         bail!(
             "One or more package you will want to install or their dependencies was updated in \
-            the repo. Update your system with 'pacrs update' befor install it."
+            the repo. Update your system with 'pacrs update' before install it."
         );
     }
 
@@ -139,7 +139,7 @@ pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {
         return Ok(());
     }
     if !quiet {
-        eprintln!("Running without root priviliges. Files index wouldn't be updated.");
+        eprintln!("Running without root privileges. Files index wouldn't be updated.");
     }
     Ok(())
 }
@@ -158,7 +158,7 @@ pub fn mark_as_dep(packages: Vec<String>) -> anyhow::Result<()> {
 }
 
 pub fn clean_paru_cache() -> anyhow::Result<()> {
-    if !shure("You really wont to delete AUR (paru) cache?")? {
+    if !sure("You really wont to delete AUR (paru) cache?")? {
         return Ok(());
     }
     let cache_dir = paru_cache_dir()?;

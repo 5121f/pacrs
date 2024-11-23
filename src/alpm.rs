@@ -43,7 +43,7 @@ impl PacrsAlpm {
                 continue;
             }
             let was_updated = self
-                // We assume that if package not finded in syncdb, then the package from AUR and we ignore it
+                // We assume that if package not found in syncdb, then the package from AUR and we ignore it
                 .package_was_updated(alpm_tmp, pkg)
                 .unwrap_or(false);
             if was_updated {
@@ -73,7 +73,7 @@ impl PacrsAlpm {
         if let Ok(grp) = self.group(package) {
             return Ok(grp.packages().into_iter().collect());
         }
-        bail!("Falied to define package type")
+        bail!("Failed to define package type")
     }
 
     fn group<'a>(&'a self, group: &str) -> anyhow::Result<&'a Group> {

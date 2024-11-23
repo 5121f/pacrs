@@ -26,7 +26,7 @@ pub enum Args {
     Update {
         /// Packages to install with update
         packages: Vec<String>,
-        /// Don't show additional messages
+        /// Show less inforamation
         #[clap(long, short)]
         quiet: bool,
     },
@@ -75,7 +75,7 @@ pub enum Args {
         /// Don't update files index
         #[clap(long, short = 'U')]
         not_update_index: bool,
-        /// Don't show additional messages
+        /// Show less inforamation
         #[clap(long, short)]
         quiet: bool,
     },

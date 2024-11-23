@@ -70,12 +70,10 @@ complete -c $progname -n $clean -s a -l aur -d 'Clean AUR cache'
 complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed explicit'
 complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependencie'
 
-complete -c $progname -n $ps -s q -l quiet -d 'Show less inforamation'
-
 for condition in $install $search $info
     complete -c $progname -n $condition -xa "(listall) $listgroups"
 end
 
-for confition in $update $files
-    complete -c $progname -n $confition -s q -l quiet -d 'Don\'t show additional messages'
+for confition in $update $files $ps
+    complete -c $progname -n $confition -s q -l quiet -d 'Show less inforamation'
 end

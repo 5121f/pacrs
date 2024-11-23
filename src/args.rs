@@ -64,7 +64,7 @@ pub enum Args {
     ListUpdates,
     /// Print list of files
     /// (by default print all files)
-    #[clap(visible_alias = "f")]
+    #[clap(visible_alias = "fl")]
     Files {
         /// Print files related to specific package
         #[clap(conflicts_with = "find")]
@@ -90,7 +90,7 @@ pub enum Args {
         aur: bool,
     },
     /// Mark packages
-    #[clap(visible_alias = "m")]
+    #[clap(visible_alias = "mr")]
     Mark {
         #[clap(required = true)]
         packages: Vec<String>,

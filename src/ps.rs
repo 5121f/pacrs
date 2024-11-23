@@ -1,7 +1,6 @@
 use std::{
     collections::{BTreeSet, HashMap, HashSet},
     io::{BufRead, BufReader},
-    path::Path,
 };
 
 use fs_err::File;
@@ -74,7 +73,7 @@ fn configured_system() -> System {
 
 fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
     let mut result = HashSet::new();
-    let path = Path::new("/proc").join(pid.to_string()).join("maps");
+    let path = format!("/proc/{pid}/maps");
     let Ok(file) = File::open(path) else {
         return Ok(result);
     };

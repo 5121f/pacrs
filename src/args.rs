@@ -105,9 +105,10 @@ pub enum Args {
         #[clap(long, short, value_parser = ["pid", "user", "command"])]
         sort_by: Option<String>,
         /// Show only list of commands instead of table
-        #[clap(long, short = 'h')]
+        #[clap(long, short = 'o')]
         shorter: bool,
         /// Don't show additional messages
+        #[clap(long, short)]
         quiet: bool,
     },
 }

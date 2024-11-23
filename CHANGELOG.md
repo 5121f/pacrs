@@ -2,8 +2,10 @@
 
 ## New changes
 
-- add `quiet` key for `ps` command.
-- `pacrs install` Fix wrong command hint.
+- `ps` command changes
+  - added `quiet` key
+  - added `sort-by` key
+- `pacrs install` Fix wrong command hint
 
 ## v0.1.0
 

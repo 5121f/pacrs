@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-only
+
 //! Reused pacman commands
 
 use crate::{cmds::pacman, command::Cmd};

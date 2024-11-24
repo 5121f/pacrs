@@ -37,3 +37,15 @@ for more info see `pacrs help` command output.
   `paru` and not provide some advanced features which they does. For cases
   when you need this features you can use `pacman` or `paru` directly (or open
   the issue with feature request).
+
+## License
+
+This program is free software.
+It is licensed under the GNU GPL version 3.
+That means you are free to use this program for any purpose;
+free to study and modify this program to suit your needs;
+and free to share this program or your modifications with anyone.
+If you share this program or your modifications
+you must grant the recipients the same freedoms.
+To be more specific: you must share the source code under the same license.
+For details see https://www.gnu.org/licenses/gpl-3.0.html

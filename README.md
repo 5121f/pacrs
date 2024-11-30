@@ -38,6 +38,37 @@ for more info see `pacrs help` command output.
   when you need this features you can use `pacman` or `paru` directly (or open
   the issue with feature request).
 
+## Installation
+
+### With `paru`
+
+```
+paru -S pacrs
+```
+
+## From AUR
+
+```
+git clone https://aur.archlinux.org/pacrs.git
+cd pacrs
+makepkg -si
+```
+
+## From source
+
+For build from source you need
+[rust toolchain](https://www.rust-lang.org/tools/install). For installation you
+need [just](https://github.com/casey/just).
+
+```
+git clone git@github.com:5121f/pacrs.git
+cd pacrs
+cargo build --release
+just install
+```
+
+for uninstall use `just uninstall`.
+
 ## License
 
 This program is free software.

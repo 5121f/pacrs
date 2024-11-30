@@ -2,10 +2,11 @@
 
 ## Unreleased
 
-- change some aliases
+- changed some aliases
   - `i` for `info` to `if` (like in zypper)
   - `f` for `files` to `fl`
   - `m` for `mark` to `mr`
+- Fix typos
 
 ## v0.2.0 - 2024-11-23
 

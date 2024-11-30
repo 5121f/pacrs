@@ -2,11 +2,17 @@
 
 ## Unreleased
 
+### Breaking chages
+
 - changed some aliases
   - `i` for `info` to `if` (like in zypper)
   - `f` for `files` to `fl`
   - `m` for `mark` to `mr`
-- Fix typos
+
+### Other changes
+
+- added `reverse` key for ps command
+- fix typos
 
 ## v0.2.0 - 2024-11-23
 

@@ -131,7 +131,12 @@ async fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, Ha
     Ok(result)
 }
 
-pub async fn ps(sort_by: Option<String>, shorter: bool, quiet: bool) -> anyhow::Result<()> {
+pub async fn ps(
+    sort_by: Option<String>,
+    shorter: bool,
+    reverse: bool,
+    quiet: bool,
+) -> anyhow::Result<()> {
     if !quiet && !is_root() {
         eprintln!("Running without root privileges. Not all processes can be displayed.\n")
     }
@@ -172,6 +177,10 @@ pub async fn ps(sort_by: Option<String>, shorter: bool, quiet: bool) -> anyhow::
             "command" => processes.sort_by(|a, b| a.command.cmp(&b.command)),
             _ => bail!("Wrong sort-by value"),
         }
+    }
+
+    if reverse {
+        processes.reverse();
     }
 
     let table = Table::new(&processes).with(Style::psql()).to_string();

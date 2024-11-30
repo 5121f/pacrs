@@ -59,8 +59,9 @@ async fn main() -> anyhow::Result<()> {
         Args::Ps {
             sort_by,
             shorter,
+            reverse,
             quiet,
-        } => ps(sort_by, shorter, quiet).await?,
+        } => ps(sort_by, shorter, reverse, quiet).await?,
     }
     Ok(())
 }

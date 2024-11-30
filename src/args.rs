@@ -109,6 +109,9 @@ pub enum Args {
         /// Show only list of commands instead of table
         #[clap(long, short = 'o', conflicts_with = "sort_by")]
         shorter: bool,
+        /// Reverse sorting
+        #[clap(long, short)]
+        reverse: bool,
         /// Don't show additional messages
         #[clap(long, short)]
         quiet: bool,

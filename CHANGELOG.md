@@ -1,5 +1,9 @@
 # pacrs changelog
 
+## Unreleased
+
+- changled alias for `autoremove` from `arm` to `ar`
+
 ## 0.3.0 - 2024-12-01
 
 ### Breaking chages

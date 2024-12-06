@@ -15,7 +15,7 @@ set -l listinstalled "(pacman -Q | string replace ' ' \t)"
 
 set -l install '__fish_seen_subcommand_from in install'
 set -l remove '__fish_seen_subcommand_from rm remove'
-set -l autoremove '__fish_seen_subcommand_from arm autoremove'
+set -l autoremove '__fish_seen_subcommand_from ar autoremove'
 set -l update '__fish_seen_subcommand_from up update'
 set -l packages '__fish_seen_subcommand_from pa packages'
 set -l search '__fish_seen_subcommand_from se search'

@@ -21,7 +21,7 @@ pub enum Args {
         clean_deps: bool,
     },
     /// Remove unneeded packages
-    #[clap(visible_alias = "arm")]
+    #[clap(visible_alias = "ar")]
     Autoremove,
     /// Update installed packages with newer versions
     #[clap(visible_alias = "up")]

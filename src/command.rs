@@ -98,7 +98,7 @@ pub enum Error {
 
 impl Error {
     fn execute(command: &Command, source: io::Error) -> Self {
-        let command_name = get_command_name(command);
+        let command_name = command.name();
         Self::Execute {
             source,
             command_name,
@@ -106,7 +106,7 @@ impl Error {
     }
 
     fn parse(command: &Command, source: Utf8Error) -> Self {
-        let command_name = get_command_name(command);
+        let command_name = command.name();
         Self::Parse {
             command_name,
             source,
@@ -114,7 +114,7 @@ impl Error {
     }
 
     fn edned_with_non_zero(command: &Command, exit_status: ExitStatus) -> Self {
-        let command_name = get_command_name(command);
+        let command_name = command.name();
         Self::EndedWithNonZero {
             exit_status,
             command_name,
@@ -122,8 +122,14 @@ impl Error {
     }
 }
 
-type Result<T> = std::result::Result<T, Error>;
-
-fn get_command_name(command: &Command) -> String {
-    command.get_program().to_string_lossy().to_string()
+trait GetCommandName {
+    fn name(&self) -> String;
 }
+
+impl GetCommandName for Command {
+    fn name(&self) -> String {
+        self.get_program().to_string_lossy().to_string()
+    }
+}
+
+type Result<T> = std::result::Result<T, Error>;

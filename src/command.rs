@@ -48,15 +48,11 @@ impl Cmd {
     }
 
     pub fn execute(mut self) -> Result<ExitStatus> {
-        self._execute()
-            .map_err(|source| Error::execute(&self.cmd, source))
+        self._execute().map_execute_err(&self.cmd)
     }
 
     pub fn execute_and_grub_output(mut self) -> Result<String> {
-        let output = self
-            .cmd
-            .output()
-            .map_err(|source| Error::execute(&self.cmd, source))?;
+        let output = self.cmd.output().map_execute_err(&self.cmd)?;
 
         let string =
             str::from_utf8(&output.stdout).map_err(|source| Error::parse(&self.cmd, source))?;
@@ -119,6 +115,16 @@ impl Error {
             exit_status,
             command_name,
         }
+    }
+}
+
+trait ErrorExtention<T> {
+    fn map_execute_err(self, command: &Command) -> std::result::Result<T, Error>;
+}
+
+impl<T> ErrorExtention<T> for std::result::Result<T, io::Error> {
+    fn map_execute_err(self, command: &Command) -> std::result::Result<T, Error> {
+        self.map_err(|source| Error::execute(command, source))
     }
 }
 

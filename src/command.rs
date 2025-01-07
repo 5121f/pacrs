@@ -92,6 +92,16 @@ pub enum Error {
     },
 }
 
+trait CommandName {
+    fn name(&self) -> String;
+}
+
+impl CommandName for Command {
+    fn name(&self) -> String {
+        self.get_program().to_string_lossy().to_string()
+    }
+}
+
 impl Error {
     fn execute(command: &Command, source: io::Error) -> Self {
         let command_name = command.name();
@@ -125,16 +135,6 @@ trait ErrorExtention<T> {
 impl<T> ErrorExtention<T> for std::result::Result<T, io::Error> {
     fn map_execute_err(self, command: &Command) -> std::result::Result<T, Error> {
         self.map_err(|source| Error::execute(command, source))
-    }
-}
-
-trait GetCommandName {
-    fn name(&self) -> String;
-}
-
-impl GetCommandName for Command {
-    fn name(&self) -> String {
-        self.get_program().to_string_lossy().to_string()
     }
 }
 

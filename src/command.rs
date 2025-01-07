@@ -58,7 +58,7 @@ impl Cmd {
             str::from_utf8(&output.stdout).map_err(|source| Error::parse(&self.cmd, source))?;
 
         if !output.status.success() {
-            return Err(Error::edned_with_non_zero(&self.cmd, output.status));
+            return Err(Error::ended_with_non_zero(&self.cmd, output.status));
         }
 
         Ok(string.trim().to_owned())
@@ -119,7 +119,7 @@ impl Error {
         }
     }
 
-    fn edned_with_non_zero(command: &Command, exit_status: ExitStatus) -> Self {
+    fn ended_with_non_zero(command: &Command, exit_status: ExitStatus) -> Self {
         let command_name = command.name();
         Self::EndedWithNonZero {
             exit_status,
@@ -128,11 +128,11 @@ impl Error {
     }
 }
 
-trait ErrorExtention<T> {
+trait ErrorExtension<T> {
     fn map_execute_err(self, command: &Command) -> std::result::Result<T, Error>;
 }
 
-impl<T> ErrorExtention<T> for std::result::Result<T, io::Error> {
+impl<T> ErrorExtension<T> for std::result::Result<T, io::Error> {
     fn map_execute_err(self, command: &Command) -> std::result::Result<T, Error> {
         self.map_err(|source| Error::execute(command, source))
     }

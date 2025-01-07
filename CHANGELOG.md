@@ -6,7 +6,7 @@
 
 ## 0.3.0 - 2024-12-01
 
-### Breaking chages
+### Breaking changes
 
 - changed some aliases
   - `i` for `info` to `if` (like in zypper)

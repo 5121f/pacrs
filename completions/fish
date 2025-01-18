@@ -65,7 +65,7 @@ complete -c $progname -n $files -s f -l find -d 'Find specific file among all pa
 complete -c $progname -n $files -s U -l not-update-index -d 'Don\'t update files index'
 
 # Clean options
-complete -c $progname -n $clean -s u -l uninstalled -d 'Clean only cache of uninstalled packages'
+complete -c $progname -n $clean -s u -l uninstalled -d 'Clean cache of uninstalled packages'
 complete -c $progname -n $clean -s a -l aur -d 'Clean AUR cache'
 
 # Mark options

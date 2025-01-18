@@ -84,7 +84,7 @@ pub enum Args {
     /// Cache
     #[clap(visible_alias = "cc")]
     Clean {
-        /// Clean only cache of uninstalled packages
+        /// Clean cache of uninstalled packages
         #[clap(long, short, conflicts_with = "aur")]
         uninstalled: bool,
         /// Clean AUR cache

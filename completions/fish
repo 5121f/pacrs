@@ -19,10 +19,10 @@ set -l autoremove '__fish_seen_subcommand_from ar autoremove'
 set -l update '__fish_seen_subcommand_from up update'
 set -l packages '__fish_seen_subcommand_from pa packages'
 set -l search '__fish_seen_subcommand_from se search'
-set -l info '__fish_seen_subcommand_from i info'
-set -l files '__fish_seen_subcommand_from f files'
+set -l info '__fish_seen_subcommand_from if info'
+set -l files '__fish_seen_subcommand_from fl files'
 set -l clean '__fish_seen_subcommand_from cc clean'
-set -l mark '__fish_seen_subcommand_from m mark'
+set -l mark '__fish_seen_subcommand_from mr mark'
 set -l ps '__fish_seen_subcommand_from ps'
 
 complete -c $progname -e # Erase old completion

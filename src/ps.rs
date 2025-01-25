@@ -89,9 +89,9 @@ fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
             continue;
         };
 
-        match parts.next() {
-            Some("(deleted)") => {}
-            _ => continue,
+        let deleted = parts.next().is_some_and(|part| part == "(deleted)");
+        if !deleted {
+            continue;
         }
 
         if fname.starts_with("/dev")

@@ -104,10 +104,6 @@ fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
             continue;
         }
 
-        if pid.as_u32() == 48944 {
-            println!("{fname}");
-        }
-
         result.insert(fname.to_owned());
     }
 

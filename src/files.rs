@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
+use map_self::MapSelf;
+
 use crate::{
     cmds::pacman,
     command, pacman,
@@ -21,9 +23,7 @@ fn package_files_global(
         .pipe_stderr()
         .execute_and_grub_lines()?;
 
-    let lines = parse_pacman_files_output(lines)?;
-
-    Ok(lines)
+    parse_pacman_files_output(lines)?.map_self(Ok)
 }
 
 fn _package_files_local(name: &str) -> Result<Vec<String>, command::Error> {

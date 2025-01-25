@@ -6,6 +6,7 @@ use std::{
 };
 
 use anyhow::Context;
+use map_self::MapSelf;
 use nix::unistd::getuid;
 
 use crate::command::Cmd;
@@ -19,9 +20,10 @@ pub fn is_root() -> bool {
 }
 
 pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
-    Ok(dirs::cache_dir()
+    dirs::cache_dir()
         .context("Failed to find paru cache dir")?
-        .join("paru"))
+        .join("paru")
+        .map_self(Ok)
 }
 
 pub fn sure(message: &str) -> anyhow::Result<bool> {

@@ -5,6 +5,7 @@ use std::ops::Deref;
 use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
 use anyhow::{bail, Context};
+use map_self::MapSelf;
 
 use crate::temp_db::TempAlpm;
 
@@ -64,18 +65,22 @@ impl PacrsAlpm {
     }
 
     pub fn dependencies<'a>(&'a self, package: &str) -> anyhow::Result<Vec<&'a Package>> {
-        if let Ok(pkg) = self.0.syncdbs().pkg(package) {
-            let dependencies = pkg
-                .depends()
-                .into_iter()
-                .map(|dep| self.0.syncdbs().find_satisfier(dep.name()).unwrap())
-                .collect();
-            return Ok(dependencies);
-        }
-        if let Ok(grp) = self.group(package) {
-            return Ok(grp.packages().into_iter().collect());
-        }
-        bail!("Failed to define package type")
+        self.0
+            .syncdbs()
+            .pkg(package)
+            .ok()
+            .map(|pkg| {
+                pkg.depends()
+                    .into_iter()
+                    .map(|dep| self.0.syncdbs().find_satisfier(dep.name()).unwrap())
+                    .collect::<Vec<_>>()
+            })
+            .or_else(|| {
+                self.group(package)
+                    .ok()
+                    .map(|grp| grp.packages().into_iter().collect::<Vec<_>>())
+            })
+            .context("Failed to define package type")
     }
 
     fn group<'a>(&'a self, group: &str) -> anyhow::Result<&'a Group> {

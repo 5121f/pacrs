@@ -4,8 +4,7 @@ use std::ops::Deref;
 
 use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
-use anyhow::{anyhow, bail, Context};
-use map_self::MapSelf;
+use anyhow::{anyhow, Context};
 
 use crate::temp_db::TempAlpm;
 

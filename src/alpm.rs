@@ -4,7 +4,7 @@ use std::ops::Deref;
 
 use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
-use anyhow::{bail, Context};
+use anyhow::{anyhow, bail, Context};
 use map_self::MapSelf;
 
 use crate::temp_db::TempAlpm;
@@ -84,12 +84,13 @@ impl PacrsAlpm {
     }
 
     fn group<'a>(&'a self, group: &str) -> anyhow::Result<&'a Group> {
-        for db in self.0.syncdbs() {
-            if let Ok(grp) = db.group(group) {
-                return Ok(grp);
-            }
-        }
-        bail!("Failed to find group \"{group}\"")
+        self.0
+            .syncdbs()
+            .into_iter()
+            .map(|db| db.group(group).ok())
+            .find(|grp| grp.is_some())
+            .flatten()
+            .with_context(|| anyhow!("Failed to find group \"{group}\""))
     }
 
     // pub fn localdb_pkg<'a>(&'a self, name: &str) -> anyhow::Result<&'a Package> {

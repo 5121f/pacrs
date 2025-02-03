@@ -10,6 +10,7 @@ use crate::{
 
 use anyhow::{bail, Context};
 use fs_err as fs;
+use map_self::MapSelf;
 
 pub fn installed_pkgs() -> anyhow::Result<()> {
     pacman::installed_packages().execute()?;
@@ -65,8 +66,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
 }
 
 pub fn list_aur_pkgs() -> anyhow::Result<Vec<String>> {
-    let lines = pacman().arg("-Qmq").execute_and_grub_lines()?;
-    Ok(lines)
+    pacman().arg("-Qmq").execute_and_grub_lines()?.map_self(Ok)
 }
 
 pub fn remove(packages: Vec<String>, clean_deps: bool) -> anyhow::Result<()> {
@@ -92,8 +92,7 @@ pub fn list_updates() -> anyhow::Result<()> {
 }
 
 pub fn orphaned_pkgs() -> anyhow::Result<Vec<String>> {
-    let lines = pacman().arg("-Qdtq").execute_and_grub_lines()?;
-    Ok(lines)
+    pacman().arg("-Qdtq").execute_and_grub_lines()?.map_self(Ok)
 }
 
 pub fn autoremove() -> anyhow::Result<()> {
@@ -107,8 +106,7 @@ pub fn autoremove() -> anyhow::Result<()> {
 }
 
 pub fn explicit_pkgs() -> anyhow::Result<Vec<String>> {
-    let lines = pacman().arg("-Qeq").execute_and_grub_lines()?;
-    Ok(lines)
+    pacman().arg("-Qeq").execute_and_grub_lines()?.map_self(Ok)
 }
 
 pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
@@ -117,8 +115,7 @@ pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
 }
 
 pub fn deps() -> anyhow::Result<Vec<String>> {
-    let lines = pacman().arg("-Qdq").execute_and_grub_lines()?;
-    Ok(lines)
+    pacman().arg("-Qdq").execute_and_grub_lines()?.map_self(Ok)
 }
 
 pub fn parse_pacman_files_output(lines: Vec<String>) -> anyhow::Result<Vec<String>> {

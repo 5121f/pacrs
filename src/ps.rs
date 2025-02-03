@@ -67,7 +67,7 @@ fn configured_system() -> System {
     system.refresh_processes_specifics(
         ProcessesToUpdate::All,
         false,
-        ProcessRefreshKind::new()
+        ProcessRefreshKind::nothing()
             .with_user(UpdateKind::OnlyIfNotSet)
             .with_exe(UpdateKind::OnlyIfNotSet),
     );

@@ -8,20 +8,28 @@ license = "GPL-3.0-only"
 keywords = ["archlinux", "arch", "pacman", "aur", "zypper", "apt"]
 
 [dependencies]
+map-self = "0.1.0"
+tokio = { version = "1.43.0", features = ["full"] }
+
+# UI
+clap = { version = "4.5.29", features = ["derive", "cargo", "wrap_help"] }
+tabled = "0.18.0"
+
+# Pacman
 alpm = "4.0.2"
 alpm-utils = "4.0.1"
-anyhow = "1.0.95"
-clap = { version = "4.5.29", features = ["derive", "cargo", "wrap_help"] }
-dirs = "6.0.0"
-fs-err = "3.1.0"
-map-self = "0.1.0"
-nix = { version = "0.29.0", features = ["user"] }
 pacmanconf = "3.0.0"
-sysinfo = "0.33.1"
-tabled = "0.18.0"
-thiserror = "2.0.11"
-tokio = { version = "1.43.0", features = ["full"] }
+
+# System
 which = "7.0.2"
+nix = { version = "0.29.0", features = ["user"] }
+dirs = "6.0.0"
+sysinfo = "0.33.1"
+
+# Error handleing
+fs-err = "3.1.0"
+anyhow = "1.0.95"
+thiserror = "2.0.11"
 
 [profile.release]
 lto = true

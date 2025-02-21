@@ -145,12 +145,15 @@ pub async fn ps(
     let pkgs_files = pkgs_files??;
     let deleted_files_and_his_processes = deleted_files_and_his_processes??;
 
-    let mut processes = Vec::new();
-    for (process, files) in deleted_files_and_his_processes {
-        if files.iter().any(|f| pkgs_files.contains(f)) {
-            processes.push(process);
-        }
-    }
+    let mut processes: Vec<Process> = deleted_files_and_his_processes
+        .into_iter()
+        .filter_map(|(process, files)| {
+            files
+                .iter()
+                .any(|f| pkgs_files.contains(f))
+                .then_some(process)
+        })
+        .collect();
 
     if processes.is_empty() {
         return Ok(());

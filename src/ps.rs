@@ -9,7 +9,6 @@ use anyhow::bail;
 use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{settings::Style, Table, Tabled};
-use tokio::join;
 
 use crate::{files::packages_files_local, utils::is_root};
 
@@ -110,12 +109,12 @@ fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
     Ok(result)
 }
 
-async fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, HashSet<String>>> {
-    let (system, users) = join!(
-        tokio::spawn(async { configured_system() }),
-        tokio::spawn(async { Users::new_with_refreshed_list() })
-    );
-    let (system, users) = (system?, users?);
+fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, HashSet<String>>> {
+    let system = std::thread::spawn(configured_system);
+    let users = std::thread::spawn(Users::new_with_refreshed_list);
+
+    let system = system.join().expect("Thread paniced");
+    let users = users.join().expect("Thread paniced");
 
     let mut result = HashMap::new();
     for (pid, process) in system.processes() {
@@ -127,7 +126,7 @@ async fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, Ha
     Ok(result)
 }
 
-pub async fn ps(
+pub fn ps(
     sort_by: Option<String>,
     shorter: bool,
     reverse: bool,
@@ -137,13 +136,13 @@ pub async fn ps(
         eprintln!("Running without root privileges. Not all processes can be displayed.\n")
     }
 
-    let (pkgs_files, deleted_files_and_his_processes) = join!(
-        tokio::spawn(async { files_of_installed_pkgs() }),
-        tokio::spawn(deleted_files_and_his_processes())
-    );
+    let pkgs_files = std::thread::spawn(files_of_installed_pkgs);
+    let deleted_files_and_his_processes = std::thread::spawn(deleted_files_and_his_processes);
 
-    let pkgs_files = pkgs_files??;
-    let deleted_files_and_his_processes = deleted_files_and_his_processes??;
+    let pkgs_files = pkgs_files.join().expect("Thread paniced")?;
+    let deleted_files_and_his_processes = deleted_files_and_his_processes
+        .join()
+        .expect("Thread paniced")?;
 
     let mut processes: Vec<Process> = deleted_files_and_his_processes
         .into_iter()

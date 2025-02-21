@@ -21,8 +21,7 @@ use anyhow::bail;
 use args::MarkGroup;
 use clap::Parser;
 
-#[tokio::main]
-async fn main() -> anyhow::Result<()> {
+fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args {
         Args::Packages {
@@ -61,7 +60,7 @@ async fn main() -> anyhow::Result<()> {
             shorter,
             reverse,
             quiet,
-        } => ps(sort_by, shorter, reverse, quiet).await?,
+        } => ps(sort_by, shorter, reverse, quiet)?,
     }
     Ok(())
 }

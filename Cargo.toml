@@ -9,7 +9,6 @@ keywords = ["archlinux", "arch", "pacman", "aur", "zypper", "apt"]
 
 [dependencies]
 map-self = "0.1.0"
-tokio = { version = "1.43.0", features = ["full"] }
 
 # UI
 clap = { version = "4.5.29", features = ["derive", "cargo", "wrap_help"] }

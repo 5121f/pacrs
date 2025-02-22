@@ -156,11 +156,18 @@ pub fn ps(
 
     if shorter {
         let mut command_names: Vec<String> = processes.into_iter().map(|p| p.command).collect();
+
         command_names.sort();
         command_names.dedup();
+
+        if reverse {
+            command_names.reverse();
+        }
+
         for command in command_names {
             println!("{command}");
         }
+
         return Ok(());
     }
 

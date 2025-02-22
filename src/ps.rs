@@ -52,7 +52,6 @@ fn get_process_command(process: &sysinfo::Process) -> String {
                 .unwrap_or(file_name.to_string())
         })
         .unwrap_or_else(|| process.name().to_string_lossy().to_string())
-        .to_string()
 }
 
 fn user_name_by_process(process: &sysinfo::Process, users: &Users) -> Option<String> {

@@ -109,11 +109,8 @@ fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
 }
 
 fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, HashSet<String>>> {
-    let system = std::thread::spawn(configured_system);
-    let users = std::thread::spawn(Users::new_with_refreshed_list);
-
-    let system = system.join().expect("Thread paniced");
-    let users = users.join().expect("Thread paniced");
+    let system = configured_system();
+    let users = Users::new_with_refreshed_list();
 
     let mut result = HashMap::new();
     for (pid, process) in system.processes() {

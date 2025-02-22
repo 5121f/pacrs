@@ -81,7 +81,7 @@ fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
     let reader = BufReader::new(file);
     for line in reader.lines() {
         let line = line?;
-        let mut parts = line.split(' ').skip(5).filter(|s| !s.is_empty());
+        let mut parts = line.split_ascii_whitespace().skip(5);
 
         let Some(fname) = parts.next() else {
             continue;

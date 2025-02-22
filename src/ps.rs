@@ -151,6 +151,10 @@ pub fn ps(
         .collect();
 
     if processes.is_empty() {
+        if !quiet {
+            println!("No processes using deleted files found.");
+        }
+
         return Ok(());
     }
 

@@ -30,15 +30,15 @@ fn main() -> anyhow::Result<()> {
             explicit,
             deps,
         } => list(orphaned, aur, explicit, deps)?,
-        Args::Install { packages } => pacrs::install(packages)?,
+        Args::Install { packages } => pacrs::install(&packages)?,
         Args::Remove {
             packages,
             clean_deps,
-        } => pacrs::remove(packages, clean_deps)?,
+        } => pacrs::remove(&packages, clean_deps)?,
         Args::Autoremove => pacrs::autoremove()?,
-        Args::Update { packages, quiet } => update(packages, quiet),
-        Args::Info { package } => pacrs::info(package)?,
-        Args::Search { package } => pacrs::search(package)?,
+        Args::Update { packages, quiet } => update(&packages, quiet),
+        Args::Info { package } => pacrs::info(&package)?,
+        Args::Search { package } => pacrs::search(&package)?,
         Args::ListUpdates => pacrs::list_updates()?,
         Args::Files {
             package,
@@ -54,7 +54,7 @@ fn main() -> anyhow::Result<()> {
                     explicit,
                     dependencie,
                 },
-        } => mark(packages, explicit, dependencie)?,
+        } => mark(&packages, explicit, dependencie)?,
         Args::Ps {
             sort_by,
             shorter,
@@ -65,7 +65,7 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn update(packages: Vec<String>, quiet: bool) {
+fn update(packages: &[String], quiet: bool) {
     let result = pacrs::update(packages);
 
     match result {
@@ -157,7 +157,7 @@ fn list(orphaned: bool, aur: bool, explicit: bool, deps: bool) -> anyhow::Result
     Ok(())
 }
 
-fn mark(packages: Vec<String>, explicit: bool, dependencie: bool) -> anyhow::Result<()> {
+fn mark(packages: &[String], explicit: bool, dependencie: bool) -> anyhow::Result<()> {
     if explicit {
         return pacrs::mark_as_explicit(packages);
     }

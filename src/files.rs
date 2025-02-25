@@ -23,7 +23,7 @@ fn package_files_global(
         .pipe_stderr()
         .execute_and_grub_lines()?;
 
-    parse_pacman_files_output(lines)?.map_self(Ok)
+    parse_pacman_files_output(&lines)?.map_self(Ok)
 }
 
 fn _package_files_local(name: &str) -> Result<Vec<String>, command::Error> {
@@ -34,12 +34,12 @@ fn _package_files_local(name: &str) -> Result<Vec<String>, command::Error> {
 
 pub fn packages_files_local() -> anyhow::Result<Vec<String>> {
     let lines = pacman::files_of_installed_pkgs().execute_and_grub_lines()?;
-    parse_pacman_files_output(lines)
+    parse_pacman_files_output(&lines)
 }
 
 pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
     let lines = match _package_files_local(name) {
-        Ok(lines) => parse_pacman_files_output(lines)?,
+        Ok(lines) => parse_pacman_files_output(&lines)?,
         Err(command::Error::EndedWithNonZero {
             exit_status: _,
             command_name: _,

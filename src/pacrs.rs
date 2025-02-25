@@ -17,19 +17,19 @@ pub fn installed_pkgs() -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn info(package: String) -> anyhow::Result<()> {
+pub fn info(package: &str) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
-    let is_local_pkg = alpm.localdb().pkg(package.as_str()).is_ok();
+    let is_local_pkg = alpm.localdb().pkg(package).is_ok();
     if is_local_pkg {
-        pacman().args(["-Qi", &package]).execute()?;
-        return Ok(());
+        pacman().args(["-Qi", package]).execute()?;
+    } else {
+        paru_or_pacman().args(["-Si", package]).execute()?;
     }
-    paru_or_pacman().args(["-Si", &package]).execute()?;
     Ok(())
 }
 
-pub fn search(package: String) -> anyhow::Result<()> {
-    paru_or_pacman().args(["-Ss", &package]).execute()?;
+pub fn search(package: &str) -> anyhow::Result<()> {
+    paru_or_pacman().args(["-Ss", package]).execute()?;
     Ok(())
 }
 
@@ -43,7 +43,7 @@ pub fn clean_cache_uninstalled() -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
+pub fn install(packages: &[String]) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::new()?;
 
@@ -69,7 +69,7 @@ pub fn list_aur_pkgs() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qmq").execute_and_grub_lines()?.map_self(Ok)
 }
 
-pub fn remove(packages: Vec<String>, clean_deps: bool) -> anyhow::Result<()> {
+pub fn remove(packages: &[String], clean_deps: bool) -> anyhow::Result<()> {
     let mut pacman = sudo_pacman().arg("-R");
     if clean_deps {
         pacman = pacman.arg("-s");
@@ -78,7 +78,7 @@ pub fn remove(packages: Vec<String>, clean_deps: bool) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn update(packages: Vec<String>) -> anyhow::Result<()> {
+pub fn update(packages: &[String]) -> anyhow::Result<()> {
     paru_or_sudo_pacman().arg("-Syu").args(packages).execute()?;
     Ok(())
 }
@@ -101,7 +101,7 @@ pub fn autoremove() -> anyhow::Result<()> {
         return Ok(());
     }
     let orphaned_packages = orphaned_pkgs()?;
-    remove(orphaned_packages, true)?;
+    remove(&orphaned_packages, true)?;
     Ok(())
 }
 
@@ -118,7 +118,7 @@ pub fn deps() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qdq").execute_and_grub_lines()?.map_self(Ok)
 }
 
-pub fn parse_pacman_files_output(lines: Vec<String>) -> anyhow::Result<Vec<String>> {
+pub fn parse_pacman_files_output(lines: &[String]) -> anyhow::Result<Vec<String>> {
     let mut res = Vec::with_capacity(lines.len());
 
     for line in lines {
@@ -143,7 +143,7 @@ pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn mark_as_explicit(packages: Vec<String>) -> anyhow::Result<()> {
+pub fn mark_as_explicit(packages: &[String]) -> anyhow::Result<()> {
     pacman()
         .args(["-D", "--asexplicit"])
         .args(packages)
@@ -151,7 +151,7 @@ pub fn mark_as_explicit(packages: Vec<String>) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn mark_as_dep(packages: Vec<String>) -> anyhow::Result<()> {
+pub fn mark_as_dep(packages: &[String]) -> anyhow::Result<()> {
     pacman().args(["-D", "--asdeps"]).args(packages).execute()?;
     Ok(())
 }

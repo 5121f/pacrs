@@ -129,7 +129,8 @@ pub fn ps(
     quiet: bool,
 ) -> anyhow::Result<()> {
     if !quiet && !is_root() {
-        eprintln!("Note: Not running as root you are limited to searching for files you have permission. The result might be incomplete.\n")
+        eprintln!("Note: Not running as root you are limited to searching for files you have permission. \
+            The result might be incomplete.\n");
     }
 
     let pkgs_files = std::thread::spawn(files_of_installed_pkgs);

@@ -123,7 +123,7 @@ pub fn parse_pacman_files_output(lines: &[String]) -> anyhow::Result<Vec<String>
 
     for line in lines {
         let pkg_name = line
-            .split(' ')
+            .split_ascii_whitespace()
             .nth(1)
             .context("Failed to parse pacman output")?;
         res.push(pkg_name.to_owned());

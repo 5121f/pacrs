@@ -96,6 +96,7 @@ fn files(
     if let Some(package) = package {
         return package_files(&package, update_index, quiet);
     }
+
     if let Some(file) = file {
         return find_file(&file, update_index, quiet);
     }

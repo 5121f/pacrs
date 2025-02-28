@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use std::{ops::Deref, path::Path};
+use std::path::Path;
 
 use crate::{
     Cmd,
@@ -10,10 +10,12 @@ use crate::{
 
 use alpm::Alpm;
 use anyhow::Context;
+use derive_more::Deref;
 use fs_err as fs;
 
 pub const TEMP_DB_PATH: &str = "/tmp/pacrs/db";
 
+#[derive(Deref)]
 pub struct TempAlpm(PacrsAlpm);
 
 impl TempAlpm {
@@ -24,14 +26,6 @@ impl TempAlpm {
         alpm_utils::configure_alpm(&mut alpm, &conf).context("Failed to configure alpm")?;
         initialize_temp_db()?;
         Ok(Self(PacrsAlpm::with_alpm(alpm)))
-    }
-}
-
-impl Deref for TempAlpm {
-    type Target = PacrsAlpm;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
     }
 }
 

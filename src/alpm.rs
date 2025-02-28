@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use std::ops::Deref;
-
 use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
 use anyhow::{Context, anyhow};
+use derive_more::Deref;
 
 use crate::temp_db::TempAlpm;
 
@@ -12,6 +11,7 @@ pub fn pacmanconf() -> anyhow::Result<pacmanconf::Config> {
     pacmanconf::Config::new().context("Failed to read pacmanconf")
 }
 
+#[derive(Deref)]
 pub struct PacrsAlpm(Alpm);
 
 impl PacrsAlpm {
@@ -104,13 +104,5 @@ impl PacrsAlpm {
             .syncdbs()
             .pkg(package)
             .with_context(|| format!("{package}: Package not found"))
-    }
-}
-
-impl Deref for PacrsAlpm {
-    type Target = Alpm;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
     }
 }

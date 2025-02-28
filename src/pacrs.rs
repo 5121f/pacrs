@@ -52,7 +52,9 @@ pub fn install(packages: &[String]) -> anyhow::Result<()> {
     let installed_pkgs = pacman::installed_packages().execute_and_grub_lines()?;
     let updated_pkgs = alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, pkgs)?;
 
-    let all_updated_pkgs_is_installed = updated_pkgs.iter().all(|p| installed_pkgs.contains(p));
+    let all_updated_pkgs_is_installed = updated_pkgs
+        .iter()
+        .all(|updated| installed_pkgs.iter().any(|instelled| instelled == updated));
 
     if !all_updated_pkgs_is_installed {
         bail!(

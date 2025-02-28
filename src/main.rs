@@ -117,7 +117,7 @@ fn cache(uninstalled: bool, aur: bool) -> anyhow::Result<()> {
 }
 
 fn list_filter(list: &mut Vec<String>, packages: Vec<String>, changed: bool) {
-    if !(changed || packages.is_empty()) {
+    if changed && packages.is_empty() {
         *list = packages;
         return;
     }

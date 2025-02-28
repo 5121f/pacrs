@@ -1,7 +1,7 @@
 [package]
 name = "pacrs"
 version = "0.3.0"
-edition = "2021"
+edition = "2024"
 
 description = "pacman wrapper with CLI inspired by zypper and apt"
 license = "GPL-3.0-only"

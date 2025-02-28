@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 use crate::{
-    utils::{is_root, which},
     Cmd,
+    utils::{is_root, which},
 };
 
 pub const PACMAN_BIN: &str = "pacman";

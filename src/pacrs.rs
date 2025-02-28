@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 use crate::{
+    PacrsAlpm,
     cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman},
     pacman,
-    temp_db::{initialize_temp_db, TempAlpm, TEMP_DB_PATH},
+    temp_db::{TEMP_DB_PATH, TempAlpm, initialize_temp_db},
     utils::{is_root, paru_cache_dir, sure},
-    PacrsAlpm,
 };
 
-use anyhow::{bail, Context};
+use anyhow::{Context, bail};
 use fs_err as fs;
 use map_self::MapSelf;
 

@@ -8,7 +8,7 @@ use std::{
 use anyhow::bail;
 use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
-use tabled::{settings::Style, Table, Tabled};
+use tabled::{Table, Tabled, settings::Style};
 
 use crate::{files::packages_files_local, utils::is_root};
 
@@ -129,8 +129,10 @@ pub fn ps(
     quiet: bool,
 ) -> anyhow::Result<()> {
     if !quiet && !is_root() {
-        eprintln!("Note: Not running as root you are limited to searching for files you have permission. \
-            The result might be incomplete.\n");
+        eprintln!(
+            "Note: Not running as root you are limited to searching for files you have permission. \
+            The result might be incomplete.\n"
+        );
     }
 
     let pkgs_files = std::thread::spawn(files_of_installed_pkgs);

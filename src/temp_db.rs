@@ -3,9 +3,9 @@
 use std::{ops::Deref, path::Path};
 
 use crate::{
-    alpm::{pacmanconf, PacrsAlpm},
-    cmds::PACMAN_BIN,
     Cmd,
+    alpm::{PacrsAlpm, pacmanconf},
+    cmds::PACMAN_BIN,
 };
 
 use alpm::Alpm;

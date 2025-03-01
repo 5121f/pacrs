@@ -8,8 +8,6 @@ license = "GPL-3.0-only"
 keywords = ["archlinux", "arch", "pacman", "aur", "zypper", "apt"]
 
 [dependencies]
-map-self = "0.1.0"
-
 # UI
 clap = { version = "4.5.29", features = ["derive", "cargo", "wrap_help"] }
 tabled = "0.18.0"
@@ -29,6 +27,9 @@ sysinfo = "0.33.1"
 fs-err = "3.1.0"
 anyhow = "1.0.95"
 thiserror = "2.0.11"
+
+# Utils
+map-self = "0.1.0"
 derive_more = { version = "2.0.1", features = ["deref"] }
 
 [profile.release]

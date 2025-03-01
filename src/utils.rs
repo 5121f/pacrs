@@ -29,15 +29,17 @@ pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
         .map_self(Ok)
 }
 
-pub fn sure(message: &str) -> anyhow::Result<bool> {
+fn sure_(message: &str) -> Result<bool, io::Error> {
     print!("{message} [y/N] ");
-    io::stdout().flush().context("Failed to read input")?;
+    io::stdout().flush()?;
     let mut buf = String::new();
-    io::stdin()
-        .read_line(&mut buf)
-        .context("Failed to read user input")?;
+    io::stdin().read_line(&mut buf)?;
     let answer = buf.trim().to_lowercase();
     Ok(answer == "y" || answer == "yes")
+}
+
+pub fn sure(message: &str) -> anyhow::Result<bool> {
+    sure_(message).context("Failed to read user input")
 }
 
 pub trait JoinError<T> {

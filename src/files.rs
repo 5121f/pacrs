@@ -1,12 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use map_self::MapSelf;
-
-use crate::{
-    cmds::pacman,
-    command, pacman,
-    pacrs::{parse_pacman_files_output, update_files_index},
-};
+use crate::{cmds::pacman, command, pacman, pacrs::update_files_index};
 
 fn package_files_global(
     name: &str,
@@ -23,21 +17,16 @@ fn package_files_global(
         .pipe_stderr()
         .execute_and_grub_lines()?;
 
-    parse_pacman_files_output(&lines)?.map_self(Ok)
-}
-
-pub fn packages_files_local() -> anyhow::Result<Vec<String>> {
-    let lines = pacman::files_of_installed_pkgs().execute_and_grub_lines()?;
-    parse_pacman_files_output(&lines)
+    Ok(lines)
 }
 
 pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
-    let package_files = pacman::files_of_installed_pkgs()
+    let files = pacman::files_of_installed_pkgs()
         .arg(name)
         .execute_and_grub_lines();
 
-    let lines = match package_files {
-        Ok(lines) => parse_pacman_files_output(&lines)?,
+    let files = match files {
+        Ok(files) => files,
         Err(command::Error::EndedWithNonZero {
             exit_status: _,
             command_name: _,
@@ -45,9 +34,10 @@ pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Res
         Err(err) => return Err(err.into()),
     };
 
-    for line in lines {
+    for line in files {
         println!("{line}");
     }
+
     Ok(())
 }
 

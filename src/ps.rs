@@ -11,7 +11,7 @@ use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Us
 use tabled::{Table, Tabled, settings::Style};
 
 use crate::{
-    files::packages_files_local,
+    pacman,
     utils::{JoinError, is_root},
 };
 
@@ -38,7 +38,7 @@ impl Process {
 }
 
 fn files_of_installed_pkgs() -> anyhow::Result<BTreeSet<String>> {
-    let files = packages_files_local()?;
+    let files = pacman::files_of_installed_pkgs().execute_and_grub_lines()?;
     // We assume that one file corresponds to one package
     let lines = BTreeSet::from_iter(files);
     Ok(lines)

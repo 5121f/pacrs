@@ -8,7 +8,7 @@ use crate::{
     utils::{is_root, paru_cache_dir, sure},
 };
 
-use anyhow::{Context, bail};
+use anyhow::bail;
 use fs_err as fs;
 use map_self::MapSelf;
 
@@ -112,26 +112,12 @@ pub fn explicit_pkgs() -> anyhow::Result<Vec<String>> {
 }
 
 pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
-    pacman::files_of_installed_pkgs().execute()?;
+    pacman().arg("-Ql").execute()?;
     Ok(())
 }
 
 pub fn deps() -> anyhow::Result<Vec<String>> {
     pacman().arg("-Qdq").execute_and_grub_lines()?.map_self(Ok)
-}
-
-pub fn parse_pacman_files_output(lines: &[String]) -> anyhow::Result<Vec<String>> {
-    let mut res = Vec::with_capacity(lines.len());
-
-    for line in lines {
-        let pkg_name = line
-            .split_ascii_whitespace()
-            .nth(1)
-            .context("Failed to parse pacman output")?;
-        res.push(pkg_name.to_owned());
-    }
-
-    Ok(res)
 }
 
 pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {

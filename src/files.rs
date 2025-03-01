@@ -14,7 +14,7 @@ fn package_files_global(
     quiet: bool,
 ) -> anyhow::Result<Vec<String>> {
     if update_index {
-        update_files_index(quiet)?
+        update_files_index(quiet)?;
     }
 
     let lines = pacman()
@@ -26,19 +26,17 @@ fn package_files_global(
     parse_pacman_files_output(&lines)?.map_self(Ok)
 }
 
-fn _package_files_local(name: &str) -> Result<Vec<String>, command::Error> {
-    pacman::files_of_installed_pkgs()
-        .arg(name)
-        .execute_and_grub_lines()
-}
-
 pub fn packages_files_local() -> anyhow::Result<Vec<String>> {
     let lines = pacman::files_of_installed_pkgs().execute_and_grub_lines()?;
     parse_pacman_files_output(&lines)
 }
 
 pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Result<()> {
-    let lines = match _package_files_local(name) {
+    let package_files = pacman::files_of_installed_pkgs()
+        .arg(name)
+        .execute_and_grub_lines();
+
+    let lines = match package_files {
         Ok(lines) => parse_pacman_files_output(&lines)?,
         Err(command::Error::EndedWithNonZero {
             exit_status: _,

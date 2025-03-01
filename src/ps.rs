@@ -42,16 +42,16 @@ fn files_of_installed_pkgs() -> anyhow::Result<BTreeSet<String>> {
 }
 
 fn get_process_command(process: &sysinfo::Process) -> String {
-    process
-        .exe()
-        .map(|p| {
+    process.exe().map_or_else(
+        || process.name().to_string_lossy().to_string(),
+        |p| {
             let file_name = p.file_name().unwrap_or_default().to_string_lossy();
             file_name
                 .strip_suffix("(deleted)")
                 .map(ToString::to_string)
                 .unwrap_or(file_name.to_string())
-        })
-        .unwrap_or_else(|| process.name().to_string_lossy().to_string())
+        },
+    )
 }
 
 fn user_name_by_process(process: &sysinfo::Process, users: &Users) -> Option<String> {
@@ -72,7 +72,7 @@ fn configured_system() -> System {
     system
 }
 
-fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
+fn process_has_deleted_files(pid: Pid) -> anyhow::Result<HashSet<String>> {
     let mut result = HashSet::new();
     let path = format!("/proc/{pid}/maps");
     let Ok(file) = File::open(path) else {
@@ -97,7 +97,7 @@ fn process_has_deleted_files(pid: &Pid) -> anyhow::Result<HashSet<String>> {
             || fname.starts_with("/drm")
             || fname.starts_with("/memfd")
             || fname.starts_with("/SYSV")
-            || fname.starts_with("[")
+            || fname.starts_with('[')
         {
             continue;
         }
@@ -114,7 +114,7 @@ fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, HashSet<
 
     let mut result = HashMap::new();
     for (pid, process) in system.processes() {
-        let files = process_has_deleted_files(pid)?;
+        let files = process_has_deleted_files(*pid)?;
         if !files.is_empty() {
             result.insert(Process::new(process, &users), files);
         }

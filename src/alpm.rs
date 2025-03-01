@@ -36,7 +36,7 @@ impl PacrsAlpm {
         &'a self,
         alpm_tmp: &TempAlpm,
         packages: Vec<&'a str>,
-    ) -> anyhow::Result<Vec<&'a str>> {
+    ) -> Vec<&'a str> {
         let mut for_check = packages;
         let mut already_checked = Vec::with_capacity(for_check.len());
         let mut update_pkgs = Vec::new();
@@ -60,7 +60,7 @@ impl PacrsAlpm {
             for_check.extend(deps);
             already_checked.push(pkg);
         }
-        Ok(update_pkgs)
+        update_pkgs
     }
 
     pub fn dependencies<'a>(&'a self, package: &str) -> anyhow::Result<Vec<&'a Package>> {
@@ -87,7 +87,7 @@ impl PacrsAlpm {
             .syncdbs()
             .into_iter()
             .map(|db| db.group(group).ok())
-            .find(|grp| grp.is_some())
+            .find(Option::is_some)
             .flatten()
             .with_context(|| anyhow!("Failed to find group \"{group}\""))
     }

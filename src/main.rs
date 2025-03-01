@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
+#![warn(clippy::pedantic)]
+
 mod alpm;
 mod args;
 mod cmds;
@@ -122,9 +124,10 @@ fn list_filter(list: &mut Vec<String>, packages: Vec<String>, changed: bool) {
         *list = packages;
         return;
     }
-    list.retain(|line| packages.contains(line))
+    list.retain(|line| packages.contains(line));
 }
 
+#[allow(clippy::fn_params_excessive_bools)]
 fn list(orphaned: bool, aur: bool, explicit: bool, deps: bool) -> anyhow::Result<()> {
     let mut changed = false;
     let mut list = Vec::new();

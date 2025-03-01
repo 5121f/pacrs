@@ -50,7 +50,7 @@ pub fn install(packages: &[String]) -> anyhow::Result<()> {
     let pkgs = packages.iter().map(String::as_str).collect();
 
     let installed_pkgs = pacman::installed_packages().execute_and_grub_lines()?;
-    let updated_pkgs = alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, pkgs)?;
+    let updated_pkgs = alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, pkgs);
 
     let all_updated_pkgs_is_installed = updated_pkgs
         .iter()

@@ -7,6 +7,7 @@ use std::{
 };
 
 use anyhow::{Context, anyhow};
+use etcetera::BaseStrategy;
 use map_self::MapSelf;
 use nix::unistd::getuid;
 
@@ -21,8 +22,9 @@ pub fn is_root() -> bool {
 }
 
 pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
-    dirs::cache_dir()
+    etcetera::choose_base_strategy()
         .context("Failed to find paru cache dir")?
+        .cache_dir()
         .join("paru")
         .map_self(Ok)
 }

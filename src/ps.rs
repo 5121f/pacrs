@@ -138,9 +138,11 @@ pub fn ps(
         );
     }
 
-    let pkgs_files = std::thread::spawn(files_of_installed_pkgs).join_err_map()??;
-    let deleted_files_and_his_processes =
-        std::thread::spawn(deleted_files_and_his_processes).join_err_map()??;
+    let pkgs_files = std::thread::spawn(files_of_installed_pkgs);
+    let deleted_files_and_his_processes = std::thread::spawn(deleted_files_and_his_processes);
+
+    let pkgs_files = pkgs_files.join_err_map()??;
+    let deleted_files_and_his_processes = deleted_files_and_his_processes.join_err_map()??;
 
     let mut processes: Vec<Process> = deleted_files_and_his_processes
         .into_iter()

@@ -10,7 +10,10 @@ use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::{Table, Tabled, settings::Style};
 
-use crate::{files::packages_files_local, utils::is_root};
+use crate::{
+    files::packages_files_local,
+    utils::{JoinError, is_root},
+};
 
 #[derive(PartialEq, Eq, Hash, Tabled)]
 struct Process {
@@ -135,13 +138,9 @@ pub fn ps(
         );
     }
 
-    let pkgs_files = std::thread::spawn(files_of_installed_pkgs);
-    let deleted_files_and_his_processes = std::thread::spawn(deleted_files_and_his_processes);
-
-    let pkgs_files = pkgs_files.join().expect("Thread paniced")?;
-    let deleted_files_and_his_processes = deleted_files_and_his_processes
-        .join()
-        .expect("Thread paniced")?;
+    let pkgs_files = std::thread::spawn(files_of_installed_pkgs).join_err_map()??;
+    let deleted_files_and_his_processes =
+        std::thread::spawn(deleted_files_and_his_processes).join_err_map()??;
 
     let mut processes: Vec<Process> = deleted_files_and_his_processes
         .into_iter()

@@ -3,9 +3,10 @@
 use std::{
     io::{self, Write},
     path::PathBuf,
+    thread::JoinHandle,
 };
 
-use anyhow::Context;
+use anyhow::{Context, anyhow};
 use map_self::MapSelf;
 use nix::unistd::getuid;
 
@@ -35,4 +36,15 @@ pub fn sure(message: &str) -> anyhow::Result<bool> {
         .context("Failed to read user input")?;
     let answer = buf.trim().to_lowercase();
     Ok(answer == "y" || answer == "yes")
+}
+
+pub trait JoinError<T> {
+    fn join_err_map(self) -> anyhow::Result<T>;
+}
+
+impl<T> JoinError<T> for JoinHandle<T> {
+    fn join_err_map(self) -> anyhow::Result<T> {
+        self.join()
+            .map_err(|err| anyhow!("Thread paniced: {err:?}"))
+    }
 }

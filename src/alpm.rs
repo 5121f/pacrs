@@ -2,8 +2,9 @@
 
 use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
-use anyhow::{Context, anyhow};
+use anyhow::{Context, anyhow, bail};
 use derive_more::Deref;
+use map_self::MapSelf;
 
 use crate::temp_db::TempAlpm;
 
@@ -64,22 +65,30 @@ impl PacrsAlpm {
     }
 
     pub fn dependencies<'a>(&'a self, package: &str) -> anyhow::Result<Vec<&'a Package>> {
-        self.0
-            .syncdbs()
-            .pkg(package)
-            .ok()
-            .map(|pkg| {
-                pkg.depends()
-                    .into_iter()
-                    .map(|dep| self.0.syncdbs().find_satisfier(dep.name()).unwrap())
-                    .collect::<Vec<_>>()
-            })
-            .or_else(|| {
-                self.group(package)
-                    .ok()
-                    .map(|grp| grp.packages().into_iter().collect::<Vec<_>>())
-            })
-            .context("Failed to define package type")
+        let pkg = self.0.syncdbs().pkg(package);
+        if let Ok(pkg) = pkg {
+            let deps = pkg.depends();
+            let mut res = Vec::with_capacity(deps.len());
+            for dep in deps {
+                let dep = self
+                    .0
+                    .syncdbs()
+                    .find_satisfier(dep.name())
+                    .with_context(|| {
+                        anyhow!("{}: failed to find satisfier for the package", dep.name())
+                    })?;
+                res.push(dep);
+            }
+            return Ok(res);
+        };
+        if let Ok(group) = self.group(package) {
+            return group
+                .packages()
+                .into_iter()
+                .collect::<Vec<_>>()
+                .map_self(Ok);
+        }
+        bail!("Failed to define package type");
     }
 
     fn group<'a>(&'a self, group: &str) -> anyhow::Result<&'a Group> {

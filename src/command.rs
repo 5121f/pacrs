@@ -7,7 +7,7 @@ use std::{
     str::{self, Utf8Error},
 };
 
-use map_self::MapSelf;
+use crate::utils::MapRes;
 
 pub struct Cmd {
     cmd: Command,
@@ -60,10 +60,10 @@ impl Cmd {
             str::from_utf8(&output.stdout).map_err(|source| Error::parse(&self.cmd, source))?;
 
         if !output.status.success() {
-            return Error::ended_with_non_zero(&self.cmd, output.status).map_self(Err);
+            return Error::ended_with_non_zero(&self.cmd, output.status).err();
         }
 
-        Ok(string.trim().to_owned())
+        string.trim().to_owned().ok()
     }
 
     pub fn execute_and_grub_lines(self) -> Result<Vec<String>> {
@@ -71,7 +71,7 @@ impl Cmd {
             .split('\n')
             .map(ToOwned::to_owned)
             .collect::<Vec<_>>()
-            .map_self(Ok)
+            .ok()
     }
 }
 

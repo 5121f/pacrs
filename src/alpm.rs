@@ -4,9 +4,8 @@ use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
 use anyhow::{Context, anyhow, bail};
 use derive_more::Deref;
-use map_self::MapSelf;
 
-use crate::temp_db::TempAlpm;
+use crate::{temp_db::TempAlpm, utils::MapRes};
 
 pub fn pacmanconf() -> anyhow::Result<pacmanconf::Config> {
     pacmanconf::Config::new().context("Failed to read pacmanconf")
@@ -20,7 +19,7 @@ impl PacrsAlpm {
         let conf = pacmanconf()?;
         let alpm =
             alpm_utils::alpm_with_conf(&conf).context("Failed to initialize alpm connection")?;
-        Ok(Self(alpm))
+        Self(alpm).ok()
     }
 
     pub fn with_alpm(alpm: Alpm) -> Self {
@@ -82,11 +81,7 @@ impl PacrsAlpm {
             return Ok(res);
         };
         if let Ok(group) = self.group(package) {
-            return group
-                .packages()
-                .into_iter()
-                .collect::<Vec<_>>()
-                .map_self(Ok);
+            return group.packages().into_iter().collect::<Vec<_>>().ok();
         }
         bail!("Failed to define package type");
     }

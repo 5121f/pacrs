@@ -8,7 +8,6 @@ use std::{
 
 use anyhow::{Context, anyhow};
 use etcetera::BaseStrategy;
-use map_self::MapSelf;
 use nix::unistd::getuid;
 
 use crate::command::Cmd;
@@ -26,7 +25,7 @@ pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
         .context("Failed to find paru cache dir")?
         .cache_dir()
         .join("paru")
-        .map_self(Ok)
+        .ok()
 }
 
 fn sure_(message: &str) -> Result<bool, io::Error> {
@@ -50,5 +49,20 @@ impl<T> JoinError<T> for JoinHandle<T> {
     fn join_err_map(self) -> anyhow::Result<T> {
         self.join()
             .map_err(|err| anyhow!("Thread paniced: {err:?}"))
+    }
+}
+
+pub trait MapRes: Sized {
+    fn ok<E>(self) -> Result<Self, E>;
+    fn err<O>(self) -> Result<O, Self>;
+}
+
+impl<T> MapRes for T {
+    fn ok<E>(self) -> Result<T, E> {
+        Ok(self)
+    }
+
+    fn err<O>(self) -> Result<O, Self> {
+        Err(self)
     }
 }

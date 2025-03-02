@@ -5,12 +5,11 @@ use crate::{
     cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman},
     pacman,
     temp_db::{TEMP_DB_PATH, TempAlpm, initialize_temp_db},
-    utils::{is_root, paru_cache_dir, sure},
+    utils::{MapRes, is_root, paru_cache_dir, sure},
 };
 
 use anyhow::bail;
 use fs_err as fs;
-use map_self::MapSelf;
 
 pub fn installed_pkgs() -> anyhow::Result<()> {
     pacman::installed_packages().execute()?;
@@ -68,7 +67,7 @@ pub fn install(packages: &[String]) -> anyhow::Result<()> {
 }
 
 pub fn list_aur_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qmq").execute_and_grub_lines()?.map_self(Ok)
+    pacman().arg("-Qmq").execute_and_grub_lines()?.ok()
 }
 
 pub fn remove(packages: &[String], clean_deps: bool) -> anyhow::Result<()> {
@@ -94,7 +93,7 @@ pub fn list_updates() -> anyhow::Result<()> {
 }
 
 pub fn orphaned_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qdtq").execute_and_grub_lines()?.map_self(Ok)
+    pacman().arg("-Qdtq").execute_and_grub_lines()?.ok()
 }
 
 pub fn autoremove() -> anyhow::Result<()> {
@@ -108,7 +107,7 @@ pub fn autoremove() -> anyhow::Result<()> {
 }
 
 pub fn explicit_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qeq").execute_and_grub_lines()?.map_self(Ok)
+    pacman().arg("-Qeq").execute_and_grub_lines()?.ok()
 }
 
 pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
@@ -117,7 +116,7 @@ pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
 }
 
 pub fn deps() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qdq").execute_and_grub_lines()?.map_self(Ok)
+    pacman().arg("-Qdq").execute_and_grub_lines()?.ok()
 }
 
 pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {

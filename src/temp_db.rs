@@ -6,6 +6,7 @@ use crate::{
     Cmd,
     alpm::{PacrsAlpm, pacmanconf},
     cmds::PACMAN_BIN,
+    utils::MapRes,
 };
 
 use alpm::Alpm;
@@ -25,7 +26,7 @@ impl TempAlpm {
             .context("Failed to initialize alpm connection")?;
         alpm_utils::configure_alpm(&mut alpm, &conf).context("Failed to configure alpm")?;
         initialize_temp_db()?;
-        Ok(Self(PacrsAlpm::with_alpm(alpm)))
+        Self(PacrsAlpm::with_alpm(alpm)).ok()
     }
 }
 

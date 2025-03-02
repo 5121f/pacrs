@@ -68,13 +68,12 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn update(packages: &[String], quiet: bool) {
-    let result = pacrs::update(packages);
-
-    match result {
+    match pacrs::update(packages) {
         Ok(()) if !quiet => eprintln!(
             "Reminder: if update system was aborted or error ends, \
             you need to finish the update before installing packages"
         ),
+        Ok(()) => {}
         Err(error) => {
             eprintln!("{error}");
             eprintln!(
@@ -83,7 +82,6 @@ fn update(packages: &[String], quiet: bool) {
             );
             std::process::exit(1);
         }
-        Ok(()) => {}
     }
 }
 

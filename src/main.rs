@@ -62,7 +62,7 @@ fn main() -> anyhow::Result<()> {
             shorter,
             reverse,
             quiet,
-        } => ps(sort_by, shorter, reverse, quiet)?,
+        } => ps(sort_by.as_deref(), shorter, reverse, quiet)?,
     }
     Ok(())
 }

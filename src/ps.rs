@@ -125,12 +125,7 @@ fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, HashSet<
     Ok(result)
 }
 
-pub fn ps(
-    sort_by: Option<String>,
-    shorter: bool,
-    reverse: bool,
-    quiet: bool,
-) -> anyhow::Result<()> {
+pub fn ps(sort_by: Option<&str>, shorter: bool, reverse: bool, quiet: bool) -> anyhow::Result<()> {
     if !quiet && !is_root() {
         eprintln!(
             "Note: Not running as root you are limited to searching for files you have permission. \
@@ -179,13 +174,12 @@ pub fn ps(
         return Ok(());
     }
 
-    if let Some(sort_by) = sort_by {
-        match sort_by.as_str() {
-            "pid" => processes.sort_by(|a, b| a.pid.cmp(&b.pid)),
-            "user" => processes.sort_by(|a, b| a.user_name.cmp(&b.user_name)),
-            "command" => processes.sort_by(|a, b| a.command.cmp(&b.command)),
-            _ => bail!("Wrong sort-by value"),
-        }
+    match sort_by {
+        Some("pid") => processes.sort_by(|a, b| a.pid.cmp(&b.pid)),
+        Some("user") => processes.sort_by(|a, b| a.user_name.cmp(&b.user_name)),
+        Some("command") => processes.sort_by(|a, b| a.command.cmp(&b.command)),
+        Some(_) => bail!("Wrong sort-by value"),
+        None => {}
     }
 
     if reverse {

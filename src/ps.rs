@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 use std::{
-    collections::{BTreeSet, HashMap, HashSet},
+    collections::{BTreeSet, HashMap},
     io::{BufRead, BufReader},
 };
 
@@ -75,8 +75,8 @@ fn configured_system() -> System {
     system
 }
 
-fn process_has_deleted_files(pid: Pid) -> anyhow::Result<HashSet<String>> {
-    let mut result = HashSet::new();
+fn process_has_deleted_files(pid: Pid) -> anyhow::Result<BTreeSet<String>> {
+    let mut result = BTreeSet::new();
     let path = format!("/proc/{pid}/maps");
     let Ok(file) = File::open(path) else {
         return Ok(result);
@@ -111,7 +111,7 @@ fn process_has_deleted_files(pid: Pid) -> anyhow::Result<HashSet<String>> {
     Ok(result)
 }
 
-fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, HashSet<String>>> {
+fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, BTreeSet<String>>> {
     let system = configured_system();
     let users = Users::new_with_refreshed_list();
 

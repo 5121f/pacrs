@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use crate::{cmds::pacman, command, pacman, pacrs::update_files_index};
+use crate::cmds::pacman;
+use crate::pacrs::update_files_index;
+use crate::{command, pacman};
 
 fn package_files_global(
     name: &str,

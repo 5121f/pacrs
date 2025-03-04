@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use std::{
-    io::{self, Write},
-    path::PathBuf,
-    thread::JoinHandle,
-};
+use std::io::{self, Write};
+use std::path::PathBuf;
+use std::thread::JoinHandle;
 
 use anyhow::{Context, anyhow};
 use etcetera::BaseStrategy;

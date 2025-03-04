@@ -1,19 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use std::{
-    collections::{BTreeSet, HashMap},
-    io::{BufRead, BufReader},
-};
+use std::collections::{BTreeSet, HashMap};
+use std::io::{BufRead, BufReader};
 
 use anyhow::bail;
 use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
-use tabled::{Table, Tabled, settings::Style};
+use tabled::settings::Style;
+use tabled::{Table, Tabled};
 
-use crate::{
-    pacman,
-    utils::{JoinError, is_root},
-};
+use crate::pacman;
+use crate::utils::{JoinError, is_root};
 
 #[derive(PartialEq, Eq, Hash, Tabled)]
 struct Process {

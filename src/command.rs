@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use std::{
-    ffi::OsStr,
-    io,
-    process::{Command, ExitStatus, Stdio},
-    str::{self, Utf8Error},
-};
+use std::ffi::OsStr;
+use std::io;
+use std::process::{Command, ExitStatus, Stdio};
+use std::str::{self, Utf8Error};
 
 use crate::utils::MapRes;
 

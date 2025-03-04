@@ -2,7 +2,8 @@
 
 //! Reused pacman commands
 
-use crate::{cmds::pacman, command::Cmd};
+use crate::cmds::pacman;
+use crate::command::Cmd;
 
 pub fn files_of_installed_pkgs() -> Cmd {
     pacman().arg("-Qql")

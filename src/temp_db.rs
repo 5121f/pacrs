@@ -2,17 +2,15 @@
 
 use std::path::Path;
 
-use crate::{
-    Cmd,
-    alpm::{PacrsAlpm, pacmanconf},
-    cmds::PACMAN_BIN,
-    utils::MapRes,
-};
-
 use alpm::Alpm;
 use anyhow::Context;
 use derive_more::Deref;
 use fs_err as fs;
+
+use crate::Cmd;
+use crate::alpm::{PacrsAlpm, pacmanconf};
+use crate::cmds::PACMAN_BIN;
+use crate::utils::MapRes;
 
 pub const TEMP_DB_PATH: &str = "/tmp/pacrs/db";
 

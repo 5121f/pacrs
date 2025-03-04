@@ -5,7 +5,8 @@ use alpm_utils::DbListExt;
 use anyhow::{Context, anyhow, bail};
 use derive_more::Deref;
 
-use crate::{temp_db::TempAlpm, utils::MapRes};
+use crate::temp_db::TempAlpm;
+use crate::utils::MapRes;
 
 pub fn pacmanconf() -> anyhow::Result<pacmanconf::Config> {
     pacmanconf::Config::new().context("Failed to read pacmanconf")

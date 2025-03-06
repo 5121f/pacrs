@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
+use std::fmt::Display;
 use std::io::{self, Write};
 use std::path::PathBuf;
 use std::thread::JoinHandle;
@@ -26,7 +27,7 @@ pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
         .ok()
 }
 
-fn sure_(message: &str) -> Result<bool, io::Error> {
+fn sure_(message: impl Display) -> Result<bool, io::Error> {
     print!("{message} [y/N] ");
     io::stdout().flush()?;
     let mut buf = String::new();
@@ -35,7 +36,7 @@ fn sure_(message: &str) -> Result<bool, io::Error> {
     Ok(answer == "y" || answer == "yes")
 }
 
-pub fn sure(message: &str) -> anyhow::Result<bool> {
+pub fn sure(message: impl Display) -> anyhow::Result<bool> {
     sure_(message).context("Failed to read user input")
 }
 

@@ -44,9 +44,8 @@ pub fn install(packages: &[String]) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::new()?;
 
-    let pkgs = packages.iter().map(String::as_str).collect();
-
     let installed_pkgs = pacman::installed_packages().execute_and_grub_lines()?;
+    let pkgs = packages.iter().map(String::as_str).collect();
     let updated_pkgs = alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, pkgs);
 
     let all_updated_pkgs_is_installed = updated_pkgs
@@ -100,8 +99,7 @@ pub fn autoremove() -> anyhow::Result<()> {
         return Ok(());
     }
     let orphaned_packages = orphaned_pkgs()?;
-    remove(&orphaned_packages, true)?;
-    Ok(())
+    remove(&orphaned_packages, true)
 }
 
 pub fn explicit_pkgs() -> anyhow::Result<Vec<String>> {

@@ -9,7 +9,7 @@ keywords = ["archlinux", "arch", "pacman", "aur", "zypper", "apt"]
 
 [dependencies]
 # UI
-clap = { version = "4.5.31", features = ["derive", "cargo", "wrap_help"] }
+clap = { version = "4.5.35", features = ["derive", "cargo", "wrap_help"] }
 tabled = "0.18.0"
 
 # Pacman
@@ -20,7 +20,7 @@ pacmanconf = "3.0.0"
 # System
 which = "7.0.2"
 nix = { version = "0.29.0", features = ["user"] }
-sysinfo = "0.33.1"
+sysinfo = "0.34.2"
 etcetera = "0.10.0"
 
 # Error handleing

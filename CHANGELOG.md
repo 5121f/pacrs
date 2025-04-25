@@ -4,6 +4,7 @@
 
 - changled alias for `autoremove` from `arm` to `ar`
 - actualized fish completions
+- `clean`: request root password if needed
 
 ## 0.3.0 - 2024-12-01
 

@@ -31,12 +31,12 @@ pub fn search(package: &str) -> anyhow::Result<()> {
 }
 
 pub fn clean_cache() -> anyhow::Result<()> {
-    pacman().arg("-Scc").execute()?;
+    sudo_pacman().arg("-Scc").execute()?;
     Ok(())
 }
 
 pub fn clean_cache_uninstalled() -> anyhow::Result<()> {
-    pacman().arg("-Sc").execute()?;
+    sudo_pacman().arg("-Sc").execute()?;
     Ok(())
 }
 

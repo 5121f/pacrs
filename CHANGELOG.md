@@ -3,8 +3,9 @@
 ## Unreleased
 
 - changled alias for `autoremove` from `arm` to `ar`
-- actualized fish completions
 - `clean`: request root password if needed
+- `packages`: added `search` key for search in installed packages
+- actualized fish completions
 
 ## 0.3.0 - 2024-12-01
 

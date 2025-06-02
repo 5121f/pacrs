@@ -80,7 +80,7 @@ impl PacrsAlpm {
                 res.push(dep);
             }
             return Ok(res);
-        };
+        }
         if let Ok(group) = self.group(package) {
             return group.packages().into_iter().collect::<Vec<_>>().ok();
         }

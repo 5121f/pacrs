@@ -17,6 +17,7 @@ use alpm::PacrsAlpm;
 use args::Args;
 use command::Cmd;
 use files::{find_file, package_files};
+use pacrs::package_search;
 use ps::ps;
 
 use anyhow::bail;
@@ -27,11 +28,12 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args {
         Args::Packages {
+            search,
             orphaned,
             aur,
             explicit,
             deps,
-        } => list(orphaned, aur, explicit, deps)?,
+        } => packages(search, orphaned, aur, explicit, deps)?,
         Args::Install { packages } => pacrs::install(&packages)?,
         Args::Remove {
             packages,
@@ -126,7 +128,21 @@ fn list_filter(list: &mut Vec<String>, packages: Vec<String>, changed: bool) {
 }
 
 #[allow(clippy::fn_params_excessive_bools)]
-fn list(orphaned: bool, aur: bool, explicit: bool, deps: bool) -> anyhow::Result<()> {
+fn packages(
+    search_regex: Option<String>,
+    orphaned: bool,
+    aur: bool,
+    explicit: bool,
+    deps: bool,
+) -> anyhow::Result<()> {
+    match search_regex {
+        Some(search_regex) => package_search(&search_regex),
+        None => package_list(orphaned, aur, explicit, deps),
+    }
+}
+
+#[allow(clippy::fn_params_excessive_bools)]
+fn package_list(orphaned: bool, aur: bool, explicit: bool, deps: bool) -> anyhow::Result<()> {
     let mut changed = false;
     let mut list = Vec::new();
 

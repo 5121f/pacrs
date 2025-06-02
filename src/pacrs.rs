@@ -14,6 +14,11 @@ pub fn installed_pkgs() -> anyhow::Result<()> {
     Ok(())
 }
 
+pub fn package_search(regex: &str) -> anyhow::Result<()> {
+    pacman().args(["-Qs", regex]).execute()?;
+    Ok(())
+}
+
 pub fn info(package: &str) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let is_local_pkg = alpm.localdb().pkg(package).is_ok();

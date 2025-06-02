@@ -35,6 +35,9 @@ pub enum Args {
     /// List all available packages
     #[clap(visible_alias = "pa")]
     Packages {
+        /// Search for given string in installed packages
+        #[clap(long, short, value_name = "REGEX", conflicts_with_all = ["explicit", "deps", "orphaned", "aur"])]
+        search: Option<String>,
         /// List of explicit installed packages
         #[clap(long, short)]
         explicit: bool,

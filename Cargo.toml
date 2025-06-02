@@ -9,11 +9,11 @@ keywords = ["archlinux", "arch", "pacman", "aur", "zypper", "apt"]
 
 [dependencies]
 # UI
-clap = { version = "4.5.37", features = ["derive", "cargo", "wrap_help"] }
+clap = { version = "4.5.39", features = ["derive", "cargo", "wrap_help"] }
 tabled = "0.19.0"
 
 # Pacman
-alpm = "4.0.2"
+alpm = "4.0.3"
 alpm-utils = "4.0.1"
 pacmanconf = "3.0.0"
 

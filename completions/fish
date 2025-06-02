@@ -54,6 +54,7 @@ complete -c $progname -n $remove -xa $listinstalled
 complete -c $progname -n $remove -s u -l clean-deps -d 'Automatically remove dependencies which become unneeded after removal of requested packages'
 
 # Packages options
+complete -c $progname -n $packages -s s -l search -d 'Search for given string in installed packages'
 complete -c $progname -n $packages -s e -l explicit -d 'List of explicit installed packages'
 complete -c $progname -n $packages -s d -l deps -d 'List of packages installed as dependencie'
 complete -c $progname -n $packages -s o -l orphaned -d 'Print list of orphaned packages'

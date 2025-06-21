@@ -6,3 +6,5 @@
   - show cleaned size.
   - `--keep <n>` key for save last 'n' package caches.
   - Configuration for automatically clean.
+- Add setting for configure how many copies of package in cache user want to
+  save

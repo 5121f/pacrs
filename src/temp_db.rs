@@ -4,13 +4,13 @@ use std::path::Path;
 
 use alpm::Alpm;
 use anyhow::Context;
+use apply::Apply;
 use derive_more::Deref;
 use fs_err as fs;
 
 use crate::Cmd;
 use crate::alpm::{PacrsAlpm, pacmanconf};
 use crate::cmds::PACMAN_BIN;
-use crate::utils::MapRes;
 
 pub const TEMP_DB_PATH: &str = "/tmp/pacrs/db";
 
@@ -24,7 +24,7 @@ impl TempAlpm {
             .context("Failed to initialize alpm connection")?;
         alpm_utils::configure_alpm(&mut alpm, &conf).context("Failed to configure alpm")?;
         initialize_temp_db()?;
-        Self(PacrsAlpm::with_alpm(alpm)).ok()
+        Self(PacrsAlpm::with_alpm(alpm)).apply(Ok)
     }
 }
 

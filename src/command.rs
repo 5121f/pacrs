@@ -5,7 +5,7 @@ use std::io;
 use std::process::{Command, ExitStatus, Stdio};
 use std::str::{self, Utf8Error};
 
-use crate::utils::MapRes;
+use apply::Apply;
 
 pub struct Cmd {
     cmd: Command,
@@ -58,10 +58,10 @@ impl Cmd {
             str::from_utf8(&output.stdout).map_err(|source| Error::parse(&self.cmd, source))?;
 
         if !output.status.success() {
-            return Error::ended_with_non_zero(&self.cmd, output.status).err();
+            return Error::ended_with_non_zero(&self.cmd, output.status).apply(Err);
         }
 
-        string.trim().to_owned().ok()
+        string.trim().to_owned().apply(Ok)
     }
 
     pub fn execute_and_grub_lines(self) -> Result<Vec<String>> {
@@ -69,7 +69,7 @@ impl Cmd {
             .split('\n')
             .map(ToOwned::to_owned)
             .collect::<Vec<_>>()
-            .ok()
+            .apply(Ok)
     }
 }
 

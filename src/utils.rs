@@ -6,6 +6,7 @@ use std::path::PathBuf;
 use std::thread::JoinHandle;
 
 use anyhow::{Context, anyhow};
+use apply::Apply;
 use etcetera::BaseStrategy;
 use nix::unistd::getuid;
 
@@ -24,7 +25,7 @@ pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
         .context("Failed to find paru cache dir")?
         .cache_dir()
         .join("paru")
-        .ok()
+        .apply(Ok)
 }
 
 fn sure_(message: impl Display) -> Result<bool, io::Error> {
@@ -48,20 +49,5 @@ impl<T> JoinError<T> for JoinHandle<T> {
     fn join_err_map(self) -> anyhow::Result<T> {
         self.join()
             .map_err(|err| anyhow!("Thread paniced: {err:?}"))
-    }
-}
-
-pub trait MapRes: Sized {
-    fn ok<E>(self) -> Result<Self, E>;
-    fn err<O>(self) -> Result<O, Self>;
-}
-
-impl<T> MapRes for T {
-    fn ok<E>(self) -> Result<T, E> {
-        Ok(self)
-    }
-
-    fn err<O>(self) -> Result<O, Self> {
-        Err(self)
     }
 }

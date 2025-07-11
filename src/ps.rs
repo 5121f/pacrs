@@ -136,7 +136,7 @@ pub fn ps(sort_by: Option<&str>, shorter: bool, reverse: bool, quiet: bool) -> a
     let pkgs_files = pkgs_files.join_err_map()??;
     let deleted_files_and_his_processes = deleted_files_and_his_processes.join_err_map()??;
 
-    let mut processes: Vec<Process> = deleted_files_and_his_processes
+    let processes: Vec<Process> = deleted_files_and_his_processes
         .into_iter()
         .filter_map(|(process, files)| {
             files
@@ -150,27 +150,38 @@ pub fn ps(sort_by: Option<&str>, shorter: bool, reverse: bool, quiet: bool) -> a
         if !quiet {
             println!("The processes using remote files were not found.");
         }
-
         return Ok(());
     }
 
     if shorter {
-        let mut command_names: Vec<String> = processes.into_iter().map(|p| p.command).collect();
-
-        command_names.sort();
-        command_names.dedup();
-
-        if reverse {
-            command_names.reverse();
-        }
-
-        for command in command_names {
-            println!("{command}");
-        }
-
-        return Ok(());
+        short_print(processes, reverse);
+    } else {
+        long_print(processes, reverse, sort_by)?;
     }
 
+    Ok(())
+}
+
+fn short_print(processes: Vec<Process>, reverse: bool) {
+    let mut command_names: Vec<String> = processes.into_iter().map(|p| p.command).collect();
+
+    command_names.sort();
+    command_names.dedup();
+
+    if reverse {
+        command_names.reverse();
+    }
+
+    for command in command_names {
+        println!("{command}");
+    }
+}
+
+fn long_print(
+    mut processes: Vec<Process>,
+    reverse: bool,
+    sort_by: Option<&str>,
+) -> anyhow::Result<()> {
     match sort_by {
         Some("pid") => processes.sort_by(|a, b| a.pid.cmp(&b.pid)),
         Some("user") => processes.sort_by(|a, b| a.user_name.cmp(&b.user_name)),

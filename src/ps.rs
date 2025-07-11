@@ -148,7 +148,7 @@ pub fn ps(sort_by: Option<&str>, shorter: bool, reverse: bool, quiet: bool) -> a
 
     if processes.is_empty() {
         if !quiet {
-            println!("No processes using deleted files found.");
+            println!("The processes using remote files were not found.");
         }
 
         return Ok(());

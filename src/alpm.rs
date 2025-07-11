@@ -27,6 +27,10 @@ impl PacrsAlpm {
         Self(alpm)
     }
 
+    pub fn is_installed_pkg(&self, pkg_name: &str) -> bool {
+        self.localdb().pkg(pkg_name).is_ok()
+    }
+
     pub fn package_was_updated(&self, alpm_tmp: &TempAlpm, package: &str) -> anyhow::Result<bool> {
         let pkg = self.syncdb_pkg(package)?;
         let pkg_tmp = alpm_tmp.syncdb_pkg(package)?;

@@ -22,8 +22,7 @@ pub fn package_search(regex: &str) -> anyhow::Result<()> {
 
 pub fn info(package: &str) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
-    let is_local_pkg = alpm.localdb().pkg(package).is_ok();
-    if is_local_pkg {
+    if alpm.is_installed_pkg(package) {
         pacman().args(["-Qi", package]).execute()?;
     } else {
         paru_or_pacman().args(["-Si", package]).execute()?;

@@ -95,9 +95,7 @@ impl PacrsAlpm {
         self.0
             .syncdbs()
             .into_iter()
-            .map(|db| db.group(group).ok())
-            .find(Option::is_some)
-            .flatten()
+            .find_map(|db| db.group(group).ok())
             .with_context(|| anyhow!("Failed to find group \"{group}\""))
     }
 

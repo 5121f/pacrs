@@ -51,3 +51,18 @@ impl<T> JoinError<T> for JoinHandle<T> {
             .map_err(|err| anyhow!("Thread paniced: {err:?}"))
     }
 }
+
+pub trait ErrInto<T, E> {
+    fn err_into<EE>(self) -> Result<T, EE>
+    where
+        EE: From<E>;
+}
+
+impl<T, E> ErrInto<T, E> for Result<T, E> {
+    fn err_into<EE>(self) -> Result<T, EE>
+    where
+        EE: From<E>,
+    {
+        self.map_err(Into::into)
+    }
+}

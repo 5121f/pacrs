@@ -37,24 +37,20 @@ impl PacrsAlpm {
         Ok(pkg.version() < pkg_tmp.version())
     }
 
-    pub fn pkgs_or_their_deps_was_updated_in_db<'a>(
-        &'a self,
-        alpm_tmp: &TempAlpm,
-        packages: Vec<&'a str>,
-    ) -> Vec<&'a str> {
-        let mut for_check = packages;
+    pub fn outdated_pkgs<'a>(&'a self, alpm_tmp: &TempAlpm) -> Vec<&'a str> {
+        let mut for_check: Vec<&str> = self.localdb().pkgs().iter().map(|p| p.name()).collect();
         let mut already_checked = Vec::with_capacity(for_check.len());
-        let mut update_pkgs = Vec::new();
+        let mut outdated_pkgs = Vec::new();
         while let Some(pkg) = for_check.pop() {
             if already_checked.contains(&pkg) {
                 continue;
             }
-            let was_updated = self
+            let outdated = self
                 // We assume that if package not found in syncdb, then the package from AUR and we ignore it
                 .is_pkg_outdated(alpm_tmp, pkg)
                 .unwrap_or(false);
-            if was_updated {
-                update_pkgs.push(pkg);
+            if outdated {
+                outdated_pkgs.push(pkg);
             }
             let deps = self
                 .dependencies(pkg)
@@ -65,7 +61,7 @@ impl PacrsAlpm {
             for_check.extend(deps);
             already_checked.push(pkg);
         }
-        update_pkgs
+        outdated_pkgs
     }
 
     pub fn dependencies<'a>(&'a self, package: &str) -> anyhow::Result<Vec<&'a Package>> {

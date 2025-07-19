@@ -49,15 +49,16 @@ pub fn install(packages: &[String]) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::new()?;
 
-    let installed_pkgs = pacman::installed_packages().execute_and_grub_lines()?;
-    let pkgs = packages.iter().map(String::as_str).collect();
-    let updated_pkgs = alpm.pkgs_or_their_deps_was_updated_in_db(&alpm_tmp, pkgs);
+    let installed_pkgs = alpm.localdb().pkgs();
+    let outdated_pkgs = alpm.outdated_pkgs(&alpm_tmp);
 
-    let all_updated_pkgs_is_installed = updated_pkgs
-        .iter()
-        .all(|updated| installed_pkgs.iter().any(|instelled| instelled == updated));
+    let has_outdated = outdated_pkgs.into_iter().any(|outdated| {
+        installed_pkgs
+            .iter()
+            .any(|instelled| instelled.name() == outdated)
+    });
 
-    if !all_updated_pkgs_is_installed {
+    if has_outdated {
         bail!(
             "One or more package you will want to install or their dependencies was updated in \
             the repo. Update your system with 'pacrs update' before install it."

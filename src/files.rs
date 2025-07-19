@@ -29,10 +29,9 @@ pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Res
 
     let files = match files {
         Ok(files) => files,
-        Err(command::Error::EndedWithNonZero {
-            exit_status: _,
-            command_name: _,
-        }) => package_files_global(name, update_index, quiet)?,
+        Err(err) if matches!(err.kind, command::ErrorKind::EndedWithNonZero { .. }) => {
+            package_files_global(name, update_index, quiet)?
+        }
         Err(err) => return Err(err.into()),
     };
 

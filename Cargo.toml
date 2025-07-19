@@ -29,7 +29,7 @@ anyhow = "1.0.98"
 thiserror = "2.0.12"
 
 # Utils
-derive_more = { version = "2.0.1", features = ["deref"] }
+derive_more = { version = "2.0.1", features = ["deref", "display"] }
 apply = "0.3.0"
 
 [profile.release]

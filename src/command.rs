@@ -6,6 +6,7 @@ use std::process::{Command, ExitStatus, Stdio};
 use std::str::{self, Utf8Error};
 
 use apply::Apply;
+use derive_more::Display;
 
 pub struct Cmd {
     cmd: Command,
@@ -75,22 +76,20 @@ impl Cmd {
 }
 
 #[derive(Debug, thiserror::Error)]
-pub enum Error {
-    #[error("{command_name}: Failed to execute program: {source}")]
-    Execute {
-        source: io::Error,
-        command_name: String,
-    },
-    #[error("{command_name}: Parse output failed: {source}")]
-    Parse {
-        source: Utf8Error,
-        command_name: String,
-    },
-    #[error("{command_name}: Command ended with error: {exit_status}")]
-    EndedWithNonZero {
-        exit_status: ExitStatus,
-        command_name: String,
-    },
+#[error("{command_name}: {kind}")]
+pub struct Error {
+    pub command_name: String,
+    pub kind: ErrorKind,
+}
+
+#[derive(Debug, Display)]
+pub enum ErrorKind {
+    #[display("Failed to execute program: {source}")]
+    Execute { source: io::Error },
+    #[display("Parse output failed: {source}")]
+    Parse { source: Utf8Error },
+    #[display("Command ended with error: {exit_status}")]
+    EndedWithNonZero { exit_status: ExitStatus },
 }
 
 trait CommandName {
@@ -105,26 +104,23 @@ impl CommandName for Command {
 
 impl Error {
     fn execute(command: &Command, source: io::Error) -> Self {
-        let command_name = command.name();
-        Self::Execute {
-            source,
-            command_name,
+        Self {
+            command_name: command.name(),
+            kind: ErrorKind::Execute { source },
         }
     }
 
     fn parse(command: &Command, source: Utf8Error) -> Self {
-        let command_name = command.name();
-        Self::Parse {
-            command_name,
-            source,
+        Self {
+            command_name: command.name(),
+            kind: ErrorKind::Parse { source },
         }
     }
 
     fn ended_with_non_zero(command: &Command, exit_status: ExitStatus) -> Self {
-        let command_name = command.name();
-        Self::EndedWithNonZero {
-            exit_status,
-            command_name,
+        Self {
+            command_name: command.name(),
+            kind: ErrorKind::EndedWithNonZero { exit_status },
         }
     }
 }

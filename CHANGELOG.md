@@ -3,6 +3,7 @@
 ## Unreleased
 
 - changled alias for `autoremove` from `arm` to `ar`
+- `install`: fix outdated check
 - `clean`: request root password if needed
 - `packages`: added `search` key for search in installed packages
 - actualized fish completions

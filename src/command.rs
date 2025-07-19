@@ -10,6 +10,7 @@ use apply::Apply;
 pub struct Cmd {
     cmd: Command,
 }
+
 impl Cmd {
     pub fn new(bin: &str) -> Self {
         let cmd = Command::new(bin);

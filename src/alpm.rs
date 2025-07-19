@@ -3,7 +3,7 @@
 use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
 use anyhow::{Context, anyhow, bail};
-use apply::Apply;
+use apply::{Also, Apply};
 use derive_more::Deref;
 
 use crate::temp_db::TempAlpm;
@@ -79,14 +79,12 @@ impl PacrsAlpm {
         let deps = pkg.depends();
         let mut res = Vec::with_capacity(deps.len());
         for dep in deps {
-            let dep = self
-                .0
-                .syncdbs()
+            self.syncdbs()
                 .find_satisfier(dep.name())
                 .with_context(|| {
                     anyhow!("{}: failed to find satisfier for the package", dep.name())
-                })?;
-            res.push(dep);
+                })?
+                .also(|dep| res.push(*dep));
         }
         Ok(res)
     }

@@ -31,7 +31,7 @@ impl PacrsAlpm {
         self.localdb().pkg(pkg_name).is_ok()
     }
 
-    pub fn package_was_updated(&self, alpm_tmp: &TempAlpm, package: &str) -> anyhow::Result<bool> {
+    pub fn is_pkg_outdated(&self, alpm_tmp: &TempAlpm, package: &str) -> anyhow::Result<bool> {
         let pkg = self.syncdb_pkg(package)?;
         let pkg_tmp = alpm_tmp.syncdb_pkg(package)?;
         Ok(pkg.version() < pkg_tmp.version())
@@ -51,7 +51,7 @@ impl PacrsAlpm {
             }
             let was_updated = self
                 // We assume that if package not found in syncdb, then the package from AUR and we ignore it
-                .package_was_updated(alpm_tmp, pkg)
+                .is_pkg_outdated(alpm_tmp, pkg)
                 .unwrap_or(false);
             if was_updated {
                 update_pkgs.push(pkg);

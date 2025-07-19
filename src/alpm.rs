@@ -71,24 +71,28 @@ impl PacrsAlpm {
     pub fn dependencies<'a>(&'a self, package: &str) -> anyhow::Result<Vec<&'a Package>> {
         let pkg = self.0.syncdbs().pkg(package);
         if let Ok(pkg) = pkg {
-            let deps = pkg.depends();
-            let mut res = Vec::with_capacity(deps.len());
-            for dep in deps {
-                let dep = self
-                    .0
-                    .syncdbs()
-                    .find_satisfier(dep.name())
-                    .with_context(|| {
-                        anyhow!("{}: failed to find satisfier for the package", dep.name())
-                    })?;
-                res.push(dep);
-            }
-            return Ok(res);
+            return self.pkg_deps(pkg);
         }
         if let Ok(group) = self.group(package) {
             return group.packages().into_iter().collect::<Vec<_>>().apply(Ok);
         }
         bail!("{package}: failed to define package type");
+    }
+
+    fn pkg_deps(&self, pkg: &Package) -> anyhow::Result<Vec<&Package>> {
+        let deps = pkg.depends();
+        let mut res = Vec::with_capacity(deps.len());
+        for dep in deps {
+            let dep = self
+                .0
+                .syncdbs()
+                .find_satisfier(dep.name())
+                .with_context(|| {
+                    anyhow!("{}: failed to find satisfier for the package", dep.name())
+                })?;
+            res.push(dep);
+        }
+        Ok(res)
     }
 
     fn group<'a>(&'a self, group: &str) -> anyhow::Result<&'a Group> {

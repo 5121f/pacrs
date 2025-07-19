@@ -49,14 +49,11 @@ pub fn install(packages: &[String]) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::new()?;
 
-    let installed_pkgs = alpm.localdb().pkgs();
     let outdated_pkgs = alpm.outdated_pkgs(&alpm_tmp);
 
-    let has_outdated = outdated_pkgs.into_iter().any(|outdated| {
-        installed_pkgs
-            .iter()
-            .any(|instelled| instelled.name() == outdated)
-    });
+    let has_outdated = outdated_pkgs
+        .into_iter()
+        .any(|outdated| packages.iter().any(|instelled| instelled == outdated));
 
     if has_outdated {
         bail!(

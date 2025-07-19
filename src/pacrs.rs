@@ -121,9 +121,7 @@ pub fn deps() -> anyhow::Result<Vec<String>> {
 pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {
     if is_root() {
         pacman().arg("-Fy").execute()?;
-        return Ok(());
-    }
-    if !quiet {
+    } else if !quiet {
         eprintln!("Running without root privileges. Files index wouldn't be updated.");
     }
     Ok(())

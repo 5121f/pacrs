@@ -65,7 +65,7 @@ impl PacrsAlpm {
     }
 
     pub fn dependencies<'a>(&'a self, package: &str) -> anyhow::Result<Vec<&'a Package>> {
-        let pkg = self.0.syncdbs().pkg(package);
+        let pkg = self.syncdbs().pkg(package);
         if let Ok(pkg) = pkg {
             return self.pkg_deps(pkg);
         }
@@ -92,8 +92,7 @@ impl PacrsAlpm {
     }
 
     fn group<'a>(&'a self, group: &str) -> anyhow::Result<&'a Group> {
-        self.0
-            .syncdbs()
+        self.syncdbs()
             .into_iter()
             .find_map(|db| db.group(group).ok())
             .with_context(|| anyhow!("Failed to find group \"{group}\""))
@@ -107,8 +106,7 @@ impl PacrsAlpm {
     // }
 
     fn syncdb_pkg<'a>(&'a self, package: &str) -> anyhow::Result<&'a Package> {
-        self.0
-            .syncdbs()
+        self.syncdbs()
             .pkg(package)
             .with_context(|| format!("{package}: Package not found"))
     }

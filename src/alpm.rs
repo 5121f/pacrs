@@ -88,7 +88,7 @@ impl PacrsAlpm {
         if let Ok(group) = self.group(package) {
             return group.packages().into_iter().collect::<Vec<_>>().apply(Ok);
         }
-        bail!("Failed to define package type");
+        bail!("{package}: failed to define package type");
     }
 
     fn group<'a>(&'a self, group: &str) -> anyhow::Result<&'a Group> {

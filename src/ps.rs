@@ -21,15 +21,10 @@ struct Process {
 
 impl Process {
     fn new(process: &sysinfo::Process, users: &Users) -> Self {
-        let pid = process.pid();
-        let command = get_process_command(process);
-        let user_name =
-            user_name_by_process(process, users).unwrap_or_else(|| String::from("Unknown"));
-
         Self {
-            pid,
-            user_name,
-            command,
+            pid: process.pid(),
+            user_name: process_owner(process, users),
+            command: get_process_command(process),
         }
     }
 }
@@ -54,10 +49,14 @@ fn get_process_command(process: &sysinfo::Process) -> String {
     )
 }
 
-fn user_name_by_process(process: &sysinfo::Process, users: &Users) -> Option<String> {
+fn process_owner_(process: &sysinfo::Process, users: &Users) -> Option<String> {
     let uid = process.user_id()?;
     let user = users.get_user_by_id(uid)?;
     Some(user.name().to_owned())
+}
+
+fn process_owner(process: &sysinfo::Process, users: &Users) -> String {
+    process_owner_(process, users).unwrap_or_else(|| String::from("Unknown"))
 }
 
 fn configured_system() -> System {

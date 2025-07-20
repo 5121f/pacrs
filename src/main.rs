@@ -25,6 +25,8 @@ use args::MarkGroup;
 use clap::Parser;
 
 fn main() -> anyhow::Result<()> {
+    env_logger::init();
+
     let args = Args::parse();
     match args {
         Args::Packages {

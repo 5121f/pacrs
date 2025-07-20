@@ -15,6 +15,7 @@ pub fn sudo_pacman() -> Cmd {
     if is_root() {
         return pacman();
     }
+    log::info!("User is not root. Runing pacman with sudo.");
     sudo().arg(PACMAN_BIN)
 }
 
@@ -23,11 +24,17 @@ pub fn paru_if_present() -> Option<Cmd> {
 }
 
 pub fn paru_or_sudo_pacman() -> Cmd {
-    paru_if_present().unwrap_or_else(sudo_pacman)
+    paru_if_present().unwrap_or_else(|| {
+        log::info!("paru not founded. Using pacman.");
+        sudo_pacman()
+    })
 }
 
 pub fn paru_or_pacman() -> Cmd {
-    paru_if_present().unwrap_or_else(pacman)
+    paru_if_present().unwrap_or_else(|| {
+        log::info!("paru not founded. Using pacman.");
+        pacman()
+    })
 }
 
 fn sudo() -> Cmd {

@@ -75,8 +75,12 @@ fn configured_system() -> System {
 fn process_has_deleted_files(pid: Pid) -> anyhow::Result<BTreeSet<String>> {
     let mut result = BTreeSet::new();
     let path = format!("/proc/{pid}/maps");
-    let Ok(file) = File::open(path) else {
-        return Ok(result);
+    let file = match File::open(path) {
+        Ok(value) => value,
+        Err(err) => {
+            log::warn!("{err}");
+            return Ok(result);
+        }
     };
     let reader = BufReader::new(file);
     for line in reader.lines() {

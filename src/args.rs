@@ -84,7 +84,7 @@ pub enum Args {
         #[clap(long, short)]
         quiet: bool,
     },
-    /// Cache
+    /// Clean cache. By default cleans the entire pacman cache.
     #[clap(visible_alias = "cc")]
     Clean {
         /// Clean cache of uninstalled packages

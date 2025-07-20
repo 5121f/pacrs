@@ -6,6 +6,8 @@
 - `install`: fix outdated check
 - `clean`: request root password if needed
 - `packages`: added `search` key for search in installed packages
+- add loggin with `RUST_LOG` environment variable (how to use see
+  [here](https://docs.rs/env_logger/latest/env_logger/#enabling-logging))
 - actualized fish completions
 
 ## 0.3.0 - 2024-12-01

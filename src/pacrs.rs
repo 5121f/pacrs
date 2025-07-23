@@ -37,6 +37,11 @@ pub fn search(package: &str) -> anyhow::Result<()> {
 
 pub fn clean_cache(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
     if keep == 0 {
+        if show_remove_candidates {
+            let remove_candidates = clean::remove_candidates(keep)?;
+            clean::show_cache(&remove_candidates)?;
+            return Ok(());
+        }
         sudo_pacman().arg("-Scc").execute()?;
         return Ok(());
     }

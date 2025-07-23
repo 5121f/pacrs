@@ -14,7 +14,7 @@ const PACMAN_CACHE_PATH: &str = "/var/cache/pacman/pkg";
 const CACHE_ENTRY_REGEX: &str = r"(?<name>[\w\-\d\.+]+)-(?<version>[\w\d\.\-:+]*)-(?<subversion>[\w\d\._]+)-(?<arch>[\d\w_]+)\.(?<ext>[\w\.]+)";
 
 #[derive(PartialEq, Eq, Clone, Debug)]
-struct CacheEntry {
+pub struct CacheEntry {
     pkg_name: String,
     version: String,
     subversion: String,
@@ -56,7 +56,7 @@ pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn show_cache(cache: &[CacheEntry]) -> anyhow::Result<()> {
+pub fn show_cache(cache: &[CacheEntry]) -> anyhow::Result<()> {
     let mut total_size = 0;
     for entry in cache {
         let metadata = entry.path().metadata()?;
@@ -69,7 +69,7 @@ fn show_cache(cache: &[CacheEntry]) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn remove_candidates(keep: u8) -> anyhow::Result<Vec<CacheEntry>> {
+pub fn remove_candidates(keep: u8) -> anyhow::Result<Vec<CacheEntry>> {
     let mut cache = read_cache()?;
     cache.sort();
     cache.reverse();

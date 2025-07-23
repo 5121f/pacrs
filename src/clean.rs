@@ -24,55 +24,17 @@ struct CacheEntry {
 
 #[allow(clippy::needless_range_loop)]
 pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
-    let regex = Regex::new(CACHE_ENTRY_REGEX)
-        .context("failed to compile regular expression for cache file names")?;
-    let mut cache = Vec::new();
-    for entry in fs::read_dir(PACMAN_CACHE_PATH)? {
-        let entry = entry?;
-        match entry.path().extension() {
-            Some(ext) if ext == "sig" => continue,
-            _ => {}
-        }
-        let file_name = entry.file_name().to_string_lossy().to_string();
-        let cache_entry = parse_file_name(&file_name, &regex)
-            .context(format!("failedt to parse file name '{file_name}'"))?;
-        cache.push(cache_entry);
-    }
-    cache.sort();
-    cache.reverse();
-    let mut remove_candidates = Vec::new();
-    let mut i = 0;
-    while i < cache.len() {
-        let keeped = i + keep as usize;
-        if keeped > cache.len() {
-            break;
-        }
-        let base = i;
-        for y in keeped..cache.len() {
-            if cache[base].pkg_name != cache[y].pkg_name {
-                break;
-            }
-            remove_candidates.push(cache[y].clone());
-            i += 1;
-        }
-        i += 1;
-    }
-    let mut total_size = 0;
+    let remove_candidates = remove_candidates(keep)?;
     let candidates_count = remove_candidates.len();
     if candidates_count == 0 {
         println!("No candidates to remove");
         return Ok(());
     }
     if show_remove_candidates {
-        for entry in remove_candidates {
-            let metadata = entry.path().metadata()?;
-            total_size += metadata.size();
-            println!("{entry}");
-        }
-        let total_size = ByteSize::b(total_size);
-        println!("{candidates_count} candidates using {total_size} of disk");
+        show_cache(&remove_candidates)?;
         return Ok(());
     }
+    let mut total_size = 0;
     for entry in remove_candidates {
         let path = entry.path();
         let metadata = entry.path().metadata()?;
@@ -92,6 +54,61 @@ pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
         "{candidates_count} candidates. {files_count} files removed. {total_size} disk space saved"
     );
     Ok(())
+}
+
+fn show_cache(cache: &[CacheEntry]) -> anyhow::Result<()> {
+    let mut total_size = 0;
+    for entry in cache {
+        let metadata = entry.path().metadata()?;
+        total_size += metadata.size();
+        println!("{entry}");
+    }
+    let candidates_count = cache.len();
+    let total_size = ByteSize::b(total_size);
+    println!("{candidates_count} candidates using {total_size} of disk");
+    Ok(())
+}
+
+fn remove_candidates(keep: u8) -> anyhow::Result<Vec<CacheEntry>> {
+    let mut cache = read_cache()?;
+    cache.sort();
+    cache.reverse();
+    let mut remove_candidates = Vec::new();
+    let mut i = 0;
+    while i < cache.len() {
+        let keeped = i + keep as usize;
+        if keeped > cache.len() {
+            break;
+        }
+        let base = i;
+        for y in keeped..cache.len() {
+            if cache[base].pkg_name != cache[y].pkg_name {
+                break;
+            }
+            remove_candidates.push(cache[y].clone());
+            i += 1;
+        }
+        i += 1;
+    }
+    Ok(remove_candidates)
+}
+
+fn read_cache() -> anyhow::Result<Vec<CacheEntry>> {
+    let regex = Regex::new(CACHE_ENTRY_REGEX)
+        .context("failed to compile regular expression for cache file names")?;
+    let mut cache = Vec::new();
+    for entry in fs::read_dir(PACMAN_CACHE_PATH)? {
+        let entry = entry?;
+        match entry.path().extension() {
+            Some(ext) if ext == "sig" => continue,
+            _ => {}
+        }
+        let file_name = entry.file_name().to_string_lossy().to_string();
+        let cache_entry = parse_file_name(&file_name, &regex)
+            .context(format!("failedt to parse file name '{file_name}'"))?;
+        cache.push(cache_entry);
+    }
+    Ok(cache)
 }
 
 fn parse_file_name(file_name: &str, regex: &Regex) -> Option<CacheEntry> {

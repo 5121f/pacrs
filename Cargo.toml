@@ -11,6 +11,7 @@ keywords = ["archlinux", "arch", "pacman", "aur", "zypper", "apt"]
 # UI
 clap = { version = "4.5.41", features = ["derive", "cargo", "wrap_help"] }
 tabled = "0.20.0"
+owo-colors = "4.2.2"
 
 # Pacman
 alpm = "4.0.3"

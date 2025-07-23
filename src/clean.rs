@@ -7,6 +7,7 @@ use std::{
 use anyhow::Context;
 use bytesize::ByteSize;
 use fs_err as fs;
+use owo_colors::OwoColorize;
 use regex::Regex;
 
 const PACMAN_CACHE_PATH: &str = "/var/cache/pacman/pkg";
@@ -49,8 +50,15 @@ pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
     }
     let files_count = candidates_count * 2;
     let total_size = ByteSize::b(total_size);
+    let prompt = "==>".green();
     println!(
-        "{candidates_count} candidates. {files_count} files removed. {total_size} disk space saved"
+        "{}",
+        format!(
+            "{prompt} {candidates_count} candidates. \
+            {files_count} files removed. \
+            {total_size} disk space saved"
+        )
+        .bold()
     );
     Ok(())
 }
@@ -64,7 +72,11 @@ pub fn show_cache(cache: &[CacheEntry]) -> anyhow::Result<()> {
     }
     let candidates_count = cache.len();
     let total_size = ByteSize::b(total_size);
-    println!("{candidates_count} candidates using {total_size} of disk");
+    let prompt = "==>".green();
+    println!(
+        "{}",
+        format!("{prompt} {candidates_count} candidates using {total_size} of disk").bold()
+    );
     Ok(())
 }
 

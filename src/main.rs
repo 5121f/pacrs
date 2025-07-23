@@ -4,6 +4,7 @@
 
 mod alpm;
 mod args;
+mod clean;
 mod cmds;
 mod command;
 mod files;
@@ -52,7 +53,11 @@ fn main() -> anyhow::Result<()> {
             not_update_index,
             quiet,
         } => files(package, file, not_update_index, quiet)?,
-        Args::Clean { uninstalled, aur } => cache(uninstalled, aur)?,
+        Args::Clean {
+            uninstalled,
+            aur,
+            keep,
+        } => cache(uninstalled, aur, keep)?,
         Args::Mark {
             packages,
             mark_group:
@@ -109,14 +114,14 @@ fn files(
     Ok(())
 }
 
-fn cache(uninstalled: bool, aur: bool) -> anyhow::Result<()> {
+fn cache(uninstalled: bool, aur: bool, keep: Option<u8>) -> anyhow::Result<()> {
     if uninstalled {
         return pacrs::clean_cache_uninstalled();
     }
     if aur {
         return pacrs::clean_paru_cache();
     }
-    pacrs::clean_cache()?;
+    pacrs::clean_cache(keep.unwrap_or(0))?;
     println!("You can also clean AUR cache with 'pacrs clean --aur'");
     Ok(())
 }

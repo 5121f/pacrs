@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use crate::PacrsAlpm;
 use crate::cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman};
 use crate::pacman;
 use crate::temp_db::{TEMP_DB_PATH, TempAlpm, initialize_temp_db};
 use crate::utils::{ErrInto, is_root, paru_cache_dir, sure};
+use crate::{PacrsAlpm, clean};
 
 use anyhow::bail;
 use apply::Apply;
@@ -35,8 +35,12 @@ pub fn search(package: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn clean_cache() -> anyhow::Result<()> {
-    sudo_pacman().arg("-Scc").execute()?;
+pub fn clean_cache(keep: u8) -> anyhow::Result<()> {
+    if keep == 0 {
+        sudo_pacman().arg("-Scc").execute()?;
+        return Ok(());
+    }
+    clean::clean(keep)?;
     Ok(())
 }
 

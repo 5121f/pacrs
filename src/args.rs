@@ -93,6 +93,8 @@ pub enum Args {
         /// Clean AUR cache
         #[clap(long, short, conflicts_with = "uninstalled")]
         aur: bool,
+        #[clap(long, short, conflicts_with = "uninstalled", conflicts_with = "aur")]
+        keep: Option<u8>,
     },
     /// Mark packages
     #[clap(visible_alias = "mr")]

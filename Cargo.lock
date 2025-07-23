@@ -411,6 +411,7 @@ dependencies = [
  "log",
  "nix",
  "pacmanconf",
+ "regex",
  "sysinfo",
  "tabled",
  "thiserror",

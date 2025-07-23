@@ -35,6 +35,7 @@ env_logger = "0.11.8"
 # Utils
 derive_more = { version = "2.0.1", features = ["deref", "display"] }
 apply = "0.3.0"
+regex = "1.11.1"
 
 [profile.release]
 lto = true

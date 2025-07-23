@@ -76,7 +76,7 @@ complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed e
 complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependencie'
 
 # ps options
-complete -c $progname -n $ps -s s -l sort-by -d 'Sort output'
+complete -c $progname -n $ps -s s -l sort-by -d 'Sort output by given field'
 complete -c $progname -n $ps -s o -l shorter -d 'Show only list of commands instead of table'
 complete -c $progname -n $ps -s r -l reverse -d 'Reverse sorting'
 

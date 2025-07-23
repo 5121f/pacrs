@@ -3,7 +3,6 @@
 use alpm::{Alpm, Group, Package};
 use alpm_utils::DbListExt;
 use anyhow::{Context, anyhow, bail};
-use apply::{Also, Apply};
 use derive_more::Deref;
 
 use crate::temp_db::TempAlpm;
@@ -20,7 +19,7 @@ impl PacrsAlpm {
         let conf = pacmanconf()?;
         let alpm =
             alpm_utils::alpm_with_conf(&conf).context("Failed to initialize alpm connection")?;
-        Self(alpm).apply(Ok)
+        Ok(Self(alpm))
     }
 
     pub fn with_alpm(alpm: Alpm) -> Self {
@@ -70,7 +69,7 @@ impl PacrsAlpm {
             return self.pkg_deps(pkg);
         }
         if let Ok(group) = self.group(package) {
-            return group.packages().into_iter().collect::<Vec<_>>().apply(Ok);
+            return Ok(group.packages().into_iter().collect::<Vec<_>>());
         }
         bail!("{package}: failed to define package type");
     }
@@ -79,12 +78,10 @@ impl PacrsAlpm {
         let deps = pkg.depends();
         let mut res = Vec::with_capacity(deps.len());
         for dep in deps {
-            self.syncdbs()
-                .find_satisfier(dep.name())
-                .with_context(|| {
-                    anyhow!("{}: failed to find satisfier for the package", dep.name())
-                })?
-                .also(|dep| res.push(*dep));
+            let satisfier = self.syncdbs().find_satisfier(dep.name()).with_context(|| {
+                anyhow!("{}: failed to find satisfier for the package", dep.name())
+            })?;
+            res.push(satisfier);
         }
         Ok(res)
     }

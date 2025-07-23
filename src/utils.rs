@@ -6,7 +6,6 @@ use std::path::PathBuf;
 use std::thread::JoinHandle;
 
 use anyhow::{Context, anyhow};
-use apply::Apply;
 use etcetera::BaseStrategy;
 use nix::unistd::getuid;
 
@@ -21,11 +20,10 @@ pub fn is_root() -> bool {
 }
 
 pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
-    etcetera::choose_base_strategy()
+    Ok(etcetera::choose_base_strategy()
         .context("Failed to find paru cache dir")?
         .cache_dir()
-        .join("paru")
-        .apply(Ok)
+        .join("paru"))
 }
 
 fn sure_(message: impl Display) -> Result<bool, io::Error> {

@@ -5,7 +5,6 @@ use std::io;
 use std::process::{Command, ExitStatus, Stdio};
 use std::str::{self, Utf8Error};
 
-use apply::Apply;
 use derive_more::Display;
 
 pub struct Cmd {
@@ -60,18 +59,18 @@ impl Cmd {
             str::from_utf8(&output.stdout).map_err(|source| Error::parse(&self.cmd, source))?;
 
         if !output.status.success() {
-            return Error::ended_with_non_zero(&self.cmd, output.status).apply(Err);
+            return Err(Error::ended_with_non_zero(&self.cmd, output.status));
         }
 
-        string.trim().to_owned().apply(Ok)
+        Ok(string.trim().to_owned())
     }
 
     pub fn execute_and_grub_lines(self) -> Result<Vec<String>> {
-        self.execute_and_grub_output()?
+        Ok(self
+            .execute_and_grub_output()?
             .split('\n')
             .map(ToOwned::to_owned)
-            .collect::<Vec<_>>()
-            .apply(Ok)
+            .collect::<Vec<_>>())
     }
 }
 

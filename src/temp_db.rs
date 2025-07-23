@@ -4,7 +4,6 @@ use std::path::{Path, PathBuf};
 
 use alpm::Alpm;
 use anyhow::Context;
-use apply::Apply;
 use derive_more::Deref;
 use etcetera::BaseStrategy;
 use fs_err as fs;
@@ -30,7 +29,7 @@ impl TempAlpm {
             .context("Failed to initialize alpm connection")?;
         alpm_utils::configure_alpm(&mut alpm, &conf).context("Failed to configure alpm")?;
         init(path)?;
-        Self(PacrsAlpm::with_alpm(alpm)).apply(Ok)
+        Ok(Self(PacrsAlpm::with_alpm(alpm)))
     }
 
     pub fn with_default_path() -> anyhow::Result<Self> {

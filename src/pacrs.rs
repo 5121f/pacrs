@@ -7,7 +7,6 @@ use crate::{PacrsAlpm, clean};
 use crate::{pacman, temp_db};
 
 use anyhow::bail;
-use apply::Apply;
 use fs_err as fs;
 
 pub fn installed_pkgs() -> anyhow::Result<()> {
@@ -76,7 +75,7 @@ pub fn install(packages: &[String]) -> anyhow::Result<()> {
 }
 
 pub fn list_aur_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qmq").execute_and_grub_lines()?.apply(Ok)
+    Ok(pacman().arg("-Qmq").execute_and_grub_lines()?)
 }
 
 pub fn remove(packages: &[String], clean_deps: bool) -> anyhow::Result<()> {

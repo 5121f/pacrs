@@ -2,11 +2,15 @@
 
 ## Unreleased
 
+- `clean`
+  - added `keep` flag for preserve some packets in cache instead of
+    deleting them all
+  - added `show-remove-candidates` which now works only with `keep` flag
+  - request root password if needed (not with `keep` flag)
 - changled alias for `autoremove` from `arm` to `ar`
 - `install`: fix outdated check
-- `clean`: request root password if needed
 - `packages`: added `search` key for search in installed packages
-- add loggin with `RUST_LOG` environment variable (how to use see
+- add loggin with `RUST_LOG` environment variable (how to use it see
   [here](https://docs.rs/env_logger/latest/env_logger/#enabling-logging))
 - actualized fish completions
 

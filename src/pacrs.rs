@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 use crate::cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman};
-use crate::pacman;
-use crate::temp_db::{TEMP_DB_PATH, TempAlpm, initialize_temp_db};
+use crate::temp_db::TempAlpm;
 use crate::utils::{ErrInto, is_root, paru_cache_dir, sure};
 use crate::{PacrsAlpm, clean};
+use crate::{pacman, temp_db};
 
 use anyhow::bail;
 use apply::Apply;
@@ -51,7 +51,7 @@ pub fn clean_cache_uninstalled() -> anyhow::Result<()> {
 
 pub fn install(packages: &[String]) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
-    let alpm_tmp = TempAlpm::new()?;
+    let alpm_tmp = TempAlpm::with_default_path()?;
 
     let outdated_pkgs = alpm.outdated_pkgs(&alpm_tmp);
 
@@ -89,9 +89,10 @@ pub fn update(packages: &[String]) -> anyhow::Result<()> {
 }
 
 pub fn list_updates() -> anyhow::Result<()> {
-    initialize_temp_db()?;
+    let temp_db_path = temp_db::path()?;
+    temp_db::init(&temp_db_path)?;
     paru_or_pacman()
-        .args(["-Qu", "--dbpath", TEMP_DB_PATH])
+        .args(["-Qu", "--dbpath", &temp_db_path.to_string_lossy()])
         .execute()?;
     Ok(())
 }

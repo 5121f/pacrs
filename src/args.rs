@@ -84,7 +84,7 @@ pub enum Args {
         #[clap(long, short)]
         quiet: bool,
     },
-    /// Clean cache. By default cleans the entire pacman cache.
+    /// Clean pacman cache. By default cleans the entire cache.
     #[clap(visible_alias = "cc")]
     Clean {
         /// Clean cache of uninstalled packages
@@ -93,14 +93,17 @@ pub enum Args {
         /// Clean AUR cache
         #[clap(long, short, conflicts_with = "uninstalled")]
         aur: bool,
+        /// Keep "num" of each package in the cache
         #[clap(
             long,
             short,
+            value_name = "NUM",
             default_value = "0",
             conflicts_with = "uninstalled",
             conflicts_with = "aur"
         )]
         keep: u8,
+        /// Only show remove candidates without removing
         #[clap(long, short, conflicts_with = "aur", conflicts_with = "uninstalled")]
         show_remove_candidated: bool,
     },

@@ -156,7 +156,7 @@ pub fn ps(
 
     if processes.is_empty() {
         if !quiet {
-            println!("The processes using remote files were not found.");
+            println!("The processes using removed files were not found.");
         }
         return Ok(());
     }

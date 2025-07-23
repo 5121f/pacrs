@@ -44,12 +44,11 @@ pub fn clean(keep: u8) -> anyhow::Result<()> {
         }
         let base = i;
         for y in keeped..cache.len() {
-            if cache[base].pkg_name == cache[y].pkg_name {
-                remove_candidates.push(cache[y].clone());
-                i += 1;
-            } else {
+            if cache[base].pkg_name != cache[y].pkg_name {
                 break;
             }
+            remove_candidates.push(cache[y].clone());
+            i += 1;
         }
         i += 1;
     }

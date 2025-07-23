@@ -118,7 +118,7 @@ fn files(
 fn cache(
     uninstalled: bool,
     aur: bool,
-    keep: Option<u8>,
+    keep: u8,
     show_remove_candidates: bool,
 ) -> anyhow::Result<()> {
     if uninstalled {
@@ -127,7 +127,7 @@ fn cache(
     if aur {
         return pacrs::clean_paru_cache();
     }
-    pacrs::clean_cache(keep.unwrap_or(0), show_remove_candidates)?;
+    pacrs::clean_cache(keep, show_remove_candidates)?;
     if !show_remove_candidates {
         println!("You can also clean AUR cache with 'pacrs clean --aur'");
     }

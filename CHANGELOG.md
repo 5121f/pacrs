@@ -5,7 +5,8 @@
 - `clean`
   - added `keep` flag for preserve some packets in cache instead of
     deleting them all
-  - added `show-remove-candidates` which now works only with `keep` flag
+  - added `show-remove-candidates` which now dosen't work with
+    `uninstalled` flag
   - request root password if needed (not with `keep` flag)
 - changled alias for `autoremove` from `arm` to `ar`
 - `install`: fix outdated check

@@ -35,10 +35,10 @@ complete -c $progname -a 'autoremove' -d 'Remove unneeded packages'
 complete -c $progname -a 'update' -d 'Update installed packages with newer versions'
 complete -c $progname -a 'packages' -d 'List all available packages'
 complete -c $progname -a 'info' -d 'Displays detailed information about the specified packages'
-complete -c $progname -a 'search' -d 'Search for packages matching any of the given search strings.'
+complete -c $progname -a 'search' -d 'Search for packages matching any of the given search strings'
 complete -c $progname -a 'list-updates' -d 'List available updates'
 complete -c $progname -a 'files' -d 'Print list of files'
-complete -c $progname -a 'clean' -d 'Clean cache'
+complete -c $progname -a 'clean' -d 'Clean pacman cache. By default cleans the entire cache'
 complete -c $progname -a 'mark' -d 'Mark packages'
 complete -c $progname -a 'ps' -d 'Processes which continue to use deleted files'
 complete -c $progname -a 'help' -d 'Print this message or the help of the given subcommand(s)'
@@ -68,6 +68,8 @@ complete -c $progname -n $files -s U -l not-update-index -d 'Don\'t update files
 # Clean options
 complete -c $progname -n $clean -s u -l uninstalled -d 'Clean cache of uninstalled packages'
 complete -c $progname -n $clean -s a -l aur -d 'Clean AUR cache'
+complete -c $progname -n $clean -s k -l keep -d 'Keep "num" of each package in the cache'
+complete -c $progname -n $clean -s s -l show_remove_candidates -d 'Only show remove candidates without removing'
 
 # Mark options
 complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed explicit'

@@ -57,8 +57,8 @@ fn main() -> anyhow::Result<()> {
             uninstalled,
             aur,
             keep,
-            show_remove_candidated,
-        } => cache(uninstalled, aur, keep, show_remove_candidated)?,
+            show_remove_candidates,
+        } => cache(uninstalled, aur, keep, show_remove_candidates)?,
         Args::Mark {
             packages,
             mark_group:

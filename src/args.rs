@@ -52,7 +52,7 @@ pub enum Args {
         #[clap(long, short)]
         aur: bool,
     },
-    /// Search for packages matching any of the given search strings.
+    /// Search for packages matching any of the given search strings
     #[clap(visible_alias = "se")]
     Search {
         #[clap(required = true)]
@@ -84,7 +84,7 @@ pub enum Args {
         #[clap(long, short)]
         quiet: bool,
     },
-    /// Clean pacman cache. By default cleans the entire cache.
+    /// Clean pacman cache. By default cleans the entire cache
     #[clap(visible_alias = "cc")]
     Clean {
         /// Clean cache of uninstalled packages
@@ -105,7 +105,7 @@ pub enum Args {
         keep: u8,
         /// Only show remove candidates without removing
         #[clap(long, short, conflicts_with = "aur", conflicts_with = "uninstalled")]
-        show_remove_candidated: bool,
+        show_remove_candidates: bool,
     },
     /// Mark packages
     #[clap(visible_alias = "mr")]

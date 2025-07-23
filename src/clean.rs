@@ -22,7 +22,6 @@ pub struct CacheEntry {
     ext: String,
 }
 
-#[allow(clippy::needless_range_loop)]
 pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
     let remove_candidates = remove_candidates(keep)?;
     let candidates_count = remove_candidates.len();

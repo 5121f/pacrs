@@ -1,9 +1,11 @@
 use std::{
     fmt,
+    os::unix::fs::MetadataExt,
     path::{Path, PathBuf},
 };
 
 use anyhow::Context;
+use bytesize::ByteSize;
 use fs_err as fs;
 use regex::Regex;
 
@@ -55,21 +57,40 @@ pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
         }
         i += 1;
     }
+    let mut total_size = 0;
+    let candidates_count = remove_candidates.len();
+    if candidates_count == 0 {
+        println!("No candidates to remove");
+        return Ok(());
+    }
     if show_remove_candidates {
         for entry in remove_candidates {
+            let metadata = entry.path().metadata()?;
+            total_size += metadata.size();
             println!("{entry}");
         }
+        let total_size = ByteSize::b(total_size);
+        println!("{candidates_count} candidates using {total_size} of disk");
         return Ok(());
     }
     for entry in remove_candidates {
         let path = entry.path();
+        let metadata = entry.path().metadata()?;
+        total_size += metadata.size();
         let path_str = path.to_string_lossy();
         log::info!("Removing file: {path_str}");
         fs::remove_file(&path)?;
         let sig_path = format!("{path_str}.sig");
+        let metadata = Path::new(&sig_path).metadata()?;
+        total_size += metadata.size();
         log::info!("Removing file: {sig_path}");
         fs::remove_file(sig_path)?;
     }
+    let files_count = candidates_count * 2;
+    let total_size = ByteSize::b(total_size);
+    println!(
+        "{candidates_count} candidates. {files_count} files removed. {total_size} disk space saved"
+    );
     Ok(())
 }
 

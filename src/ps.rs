@@ -125,6 +125,24 @@ fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, BTreeSet
     Ok(result)
 }
 
+fn processes_with_deleted_files() -> anyhow::Result<Vec<Process>> {
+    let pkgs_files = std::thread::spawn(files_of_installed_pkgs);
+    let deleted_files_and_his_processes = std::thread::spawn(deleted_files_and_his_processes);
+
+    let pkgs_files = pkgs_files.join_err_map()??;
+    let deleted_files_and_his_processes = deleted_files_and_his_processes.join_err_map()??;
+
+    Ok(deleted_files_and_his_processes
+        .into_iter()
+        .filter_map(|(process, files)| {
+            files
+                .iter()
+                .any(|f| pkgs_files.contains(f))
+                .then_some(process)
+        })
+        .collect())
+}
+
 pub fn ps(
     sort_by: Option<PsSortBy>,
     shorter: bool,
@@ -138,21 +156,7 @@ pub fn ps(
         );
     }
 
-    let pkgs_files = std::thread::spawn(files_of_installed_pkgs);
-    let deleted_files_and_his_processes = std::thread::spawn(deleted_files_and_his_processes);
-
-    let pkgs_files = pkgs_files.join_err_map()??;
-    let deleted_files_and_his_processes = deleted_files_and_his_processes.join_err_map()??;
-
-    let processes: Vec<Process> = deleted_files_and_his_processes
-        .into_iter()
-        .filter_map(|(process, files)| {
-            files
-                .iter()
-                .any(|f| pkgs_files.contains(f))
-                .then_some(process)
-        })
-        .collect();
+    let processes = processes_with_deleted_files()?;
 
     if processes.is_empty() {
         if !quiet {

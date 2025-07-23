@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use std::{
-    fmt,
-    os::unix::fs::MetadataExt,
-    path::{Path, PathBuf},
-};
+use std::fmt;
+use std::os::unix::fs::MetadataExt;
+use std::path::{Path, PathBuf};
 
 use anyhow::Context;
 use bytesize::ByteSize;

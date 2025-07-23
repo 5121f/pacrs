@@ -1,4 +1,7 @@
-use std::{fmt, path::Path};
+use std::{
+    fmt,
+    path::{Path, PathBuf},
+};
 
 use anyhow::Context;
 use fs_err as fs;
@@ -59,7 +62,7 @@ pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
         return Ok(());
     }
     for entry in remove_candidates {
-        let path = Path::new(PACMAN_CACHE_PATH).join(entry.to_string());
+        let path = entry.path();
         let path_str = path.to_string_lossy();
         log::info!("Removing file: {path_str}");
         fs::remove_file(&path)?;
@@ -79,6 +82,12 @@ fn parse_file_name(file_name: &str, regex: &Regex) -> Option<CacheEntry> {
         arch: captures.name("arch")?.as_str().to_string(),
         ext: captures.name("ext")?.as_str().to_string(),
     })
+}
+
+impl CacheEntry {
+    fn path(&self) -> PathBuf {
+        Path::new(PACMAN_CACHE_PATH).join(self.to_string())
+    }
 }
 
 impl fmt::Display for CacheEntry {

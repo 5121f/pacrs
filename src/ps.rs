@@ -133,7 +133,7 @@ pub fn ps(
 ) -> anyhow::Result<()> {
     if !quiet && !is_root() {
         eprintln!(
-            "Note: Not running as root you are limited to searching for files you have permission. \
+            "Not running as root you are limited to searching for files you have permission. \
             The result might be incomplete.\n"
         );
     }

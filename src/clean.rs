@@ -18,7 +18,7 @@ struct CacheEntry {
 }
 
 #[allow(clippy::needless_range_loop)]
-pub fn clean(keep: u8) -> anyhow::Result<()> {
+pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
     let regex = Regex::new(CACHE_ENTRY_REGEX)
         .context("failed to compile regular expression for cache file names")?;
     let mut cache = Vec::new();
@@ -51,6 +51,12 @@ pub fn clean(keep: u8) -> anyhow::Result<()> {
             i += 1;
         }
         i += 1;
+    }
+    if show_remove_candidates {
+        for entry in remove_candidates {
+            println!("{entry}");
+        }
+        return Ok(());
     }
     for entry in remove_candidates {
         let path = Path::new(PACMAN_CACHE_PATH).join(entry.to_string());

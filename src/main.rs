@@ -57,7 +57,8 @@ fn main() -> anyhow::Result<()> {
             uninstalled,
             aur,
             keep,
-        } => cache(uninstalled, aur, keep)?,
+            show_remove_candidated,
+        } => cache(uninstalled, aur, keep, show_remove_candidated)?,
         Args::Mark {
             packages,
             mark_group:
@@ -114,15 +115,22 @@ fn files(
     Ok(())
 }
 
-fn cache(uninstalled: bool, aur: bool, keep: Option<u8>) -> anyhow::Result<()> {
+fn cache(
+    uninstalled: bool,
+    aur: bool,
+    keep: Option<u8>,
+    show_remove_candidates: bool,
+) -> anyhow::Result<()> {
     if uninstalled {
         return pacrs::clean_cache_uninstalled();
     }
     if aur {
         return pacrs::clean_paru_cache();
     }
-    pacrs::clean_cache(keep.unwrap_or(0))?;
-    println!("You can also clean AUR cache with 'pacrs clean --aur'");
+    pacrs::clean_cache(keep.unwrap_or(0), show_remove_candidates)?;
+    if !show_remove_candidates {
+        println!("You can also clean AUR cache with 'pacrs clean --aur'");
+    }
     Ok(())
 }
 

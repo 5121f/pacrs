@@ -35,12 +35,12 @@ pub fn search(package: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn clean_cache(keep: u8) -> anyhow::Result<()> {
+pub fn clean_cache(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
     if keep == 0 {
         sudo_pacman().arg("-Scc").execute()?;
         return Ok(());
     }
-    clean::clean(keep)?;
+    clean::clean(keep, show_remove_candidates)?;
     Ok(())
 }
 

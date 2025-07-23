@@ -6,14 +6,13 @@ use regex::Regex;
 
 const PACMAN_CACHE_PATH: &str = "/var/cache/pacman/pkg";
 
-// Packages that have not been updated for a long time may not have a subversion
 const CACHE_ENTRY_REGEX: &str = r"(?<name>[\w\-\d\.+]+)-(?<version>[\w\d\.\-:+]*)-(?<subversion>[\w\d\._]+)-(?<arch>[\d\w_]+)\.(?<ext>[\w\.]+)";
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 struct CacheEntry {
     pkg_name: String,
     version: String,
-    subversion: Option<String>,
+    subversion: String,
     arch: String,
     ext: String,
 }
@@ -71,7 +70,7 @@ fn parse_file_name(file_name: &str, regex: &Regex) -> Option<CacheEntry> {
     Some(CacheEntry {
         pkg_name: captures.name("name")?.as_str().to_string(),
         version: captures.name("version")?.as_str().to_string(),
-        subversion: captures.name("subversion").map(|v| v.as_str().to_string()),
+        subversion: captures.name("subversion")?.as_str().to_string(),
         arch: captures.name("arch")?.as_str().to_string(),
         ext: captures.name("ext")?.as_str().to_string(),
     })
@@ -79,11 +78,15 @@ fn parse_file_name(file_name: &str, regex: &Regex) -> Option<CacheEntry> {
 
 impl fmt::Display for CacheEntry {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}-{}", self.pkg_name, self.version)?;
-        if let Some(subversion) = &self.subversion {
-            write!(f, "-{subversion}")?;
-        }
-        write!(f, "-{arch}.{ext}", arch = self.arch, ext = self.ext)
+        write!(
+            f,
+            "{name}-{version}-{subversion}-{arch}.{ext}",
+            name = self.pkg_name,
+            version = self.version,
+            subversion = self.subversion,
+            arch = self.arch,
+            ext = self.ext
+        )
     }
 }
 

@@ -3,12 +3,12 @@
 use std::collections::{BTreeSet, HashMap};
 use std::io::{BufRead, BufReader};
 
-use anyhow::bail;
 use fs_err::File;
 use sysinfo::{Pid, ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind, Users};
 use tabled::settings::Style;
 use tabled::{Table, Tabled};
 
+use crate::args::PsSortBy;
 use crate::pacman;
 use crate::utils::{JoinError, is_root};
 
@@ -125,7 +125,12 @@ fn deleted_files_and_his_processes() -> anyhow::Result<HashMap<Process, BTreeSet
     Ok(result)
 }
 
-pub fn ps(sort_by: Option<&str>, shorter: bool, reverse: bool, quiet: bool) -> anyhow::Result<()> {
+pub fn ps(
+    sort_by: Option<PsSortBy>,
+    shorter: bool,
+    reverse: bool,
+    quiet: bool,
+) -> anyhow::Result<()> {
     if !quiet && !is_root() {
         eprintln!(
             "Note: Not running as root you are limited to searching for files you have permission. \
@@ -159,7 +164,7 @@ pub fn ps(sort_by: Option<&str>, shorter: bool, reverse: bool, quiet: bool) -> a
     if shorter {
         short_print(processes, reverse);
     } else {
-        long_print(processes, reverse, sort_by)?;
+        long_print(processes, reverse, sort_by);
     }
 
     Ok(())
@@ -180,17 +185,12 @@ fn short_print(processes: Vec<Process>, reverse: bool) {
     }
 }
 
-fn long_print(
-    mut processes: Vec<Process>,
-    reverse: bool,
-    sort_by: Option<&str>,
-) -> anyhow::Result<()> {
+fn long_print(mut processes: Vec<Process>, reverse: bool, sort_by: Option<PsSortBy>) {
     match sort_by {
-        Some("pid") => processes.sort_by(|a, b| a.pid.cmp(&b.pid)),
-        Some("user") => processes.sort_by(|a, b| a.user_name.cmp(&b.user_name)),
-        Some("command") => processes.sort_by(|a, b| a.command.cmp(&b.command)),
-        Some(_) => bail!("Wrong sort-by value"),
         None => {}
+        Some(PsSortBy::Pid) => processes.sort_by(|a, b| a.pid.cmp(&b.pid)),
+        Some(PsSortBy::User) => processes.sort_by(|a, b| a.user_name.cmp(&b.user_name)),
+        Some(PsSortBy::Command) => processes.sort_by(|a, b| a.command.cmp(&b.command)),
     }
 
     if reverse {
@@ -199,6 +199,4 @@ fn long_print(
 
     let table = Table::new(&processes).with(Style::psql()).to_string();
     println!("{table}");
-
-    Ok(())
 }

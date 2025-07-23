@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 
 #[derive(Parser)]
 #[command(version = clap::crate_version!(), about = clap::crate_description!())]
@@ -75,7 +75,7 @@ pub enum Args {
         #[clap(conflicts_with = "find")]
         package: Option<String>,
         /// Find specific file among all packages
-        #[clap(long, short, conflicts_with = "package")]
+        #[clap(long, short, value_name = "FILE", conflicts_with = "package")]
         find: Option<String>,
         /// Don't update files index
         #[clap(long, short = 'U')]
@@ -119,9 +119,9 @@ pub enum Args {
     /// This command is actual after updating the system and they can indicate the processes that
     /// should be restarted.
     Ps {
-        /// Sort output
-        #[clap(long, short, value_parser = ["pid", "user", "command"], conflicts_with = "shorter")]
-        sort_by: Option<String>,
+        /// Sort output by given field
+        #[clap(long, short, value_name = "SORTBY", conflicts_with = "shorter")]
+        sort_by: Option<PsSortBy>,
         /// Show only list of commands instead of table
         #[clap(long, short = 'o', conflicts_with = "sort_by")]
         shorter: bool,
@@ -132,6 +132,13 @@ pub enum Args {
         #[clap(long, short)]
         quiet: bool,
     },
+}
+
+#[derive(ValueEnum, Clone, Copy)]
+pub enum PsSortBy {
+    Pid,
+    User,
+    Command,
 }
 
 #[derive(Debug, Parser)]

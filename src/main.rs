@@ -7,6 +7,8 @@ mod args;
 mod clean;
 mod cmds;
 mod command;
+#[cfg(feature = "completions")]
+mod completions;
 mod files;
 mod pacman;
 mod pacrs;
@@ -73,6 +75,8 @@ fn main() -> anyhow::Result<()> {
             reverse,
             quiet,
         } => ps(sort_by, shorter, reverse, quiet)?,
+        #[cfg(feature = "completions")]
+        Args::Completions => completions::generate(),
     }
     Ok(())
 }

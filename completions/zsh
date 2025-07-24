@@ -1,0 +1,529 @@
+#compdef pacrs
+
+autoload -U is-at-least
+
+_pacrs() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+":: :_pacrs_commands" \
+"*::: :->pacrs" \
+&& ret=0
+    case $state in
+    (pacrs)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:pacrs-command-$line[1]:"
+        case $line[1] in
+            (install)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::packages:_default' \
+&& ret=0
+;;
+(in)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::packages:_default' \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+'-u[Automatically remove dependencies which become unneeded after removal of requested packages]' \
+'--clean-deps[Automatically remove dependencies which become unneeded after removal of requested packages]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::packages:_default' \
+&& ret=0
+;;
+(rm)
+_arguments "${_arguments_options[@]}" : \
+'-u[Automatically remove dependencies which become unneeded after removal of requested packages]' \
+'--clean-deps[Automatically remove dependencies which become unneeded after removal of requested packages]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::packages:_default' \
+&& ret=0
+;;
+(autoremove)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(ar)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(update)
+_arguments "${_arguments_options[@]}" : \
+'-q[Show less inforamation]' \
+'--quiet[Show less inforamation]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::packages -- Packages to install with update:_default' \
+&& ret=0
+;;
+(up)
+_arguments "${_arguments_options[@]}" : \
+'-q[Show less inforamation]' \
+'--quiet[Show less inforamation]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::packages -- Packages to install with update:_default' \
+&& ret=0
+;;
+(packages)
+_arguments "${_arguments_options[@]}" : \
+'(-e --explicit -d --deps -o --orphaned -a --aur)-s+[Search for given string in installed packages]:REGEX:_default' \
+'(-e --explicit -d --deps -o --orphaned -a --aur)--search=[Search for given string in installed packages]:REGEX:_default' \
+'-e[Display list of explicit installed packages]' \
+'--explicit[Display list of explicit installed packages]' \
+'-d[Display list of packages installed as dependencie]' \
+'--deps[Display list of packages installed as dependencie]' \
+'-o[Display list of orphaned packages (packages which not installed explicitly and on which no package depends)]' \
+'--orphaned[Display list of orphaned packages (packages which not installed explicitly and on which no package depends)]' \
+'-a[Display list of packages which not found in databases. In most cases it'\''s AUR packages]' \
+'--aur[Display list of packages which not found in databases. In most cases it'\''s AUR packages]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(pa)
+_arguments "${_arguments_options[@]}" : \
+'(-e --explicit -d --deps -o --orphaned -a --aur)-s+[Search for given string in installed packages]:REGEX:_default' \
+'(-e --explicit -d --deps -o --orphaned -a --aur)--search=[Search for given string in installed packages]:REGEX:_default' \
+'-e[Display list of explicit installed packages]' \
+'--explicit[Display list of explicit installed packages]' \
+'-d[Display list of packages installed as dependencie]' \
+'--deps[Display list of packages installed as dependencie]' \
+'-o[Display list of orphaned packages (packages which not installed explicitly and on which no package depends)]' \
+'--orphaned[Display list of orphaned packages (packages which not installed explicitly and on which no package depends)]' \
+'-a[Display list of packages which not found in databases. In most cases it'\''s AUR packages]' \
+'--aur[Display list of packages which not found in databases. In most cases it'\''s AUR packages]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(search)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':package:_default' \
+&& ret=0
+;;
+(se)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':package:_default' \
+&& ret=0
+;;
+(info)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':package:_default' \
+&& ret=0
+;;
+(if)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+':package:_default' \
+&& ret=0
+;;
+(list-updates)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(lu)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(files)
+_arguments "${_arguments_options[@]}" : \
+'()-f+[Find specific file among all packages]:FILE:_default' \
+'()--find=[Find specific file among all packages]:FILE:_default' \
+'-U[Don'\''t update files index]' \
+'--not-update-index[Don'\''t update files index]' \
+'-q[Show less inforamation]' \
+'--quiet[Show less inforamation]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'::package -- Print files related to specific package:_default' \
+&& ret=0
+;;
+(fl)
+_arguments "${_arguments_options[@]}" : \
+'()-f+[Find specific file among all packages]:FILE:_default' \
+'()--find=[Find specific file among all packages]:FILE:_default' \
+'-U[Don'\''t update files index]' \
+'--not-update-index[Don'\''t update files index]' \
+'-q[Show less inforamation]' \
+'--quiet[Show less inforamation]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'::package -- Print files related to specific package:_default' \
+&& ret=0
+;;
+(clean)
+_arguments "${_arguments_options[@]}" : \
+'(-u --uninstalled -a --aur)-k+[Keep "num" of each package in the cache]:NUM:_default' \
+'(-u --uninstalled -a --aur)--keep=[Keep "num" of each package in the cache]:NUM:_default' \
+'(-a --aur)-u[Clean cache of uninstalled packages]' \
+'(-a --aur)--uninstalled[Clean cache of uninstalled packages]' \
+'(-u --uninstalled)-a[Clean AUR cache]' \
+'(-u --uninstalled)--aur[Clean AUR cache]' \
+'(-a --aur -u --uninstalled)-s[Only show remove candidates without actually removing]' \
+'(-a --aur -u --uninstalled)--show-remove-candidates[Only show remove candidates without actually removing]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(cc)
+_arguments "${_arguments_options[@]}" : \
+'(-u --uninstalled -a --aur)-k+[Keep "num" of each package in the cache]:NUM:_default' \
+'(-u --uninstalled -a --aur)--keep=[Keep "num" of each package in the cache]:NUM:_default' \
+'(-a --aur)-u[Clean cache of uninstalled packages]' \
+'(-a --aur)--uninstalled[Clean cache of uninstalled packages]' \
+'(-u --uninstalled)-a[Clean AUR cache]' \
+'(-u --uninstalled)--aur[Clean AUR cache]' \
+'(-a --aur -u --uninstalled)-s[Only show remove candidates without actually removing]' \
+'(-a --aur -u --uninstalled)--show-remove-candidates[Only show remove candidates without actually removing]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(mark)
+_arguments "${_arguments_options[@]}" : \
+'-e[Mark packages as installed explicit]' \
+'--explicit[Mark packages as installed explicit]' \
+'-d[Mark packages as dependencie (non-explicit installed)]' \
+'--dependencie[Mark packages as dependencie (non-explicit installed)]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::packages:_default' \
+&& ret=0
+;;
+(mr)
+_arguments "${_arguments_options[@]}" : \
+'-e[Mark packages as installed explicit]' \
+'--explicit[Mark packages as installed explicit]' \
+'-d[Mark packages as dependencie (non-explicit installed)]' \
+'--dependencie[Mark packages as dependencie (non-explicit installed)]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::packages:_default' \
+&& ret=0
+;;
+(ps)
+_arguments "${_arguments_options[@]}" : \
+'(-o --shorter)-s+[Sort output by given field]:SORTBY:(pid user command)' \
+'(-o --shorter)--sort-by=[Sort output by given field]:SORTBY:(pid user command)' \
+'(-s --sort-by)-o[Show only list of commands instead of table]' \
+'(-s --sort-by)--shorter[Show only list of commands instead of table]' \
+'-r[Reverse sorting]' \
+'--reverse[Reverse sorting]' \
+'-q[Don'\''t show additional messages]' \
+'--quiet[Don'\''t show additional messages]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(completions)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_pacrs__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:pacrs-help-command-$line[1]:"
+        case $line[1] in
+            (install)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(autoremove)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(update)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(packages)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(search)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(info)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list-updates)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(files)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(clean)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(mark)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(ps)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(completions)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+}
+
+(( $+functions[_pacrs_commands] )) ||
+_pacrs_commands() {
+    local commands; commands=(
+'install:Install packages' \
+'in:Install packages' \
+'remove:Remove (uninstall) packages' \
+'rm:Remove (uninstall) packages' \
+'autoremove:Remove unneeded packages' \
+'ar:Remove unneeded packages' \
+'update:Update installed packages with newer versions' \
+'up:Update installed packages with newer versions' \
+'packages:Display list of all available packages' \
+'pa:Display list of all available packages' \
+'search:Search for packages matching any of the given search strings' \
+'se:Search for packages matching any of the given search strings' \
+'info:Display detailed information about the specified packages' \
+'if:Display detailed information about the specified packages' \
+'list-updates:Display list available updates' \
+'lu:Display list available updates' \
+'files:Query the file database' \
+'fl:Query the file database' \
+'clean:Clean pacman cache. By default cleans the entire cache' \
+'cc:Clean pacman cache. By default cleans the entire cache' \
+'mark:Mark packages' \
+'mr:Mark packages' \
+'ps:Display processes which use deleted files. This run this command after updating the system and they can indicate the processes that should be restarted' \
+'completions:Generate shell completions' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'pacrs commands' commands "$@"
+}
+(( $+functions[_pacrs__autoremove_commands] )) ||
+_pacrs__autoremove_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs autoremove commands' commands "$@"
+}
+(( $+functions[_pacrs__clean_commands] )) ||
+_pacrs__clean_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs clean commands' commands "$@"
+}
+(( $+functions[_pacrs__completions_commands] )) ||
+_pacrs__completions_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs completions commands' commands "$@"
+}
+(( $+functions[_pacrs__files_commands] )) ||
+_pacrs__files_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs files commands' commands "$@"
+}
+(( $+functions[_pacrs__help_commands] )) ||
+_pacrs__help_commands() {
+    local commands; commands=(
+'install:Install packages' \
+'remove:Remove (uninstall) packages' \
+'autoremove:Remove unneeded packages' \
+'update:Update installed packages with newer versions' \
+'packages:Display list of all available packages' \
+'search:Search for packages matching any of the given search strings' \
+'info:Display detailed information about the specified packages' \
+'list-updates:Display list available updates' \
+'files:Query the file database' \
+'clean:Clean pacman cache. By default cleans the entire cache' \
+'mark:Mark packages' \
+'ps:Display processes which use deleted files. This run this command after updating the system and they can indicate the processes that should be restarted' \
+'completions:Generate shell completions' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'pacrs help commands' commands "$@"
+}
+(( $+functions[_pacrs__help__autoremove_commands] )) ||
+_pacrs__help__autoremove_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help autoremove commands' commands "$@"
+}
+(( $+functions[_pacrs__help__clean_commands] )) ||
+_pacrs__help__clean_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help clean commands' commands "$@"
+}
+(( $+functions[_pacrs__help__completions_commands] )) ||
+_pacrs__help__completions_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help completions commands' commands "$@"
+}
+(( $+functions[_pacrs__help__files_commands] )) ||
+_pacrs__help__files_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help files commands' commands "$@"
+}
+(( $+functions[_pacrs__help__help_commands] )) ||
+_pacrs__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help help commands' commands "$@"
+}
+(( $+functions[_pacrs__help__info_commands] )) ||
+_pacrs__help__info_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help info commands' commands "$@"
+}
+(( $+functions[_pacrs__help__install_commands] )) ||
+_pacrs__help__install_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help install commands' commands "$@"
+}
+(( $+functions[_pacrs__help__list-updates_commands] )) ||
+_pacrs__help__list-updates_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help list-updates commands' commands "$@"
+}
+(( $+functions[_pacrs__help__mark_commands] )) ||
+_pacrs__help__mark_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help mark commands' commands "$@"
+}
+(( $+functions[_pacrs__help__packages_commands] )) ||
+_pacrs__help__packages_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help packages commands' commands "$@"
+}
+(( $+functions[_pacrs__help__ps_commands] )) ||
+_pacrs__help__ps_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help ps commands' commands "$@"
+}
+(( $+functions[_pacrs__help__remove_commands] )) ||
+_pacrs__help__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help remove commands' commands "$@"
+}
+(( $+functions[_pacrs__help__search_commands] )) ||
+_pacrs__help__search_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help search commands' commands "$@"
+}
+(( $+functions[_pacrs__help__update_commands] )) ||
+_pacrs__help__update_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs help update commands' commands "$@"
+}
+(( $+functions[_pacrs__info_commands] )) ||
+_pacrs__info_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs info commands' commands "$@"
+}
+(( $+functions[_pacrs__install_commands] )) ||
+_pacrs__install_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs install commands' commands "$@"
+}
+(( $+functions[_pacrs__list-updates_commands] )) ||
+_pacrs__list-updates_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs list-updates commands' commands "$@"
+}
+(( $+functions[_pacrs__mark_commands] )) ||
+_pacrs__mark_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs mark commands' commands "$@"
+}
+(( $+functions[_pacrs__packages_commands] )) ||
+_pacrs__packages_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs packages commands' commands "$@"
+}
+(( $+functions[_pacrs__ps_commands] )) ||
+_pacrs__ps_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs ps commands' commands "$@"
+}
+(( $+functions[_pacrs__remove_commands] )) ||
+_pacrs__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs remove commands' commands "$@"
+}
+(( $+functions[_pacrs__search_commands] )) ||
+_pacrs__search_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs search commands' commands "$@"
+}
+(( $+functions[_pacrs__update_commands] )) ||
+_pacrs__update_commands() {
+    local commands; commands=()
+    _describe -t commands 'pacrs update commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_pacrs" ]; then
+    _pacrs "$@"
+else
+    compdef _pacrs pacrs
+fi

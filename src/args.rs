@@ -131,6 +131,9 @@ pub enum Args {
         #[clap(long, short)]
         quiet: bool,
     },
+    /// Generate shell completions
+    #[cfg(feature = "completions")]
+    Completions,
 }
 
 #[derive(ValueEnum, Clone, Copy)]

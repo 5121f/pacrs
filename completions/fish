@@ -33,14 +33,14 @@ complete -c $progname -a 'install' -d 'Install packages'
 complete -c $progname -a 'remove' -d 'Remove (uninstall) packages'
 complete -c $progname -a 'autoremove' -d 'Remove unneeded packages'
 complete -c $progname -a 'update' -d 'Update installed packages with newer versions'
-complete -c $progname -a 'packages' -d 'List all available packages'
-complete -c $progname -a 'info' -d 'Displays detailed information about the specified packages'
+complete -c $progname -a 'packages' -d 'Display list of all available packages'
+complete -c $progname -a 'info' -d 'Display detailed information about the specified packages'
 complete -c $progname -a 'search' -d 'Search for packages matching any of the given search strings'
 complete -c $progname -a 'list-updates' -d 'List available updates'
-complete -c $progname -a 'files' -d 'Print list of files'
+complete -c $progname -a 'files' -d 'Query the file database'
 complete -c $progname -a 'clean' -d 'Clean pacman cache. By default cleans the entire cache'
 complete -c $progname -a 'mark' -d 'Mark packages'
-complete -c $progname -a 'ps' -d 'Processes which continue to use deleted files'
+complete -c $progname -a 'ps' -d 'Display processes which use deleted files and needed to restart'
 complete -c $progname -a 'help' -d 'Print this message or the help of the given subcommand(s)'
 
 # General options
@@ -55,10 +55,10 @@ complete -c $progname -n $remove -s u -l clean-deps -d 'Automatically remove dep
 
 # Packages options
 complete -c $progname -n $packages -s s -l search -d 'Search for given string in installed packages'
-complete -c $progname -n $packages -s e -l explicit -d 'List of explicit installed packages'
-complete -c $progname -n $packages -s d -l deps -d 'List of packages installed as dependencie'
+complete -c $progname -n $packages -s e -l explicit -d 'Display list of explicit installed packages'
+complete -c $progname -n $packages -s d -l deps -d 'Display list of packages installed as dependencie'
 complete -c $progname -n $packages -s o -l orphaned -d 'Print list of orphaned packages'
-complete -c $progname -n $packages -s a -l aur -d 'Print list of AUR packages'
+complete -c $progname -n $packages -s a -l aur -d 'Display list of packages which not found in databases. In most cases it\'s AUR packages'
 
 # Files options
 complete -c $progname -n $files -xa "(listall)"
@@ -69,7 +69,7 @@ complete -c $progname -n $files -s U -l not-update-index -d 'Don\'t update files
 complete -c $progname -n $clean -s u -l uninstalled -d 'Clean cache of uninstalled packages'
 complete -c $progname -n $clean -s a -l aur -d 'Clean AUR cache'
 complete -c $progname -n $clean -s k -l keep -d 'Keep "num" of each package in the cache'
-complete -c $progname -n $clean -s s -l show_remove_candidates -d 'Only show remove candidates without removing'
+complete -c $progname -n $clean -s s -l show_remove_candidates -d 'Only show remove candidates without actually removing'
 
 # Mark options
 complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed explicit'

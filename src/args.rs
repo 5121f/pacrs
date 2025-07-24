@@ -32,23 +32,23 @@ pub enum Args {
         #[clap(long, short)]
         quiet: bool,
     },
-    /// List all available packages
+    /// Display list of all available packages
     #[clap(visible_alias = "pa")]
     Packages {
         /// Search for given string in installed packages
         #[clap(long, short, value_name = "REGEX", conflicts_with_all = ["explicit", "deps", "orphaned", "aur"])]
         search: Option<String>,
-        /// List of explicit installed packages
+        /// Display list of explicit installed packages
         #[clap(long, short)]
         explicit: bool,
-        /// List of packages installed as dependencie
+        /// Display list of packages installed as dependencie
         #[clap(long, short)]
         deps: bool,
-        /// List of orphaned packages
+        /// Display list of orphaned packages
         /// (packages which not installed explicitly and on which no package depends)
         #[clap(long, short)]
         orphaned: bool,
-        /// Print list of packages which not found in databases. In most cases it's AUR packages
+        /// Display list of packages which not found in databases. In most cases it's AUR packages
         #[clap(long, short)]
         aur: bool,
     },
@@ -58,17 +58,16 @@ pub enum Args {
         #[clap(required = true)]
         package: String,
     },
-    /// Displays detailed information about the specified packages
+    /// Display detailed information about the specified packages
     #[clap(visible_alias = "if")]
     Info {
         #[clap(required = true)]
         package: String,
     },
-    /// List available updates
+    /// Display list available updates
     #[clap(visible_alias = "lu")]
     ListUpdates,
-    /// Print list of files
-    /// (by default print all files)
+    /// Query the file database
     #[clap(visible_alias = "fl")]
     Files {
         /// Print files related to specific package
@@ -103,7 +102,7 @@ pub enum Args {
             conflicts_with = "aur"
         )]
         keep: u8,
-        /// Only show remove candidates without removing
+        /// Only show remove candidates without actually removing
         #[clap(long, short, conflicts_with = "aur", conflicts_with = "uninstalled")]
         show_remove_candidates: bool,
     },
@@ -115,8 +114,8 @@ pub enum Args {
         #[clap(flatten)]
         mark_group: MarkGroup,
     },
-    /// Processes which continue to use deleted files.
-    /// This command is actual after updating the system and they can indicate the processes that
+    /// Display processes which use deleted files.
+    /// This run this command after updating the system and they can indicate the processes that
     /// should be restarted.
     Ps {
         /// Sort output by given field

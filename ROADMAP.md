@@ -8,3 +8,4 @@
   - Configuration for automatically clean.
 - Add setting for configure how many copies of package in cache user want
   to save
+- Add support for other shells in addition to `fish`

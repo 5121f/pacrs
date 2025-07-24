@@ -21,7 +21,7 @@ pub fn is_root() -> bool {
 
 pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
     Ok(etcetera::choose_base_strategy()
-        .context("Failed to find paru cache dir")?
+        .context("failed to find paru cache dir")?
         .cache_dir()
         .join("paru"))
 }
@@ -36,7 +36,7 @@ fn sure_(message: impl Display) -> Result<bool, io::Error> {
 }
 
 pub fn sure(message: impl Display) -> anyhow::Result<bool> {
-    sure_(message).context("Failed to read user input")
+    sure_(message).context("failed to read user input")
 }
 
 pub trait JoinError<T> {
@@ -46,7 +46,7 @@ pub trait JoinError<T> {
 impl<T> JoinError<T> for JoinHandle<T> {
     fn join_err_map(self) -> anyhow::Result<T> {
         self.join()
-            .map_err(|err| anyhow!("Thread paniced: {err:?}"))
+            .map_err(|err| anyhow!("thread paniced: {err:?}"))
     }
 }
 

@@ -8,7 +8,7 @@ use derive_more::Deref;
 use crate::temp_db::TempAlpm;
 
 pub fn pacmanconf() -> anyhow::Result<pacmanconf::Config> {
-    pacmanconf::Config::new().context("Failed to read pacmanconf")
+    pacmanconf::Config::new().context("failed to read pacmanconf")
 }
 
 #[derive(Deref)]
@@ -18,7 +18,7 @@ impl PacrsAlpm {
     pub fn new() -> anyhow::Result<Self> {
         let conf = pacmanconf()?;
         let alpm =
-            alpm_utils::alpm_with_conf(&conf).context("Failed to initialize alpm connection")?;
+            alpm_utils::alpm_with_conf(&conf).context("failed to initialize alpm connection")?;
         Ok(Self(alpm))
     }
 
@@ -90,7 +90,7 @@ impl PacrsAlpm {
         self.syncdbs()
             .into_iter()
             .find_map(|db| db.group(group).ok())
-            .with_context(|| anyhow!("Failed to find group \"{group}\""))
+            .with_context(|| anyhow!("failed to find group \"{group}\""))
     }
 
     // pub fn localdb_pkg<'a>(&'a self, name: &str) -> anyhow::Result<&'a Package> {
@@ -103,6 +103,6 @@ impl PacrsAlpm {
     fn syncdb_pkg<'a>(&'a self, package: &str) -> anyhow::Result<&'a Package> {
         self.syncdbs()
             .pkg(package)
-            .with_context(|| format!("{package}: Package not found"))
+            .with_context(|| format!("{package}: fackage not found"))
     }
 }

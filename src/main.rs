@@ -197,5 +197,5 @@ fn mark(packages: &[String], explicit: bool, dependencie: bool) -> anyhow::Resul
     if dependencie {
         return pacrs::mark_as_dep(packages);
     }
-    bail!("No one parameter specified");
+    bail!("no one parameter specified"); // Unreachable
 }

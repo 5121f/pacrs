@@ -65,7 +65,7 @@ pub fn install(packages: &[String]) -> anyhow::Result<()> {
 
     if has_outdated {
         bail!(
-            "One or more package you will want to install or their dependencies was updated in \
+            "one or more package you will want to install or their dependencies was updated in \
             the repo. Update your system with 'pacrs update' before install it."
         );
     }

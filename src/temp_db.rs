@@ -26,8 +26,8 @@ impl TempAlpm {
         let path = path.as_ref();
         let conf = pacmanconf()?;
         let mut alpm = Alpm::new(&*conf.root_dir, &path.to_string_lossy())
-            .context("Failed to initialize alpm connection")?;
-        alpm_utils::configure_alpm(&mut alpm, &conf).context("Failed to configure alpm")?;
+            .context("failed to initialize alpm connection")?;
+        alpm_utils::configure_alpm(&mut alpm, &conf).context("failed to configure alpm")?;
         init(path)?;
         Ok(Self(PacrsAlpm::with_alpm(alpm)))
     }

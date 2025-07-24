@@ -69,7 +69,7 @@ impl PacrsAlpm {
             return self.pkg_deps(pkg);
         }
         if let Ok(group) = self.group(package) {
-            return Ok(group.packages().into_iter().collect::<Vec<_>>());
+            return Ok(group.packages().into_iter().collect());
         }
         bail!("{package}: failed to define package type");
     }

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use std::{env, io::Write, path::Path};
+use std::env;
+use std::io::Write;
+use std::path::Path;
 
 use clap::{Command, CommandFactory};
 use clap_complete::Shell;

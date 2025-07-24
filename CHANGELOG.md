@@ -11,8 +11,9 @@
 - changled alias for `autoremove` from `arm` to `ar`
 - `install`: fix outdated check
 - `packages`: added `search` key for search in installed packages
-- add loggin with `RUST_LOG` environment variable (how to use it see
+- added loggin with `RUST_LOG` environment variable (how to use it see
   [here](https://docs.rs/env_logger/latest/env_logger/#enabling-logging))
+- added basic `bash` and `zsh` completions
 - actualized fish completions
 
 ## 0.3.0 - 2024-12-01

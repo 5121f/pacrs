@@ -6,9 +6,11 @@ target_fish_completion :=  '/usr/share/fish/vendor_completions.d' / progname + '
 target_bash := '/usr/share/bash-completion/completions' / progname + '.bash'
 target_zsh := '/usr/share/zsh/site-functions/_' + progname
 
-build:
-    cargo run --features completions -- completions
+build: generate-completions
     cargo build --release
+
+generate-completions:
+    cargo run --features completions -- completions
 
 install:
     install -Dm0755 target/release/{{progname}} {{target_bin}}

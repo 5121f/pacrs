@@ -8,7 +8,9 @@
   - added `show-remove-candidates` which now dosen't work with
     `uninstalled` flag
   - request root password if needed (not with `keep` flag)
-- changled alias for `autoremove` from `arm` to `ar`
+- `autoremove`
+  - changled short alias from `arm` to `ar`
+  - added oportunity to convey packages
 - `install`: fix outdated check
 - `packages`: added `search` key for search in installed packages
 - added loggin with `RUST_LOG` environment variable (how to use it see

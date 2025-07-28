@@ -64,12 +64,14 @@ _arguments "${_arguments_options[@]}" : \
 _arguments "${_arguments_options[@]}" : \
 '-h[Print help]' \
 '--help[Print help]' \
+'*::packages -- Removes given packages and their unneeded dependencies:_default' \
 && ret=0
 ;;
 (ar)
 _arguments "${_arguments_options[@]}" : \
 '-h[Print help]' \
 '--help[Print help]' \
+'*::packages -- Removes given packages and their unneeded dependencies:_default' \
 && ret=0
 ;;
 (update)

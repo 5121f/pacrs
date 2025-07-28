@@ -13,7 +13,8 @@ Some features and peculiarities:
   for more info).
 - If you try to install package which updated in the repo pacrs inform you
   what you needed to update system before.
-- `apt autoremove` command which works like `apt autoremove` or `paru -c`.
+- `pacrs autoremove` command which works like `pacman -Rs` or
+  `apt autoremove` or if no package given it works like `paru -c`.
 - `pacrs ps` command which works like `zypper ps`.
 - `pacman -Si` and `pacman -Qi` was merged into `pacrs info` command.
 - `pacman -F` and `pacman -Ql` was merged into `pacrs files` command.

@@ -51,7 +51,6 @@ complete -c $progname -s V -l version -d 'Print version'
 complete -c $progname -n $install -s o -l orphaned -d 'Remove orphaned packages'
 
 # Remove options
-complete -c $progname -n $remove -xa $listinstalled
 complete -c $progname -n $remove -s u -l clean-deps -d 'Automatically remove dependencies which become unneeded after removal of requested packages'
 
 # Packages options
@@ -80,6 +79,10 @@ complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependen
 complete -c $progname -n $ps -s s -l sort-by -d 'Sort output by given field'
 complete -c $progname -n $ps -s o -l shorter -d 'Show only list of commands instead of table'
 complete -c $progname -n $ps -s r -l reverse -d 'Reverse sorting'
+
+for condition in $remove $autoremove
+    complete -c $progname -n $condition -xa $listinstalled
+end
 
 for condition in $install $search $info
     complete -c $progname -n $condition -xa "(listall) $listgroups"

@@ -34,10 +34,10 @@ for more info see `pacrs help` command output.
 - `pacrs` conducts some checks and removes part of handmade.
   - This makes him more user-friendly.
   - This makes him slower in some cases.
-- `pacrs` does not set a goal to be a complete replacement for `pacman` and
-  `paru` and not provide some advanced features which they does. For cases
-  when you need this features you can use `pacman` or `paru` directly (or open
-  the issue with feature request).
+- `pacrs` does not set a goal to be a complete replacement for `pacman`
+  and `paru` and not provide some advanced features which they does. For
+  cases when you need this features you can use `pacman` or `paru`
+  directly (or open the issue with feature request).
 
 ## Installation
 
@@ -58,8 +58,8 @@ makepkg -si
 ## From source
 
 For build from source you need
-[rust toolchain](https://www.rust-lang.org/tools/install). For installation you
-need [just](https://github.com/casey/just).
+[rust toolchain](https://www.rust-lang.org/tools/install). For
+installation you need [just](https://github.com/casey/just).
 
 ```
 git clone git@github.com:5121f/pacrs.git

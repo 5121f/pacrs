@@ -44,7 +44,7 @@ fn main() -> anyhow::Result<()> {
             packages,
             clean_deps,
         } => pacrs::remove(&packages, clean_deps)?,
-        Args::Autoremove => pacrs::autoremove()?,
+        Args::Autoremove { packages } => autoremove(&packages)?,
         Args::Update { packages, quiet } => update(&packages, quiet),
         Args::Info { package } => pacrs::info(&package)?,
         Args::Search { package } => pacrs::search(&package)?,
@@ -79,6 +79,14 @@ fn main() -> anyhow::Result<()> {
         Args::Completions => completions::generate(),
     }
     Ok(())
+}
+
+fn autoremove(packages: &[String]) -> anyhow::Result<()> {
+    if packages.is_empty() {
+        pacrs::autoremove()
+    } else {
+        pacrs::remove(packages, true)
+    }
 }
 
 fn update(packages: &[String], quiet: bool) {

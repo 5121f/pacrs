@@ -16,13 +16,16 @@ pub enum Args {
     Remove {
         #[clap(required = true)]
         packages: Vec<String>,
-        /// Automatically remove dependencies which become unneeded after removal of requested packages.
+        /// Automatically remove dependencies which become unneeded after removal of requested packages
         #[clap(long, short, short = 'u')]
         clean_deps: bool,
     },
     /// Remove unneeded packages
     #[clap(visible_alias = "ar")]
-    Autoremove,
+    Autoremove {
+        /// Removes given packages and their unneeded dependencies
+        packages: Vec<String>,
+    },
     /// Update installed packages with newer versions
     #[clap(visible_alias = "up")]
     Update {

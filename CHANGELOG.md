@@ -15,7 +15,7 @@
 - `packages`: added `search` key for search in installed packages
 - added loggin with `RUST_LOG` environment variable (how to use it see
   [here](https://docs.rs/env_logger/latest/env_logger/#enabling-logging))
-- added basic `bash` and `zsh` completions
+- added basic completions for `bash` and `zsh`
 - actualized fish completions
 
 ## 0.3.0 - 2024-12-01

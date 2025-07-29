@@ -25,17 +25,14 @@ pub struct CacheEntry {
     ext: String,
 }
 
-pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
+pub fn clean(keep: u8) -> anyhow::Result<()> {
     let remove_candidates = remove_candidates(keep)?;
     let candidates_count = remove_candidates.len();
     if candidates_count == 0 {
         println!("No candidates to remove");
         return Ok(());
     }
-    show_cache(&remove_candidates, !show_remove_candidates)?;
-    if show_remove_candidates {
-        return Ok(());
-    }
+    show_cache(&remove_candidates, true)?;
     let mut cli = Cli::new();
     let answer = cli.sure("Remove?", Answer::Yes)?;
     if answer.is_no() {

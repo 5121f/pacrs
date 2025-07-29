@@ -35,16 +35,20 @@ pub fn search(package: &str) -> anyhow::Result<()> {
 }
 
 pub fn clean_cache(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
-    if keep == 0 {
-        if show_remove_candidates {
-            let remove_candidates = clean::remove_candidates(keep)?;
-            clean::show_cache(&remove_candidates, false)?;
+    if show_remove_candidates {
+        let remove_candidates = clean::remove_candidates(keep)?;
+        if remove_candidates.is_empty() {
+            println!("No candidates to remove");
             return Ok(());
         }
+        clean::show_cache(&remove_candidates, false)?;
+        return Ok(());
+    }
+    if keep == 0 {
         sudo_pacman().arg("-Scc").execute()?;
         return Ok(());
     }
-    clean::clean(keep, show_remove_candidates)?;
+    clean::clean(keep)?;
     Ok(())
 }
 

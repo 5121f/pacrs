@@ -38,7 +38,7 @@ pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
     }
     let mut cli = Cli::new();
     let answer = cli.sure("Remove?", Answer::Yes)?;
-    if matches!(answer, Answer::No) {
+    if answer.is_no() {
         return Ok(());
     }
     let mut total_size = 0;

@@ -42,10 +42,6 @@ pub enum Answer {
 }
 
 impl Answer {
-    pub fn is_yes(&self) -> bool {
-        matches!(self, Answer::Yes)
-    }
-
     pub fn is_no(&self) -> bool {
         matches!(self, Answer::No)
     }

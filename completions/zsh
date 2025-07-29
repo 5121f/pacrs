@@ -254,12 +254,6 @@ _arguments "${_arguments_options[@]}" : \
 '--help[Print help]' \
 && ret=0
 ;;
-(completions)
-_arguments "${_arguments_options[@]}" : \
-'-h[Print help]' \
-'--help[Print help]' \
-&& ret=0
-;;
 (help)
 _arguments "${_arguments_options[@]}" : \
 ":: :_pacrs__help_commands" \
@@ -320,10 +314,6 @@ _arguments "${_arguments_options[@]}" : \
 _arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
-(completions)
-_arguments "${_arguments_options[@]}" : \
-&& ret=0
-;;
 (help)
 _arguments "${_arguments_options[@]}" : \
 && ret=0
@@ -363,7 +353,6 @@ _pacrs_commands() {
 'mark:Mark packages' \
 'mr:Mark packages' \
 'ps:Display processes which use deleted files. This run this command after updating the system and they can indicate the processes that should be restarted' \
-'completions:Generate shell completions' \
 'help:Print this message or the help of the given subcommand(s)' \
     )
     _describe -t commands 'pacrs commands' commands "$@"
@@ -377,11 +366,6 @@ _pacrs__autoremove_commands() {
 _pacrs__clean_commands() {
     local commands; commands=()
     _describe -t commands 'pacrs clean commands' commands "$@"
-}
-(( $+functions[_pacrs__completions_commands] )) ||
-_pacrs__completions_commands() {
-    local commands; commands=()
-    _describe -t commands 'pacrs completions commands' commands "$@"
 }
 (( $+functions[_pacrs__files_commands] )) ||
 _pacrs__files_commands() {
@@ -403,7 +387,6 @@ _pacrs__help_commands() {
 'clean:Clean pacman cache. By default cleans the entire cache' \
 'mark:Mark packages' \
 'ps:Display processes which use deleted files. This run this command after updating the system and they can indicate the processes that should be restarted' \
-'completions:Generate shell completions' \
 'help:Print this message or the help of the given subcommand(s)' \
     )
     _describe -t commands 'pacrs help commands' commands "$@"
@@ -417,11 +400,6 @@ _pacrs__help__autoremove_commands() {
 _pacrs__help__clean_commands() {
     local commands; commands=()
     _describe -t commands 'pacrs help clean commands' commands "$@"
-}
-(( $+functions[_pacrs__help__completions_commands] )) ||
-_pacrs__help__completions_commands() {
-    local commands; commands=()
-    _describe -t commands 'pacrs help completions commands' commands "$@"
 }
 (( $+functions[_pacrs__help__files_commands] )) ||
 _pacrs__help__files_commands() {

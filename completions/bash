@@ -28,9 +28,6 @@ _pacrs() {
             pacrs,clean)
                 cmd="pacrs__clean"
                 ;;
-            pacrs,completions)
-                cmd="pacrs__completions"
-                ;;
             pacrs,files)
                 cmd="pacrs__files"
                 ;;
@@ -97,9 +94,6 @@ _pacrs() {
             pacrs__help,clean)
                 cmd="pacrs__help__clean"
                 ;;
-            pacrs__help,completions)
-                cmd="pacrs__help__completions"
-                ;;
             pacrs__help,files)
                 cmd="pacrs__help__files"
                 ;;
@@ -140,7 +134,7 @@ _pacrs() {
 
     case "${cmd}" in
         pacrs)
-            opts="-h -V --help --version install in remove rm autoremove ar update up packages pa search se info if list-updates lu files fl clean cc mark mr ps completions help"
+            opts="-h -V --help --version install in remove rm autoremove ar update up packages pa search se info if list-updates lu files fl clean cc mark mr ps help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -189,20 +183,6 @@ _pacrs() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        pacrs__completions)
-            opts="-h --help"
-            if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
-                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-                return 0
-            fi
-            case "${prev}" in
-                *)
-                    COMPREPLY=()
-                    ;;
-            esac
-            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-            return 0
-            ;;
         pacrs__files)
             opts="-f -U -q -h --find --not-update-index --quiet --help [PACKAGE]"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
@@ -226,7 +206,7 @@ _pacrs() {
             return 0
             ;;
         pacrs__help)
-            opts="install remove autoremove update packages search info list-updates files clean mark ps completions help"
+            opts="install remove autoremove update packages search info list-updates files clean mark ps help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -254,20 +234,6 @@ _pacrs() {
             return 0
             ;;
         pacrs__help__clean)
-            opts=""
-            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
-                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-                return 0
-            fi
-            case "${prev}" in
-                *)
-                    COMPREPLY=()
-                    ;;
-            esac
-            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
-            return 0
-            ;;
-        pacrs__help__completions)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )

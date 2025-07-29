@@ -7,9 +7,9 @@ description = "pacman wrapper with CLI inspired by zypper and apt"
 license = "GPL-3.0-only"
 keywords = ["archlinux", "arch", "pacman", "aur", "zypper", "apt"]
 
-[features]
-# default = ["completions"]
-completions = ["dep:clap_complete"] # It's dev-only feature
+[build-dependencies]
+clap = { version = "4.5.41", features = ["derive", "cargo"] }
+clap_complete = "4.5.55"
 
 [dependencies]
 # UI

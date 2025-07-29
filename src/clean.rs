@@ -10,6 +10,8 @@ use fs_err as fs;
 use owo_colors::OwoColorize;
 use regex::Regex;
 
+use crate::cli::{Answer, Cli};
+
 const PACMAN_CACHE_PATH: &str = "/var/cache/pacman/pkg";
 
 const CACHE_ENTRY_REGEX: &str = r"(?<name>[\w\-\d\.+]+)-(?<version>[\w\d\.\-:+]*)-(?<subversion>[\w\d\._]+)-(?<arch>[\d\w_]+)\.(?<ext>[\w\.]+)";
@@ -30,8 +32,13 @@ pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
         println!("No candidates to remove");
         return Ok(());
     }
+    show_cache(&remove_candidates)?;
     if show_remove_candidates {
-        show_cache(&remove_candidates)?;
+        return Ok(());
+    }
+    let mut cli = Cli::new();
+    let answer = cli.sure("Remove?", Answer::Yes)?;
+    if matches!(answer, Answer::No) {
         return Ok(());
     }
     let mut total_size = 0;

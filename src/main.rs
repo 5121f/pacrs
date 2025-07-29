@@ -5,6 +5,7 @@
 mod alpm;
 mod args;
 mod clean;
+mod cli;
 mod cmds;
 mod command;
 #[cfg(feature = "completions")]

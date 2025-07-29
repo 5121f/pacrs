@@ -32,7 +32,7 @@ pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
         println!("No candidates to remove");
         return Ok(());
     }
-    show_cache(&remove_candidates)?;
+    show_cache(&remove_candidates, !show_remove_candidates)?;
     if show_remove_candidates {
         return Ok(());
     }
@@ -71,12 +71,14 @@ pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn show_cache(cache: &[CacheEntry]) -> anyhow::Result<()> {
+pub fn show_cache(cache: &[CacheEntry], only_stats: bool) -> anyhow::Result<()> {
     let mut total_size = 0;
     for entry in cache {
         let metadata = entry.path().metadata()?;
         total_size += metadata.size();
-        println!("{entry}");
+        if !only_stats {
+            println!("{entry}");
+        }
     }
     let candidates_count = cache.len();
     let total_size = ByteSize::b(total_size).to_string();

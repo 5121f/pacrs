@@ -38,7 +38,7 @@ pub fn clean_cache(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()>
     if keep == 0 {
         if show_remove_candidates {
             let remove_candidates = clean::remove_candidates(keep)?;
-            clean::show_cache(&remove_candidates)?;
+            clean::show_cache(&remove_candidates, false)?;
             return Ok(());
         }
         sudo_pacman().arg("-Scc").execute()?;

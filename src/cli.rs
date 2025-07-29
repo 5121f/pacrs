@@ -30,7 +30,7 @@ impl Cli {
         self.stdout.flush()?;
         let mut buf = String::new();
         self.stdin.read_line(&mut buf)?;
-        Ok(match buf.trim().to_lowercase().as_str() {
+        Ok(match buf.to_lowercase().trim() {
             "y" => Answer::Yes,
             "" => default_ansver,
             _ => Answer::No,

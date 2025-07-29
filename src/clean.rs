@@ -49,7 +49,8 @@ pub fn clean(keep: u8, show_remove_candidates: bool) -> anyhow::Result<()> {
         fs::remove_file(sig_path)?;
     }
     let files_count = candidates_count * 2;
-    let total_size = ByteSize::b(total_size);
+    let total_size = ByteSize::b(total_size).to_string();
+    let total_size = total_size.bright_blue();
     let prompt = "==>".green();
     println!(
         "{}",
@@ -71,7 +72,8 @@ pub fn show_cache(cache: &[CacheEntry]) -> anyhow::Result<()> {
         println!("{entry}");
     }
     let candidates_count = cache.len();
-    let total_size = ByteSize::b(total_size);
+    let total_size = ByteSize::b(total_size).to_string();
+    let total_size = total_size.bright_blue();
     let prompt = "==>".green();
     println!(
         "{}",

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
+use std::borrow::Cow;
 use std::collections::{BTreeSet, HashMap};
 use std::io::{BufRead, BufReader};
 
@@ -24,7 +25,7 @@ impl Process {
         Self {
             pid: process.pid(),
             user_name: process_owner(process, users),
-            command: get_process_command(process),
+            command: get_process_command(process).to_string(),
         }
     }
 }
@@ -36,15 +37,16 @@ fn files_of_installed_pkgs() -> anyhow::Result<BTreeSet<String>> {
     Ok(lines)
 }
 
-fn get_process_command(process: &sysinfo::Process) -> String {
+fn get_process_command(process: &sysinfo::Process) -> Cow<'_, str> {
     process.exe().map_or_else(
-        || process.name().to_string_lossy().to_string(),
+        || process.name().to_string_lossy(),
         |p| {
             let file_name = p.file_name().unwrap_or_default().to_string_lossy();
             file_name
                 .strip_suffix("(deleted)")
                 .map(ToString::to_string)
-                .unwrap_or(file_name.to_string())
+                .map(Cow::Owned)
+                .unwrap_or(file_name)
         },
     )
 }

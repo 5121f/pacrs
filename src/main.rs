@@ -38,7 +38,7 @@ fn main() -> anyhow::Result<()> {
             explicit,
             deps,
         } => packages(search, orphaned, aur, explicit, deps)?,
-        Args::Install { packages } => pacrs::install(&packages)?,
+        Args::Install { packages } => pacrs::install(packages)?,
         Args::Remove {
             packages,
             clean_deps,

@@ -57,15 +57,24 @@ pub fn clean_cache_uninstalled() -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn install(packages: &[String]) -> anyhow::Result<()> {
+pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     let alpm_tmp = TempAlpm::with_default_path()?;
 
     let outdated_pkgs = alpm.outdated_pkgs(&alpm_tmp);
 
+    let mut recursive_pkgs = packages.clone();
+    for package in &packages {
+        let deps = alpm
+            .recursive_dependencies(package)?
+            .into_iter()
+            .map(|d| d.name().to_owned())
+            .collect();
+        recursive_pkgs = [recursive_pkgs, deps].concat();
+    }
     let has_outdated = outdated_pkgs
         .into_iter()
-        .any(|outdated| packages.iter().any(|instelled| instelled == outdated));
+        .any(|outdated| recursive_pkgs.iter().any(|instelled| instelled == outdated));
 
     if has_outdated {
         bail!(

@@ -74,6 +74,19 @@ impl PacrsAlpm {
         bail!("{package}: failed to define package type");
     }
 
+    pub fn recursive_dependencies<'a>(&'a self, package: &str) -> anyhow::Result<Vec<&'a Package>> {
+        let mut scan = self.dependencies(package)?;
+        let mut deps: Vec<&Package> = Vec::new();
+        while let Some(dep) = scan.pop() {
+            if deps.iter().any(|d| d.name() == dep.name()) {
+                continue;
+            }
+            scan.extend(self.pkg_deps(dep)?);
+            deps.push(dep);
+        }
+        Ok(deps)
+    }
+
     fn pkg_deps(&self, pkg: &Package) -> anyhow::Result<Vec<&Package>> {
         let deps = pkg.depends();
         let mut res = Vec::with_capacity(deps.len());

@@ -2,7 +2,7 @@
 
 use crate::cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman};
 use crate::temp_db::TempAlpm;
-use crate::utils::{ErrInto, is_root, paru_cache_dir, sure};
+use crate::utils::{is_root, paru_cache_dir, sure};
 use crate::{PacrsAlpm, clean};
 use crate::{pacman, temp_db};
 
@@ -122,7 +122,8 @@ pub fn list_updates() -> anyhow::Result<()> {
 }
 
 pub fn orphaned_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qdtq").execute_and_grub_lines().err_into()
+    let pkgs = pacman().arg("-Qdtq").execute_and_grub_lines()?;
+    Ok(pkgs)
 }
 
 pub fn autoremove() -> anyhow::Result<()> {
@@ -135,7 +136,8 @@ pub fn autoremove() -> anyhow::Result<()> {
 }
 
 pub fn explicit_pkgs() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qeq").execute_and_grub_lines().err_into()
+    let pkgs = pacman().arg("-Qeq").execute_and_grub_lines()?;
+    Ok(pkgs)
 }
 
 pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
@@ -144,7 +146,8 @@ pub fn files_of_installed_pkgs() -> anyhow::Result<()> {
 }
 
 pub fn deps() -> anyhow::Result<Vec<String>> {
-    pacman().arg("-Qdq").execute_and_grub_lines().err_into()
+    let deps = pacman().arg("-Qdq").execute_and_grub_lines()?;
+    Ok(deps)
 }
 
 pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {

@@ -66,6 +66,9 @@ pub enum Args {
     Info {
         #[clap(required = true)]
         package: String,
+        /// Display list of recursive dependencies
+        #[clap(long, short)]
+        recursive_deps: bool,
     },
     /// Display list available updates
     #[clap(visible_alias = "lu")]

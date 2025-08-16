@@ -402,7 +402,7 @@ _pacrs() {
             return 0
             ;;
         pacrs__info)
-            opts="-h --help <PACKAGE>"
+            opts="-r -h --recursive-deps --help <PACKAGE>"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

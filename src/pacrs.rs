@@ -19,8 +19,15 @@ pub fn package_search(regex: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn info(package: &str) -> anyhow::Result<()> {
+pub fn info(package: &str, recursive_deps: bool) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
+    if recursive_deps {
+        let deps = alpm.recursive_dependencies(package)?;
+        for dep in deps {
+            println!("{}", dep.name());
+        }
+        return Ok(());
+    }
     if alpm.is_installed_pkg(package) {
         pacman().args(["-Qi", package]).execute()?;
     } else {

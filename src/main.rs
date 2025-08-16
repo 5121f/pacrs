@@ -45,7 +45,10 @@ fn main() -> anyhow::Result<()> {
         } => pacrs::remove(&packages, clean_deps)?,
         Args::Autoremove { packages } => autoremove(&packages)?,
         Args::Update { packages, quiet } => update(&packages, quiet),
-        Args::Info { package } => pacrs::info(&package)?,
+        Args::Info {
+            package,
+            recursive_deps,
+        } => pacrs::info(&package, recursive_deps)?,
         Args::Search { package } => pacrs::search(&package)?,
         Args::ListUpdates => pacrs::list_updates()?,
         Args::Files {

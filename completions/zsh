@@ -140,6 +140,8 @@ _arguments "${_arguments_options[@]}" : \
 ;;
 (info)
 _arguments "${_arguments_options[@]}" : \
+'-r[Display list of recursive dependencies]' \
+'--recursive-deps[Display list of recursive dependencies]' \
 '-h[Print help]' \
 '--help[Print help]' \
 ':package:_default' \
@@ -147,6 +149,8 @@ _arguments "${_arguments_options[@]}" : \
 ;;
 (if)
 _arguments "${_arguments_options[@]}" : \
+'-r[Display list of recursive dependencies]' \
+'--recursive-deps[Display list of recursive dependencies]' \
 '-h[Print help]' \
 '--help[Print help]' \
 ':package:_default' \

@@ -44,13 +44,12 @@ impl Cmd {
         self
     }
 
-    pub fn execute_(&mut self) -> std::result::Result<ExitStatus, io::Error> {
-        self.cmd.spawn()?.wait()
-    }
-
     pub fn execute(mut self) -> Result<ExitStatus> {
-        self.execute_()
-            .map_err(|source| Error::execute(&self.cmd, source))
+        fn spawn_and_wait(cmd: &mut Command) -> std::result::Result<ExitStatus, io::Error> {
+            cmd.spawn()?.wait()
+        }
+
+        spawn_and_wait(&mut self.cmd).map_err(|source| Error::execute(&self.cmd, source))
     }
 
     pub fn execute_and_grub_output(mut self) -> Result<String> {

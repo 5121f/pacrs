@@ -49,14 +49,14 @@ fn get_process_command(process: &sysinfo::Process) -> String {
     )
 }
 
-fn process_owner_(process: &sysinfo::Process, users: &Users) -> Option<String> {
-    let uid = process.user_id()?;
-    let user = users.get_user_by_id(uid)?;
-    Some(user.name().to_owned())
-}
-
 fn process_owner(process: &sysinfo::Process, users: &Users) -> String {
-    process_owner_(process, users).unwrap_or_else(|| String::from("Unknown"))
+    fn inner(process: &sysinfo::Process, users: &Users) -> Option<String> {
+        let uid = process.user_id()?;
+        let user = users.get_user_by_id(uid)?;
+        Some(user.name().to_owned())
+    }
+
+    inner(process, users).unwrap_or_else(|| String::from("Unknown"))
 }
 
 fn configured_system() -> System {

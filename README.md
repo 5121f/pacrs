@@ -1,28 +1,28 @@
 # pacrs
 
-**pacrs** - `pacman` and `paru` wrapper (yes, wrapper above wrapper), with
-frendly CLI inspired by zypper and apt.
+**pacrs** - `pacman` and `paru` wrapper (yes, wrapper on top of another
+wrapper), with friendly CLI inspired by zypper and apt.
 
 paru is optional dependency needed for AUR support.
 
 Some features and peculiarities:
 
-- Semi-automatic index update. It's good because `pacman -Sy` command ran
-  without further update is potentially fearing (see
+- Semi-automatic index update. It's good because running `pacman -Sy`
+  without immediately upgrading is potentially dangerous (see
   [Arch Wiki](https://wiki.archlinux.org/title/System_maintenance#Partial_upgrades_are_unsupported)
   for more info).
-- If you try to install package which updated in the repo pacrs inform you
-  what you needed to update system before.
-- `pacrs autoremove` command which works like `pacman -Rs` or
-  `apt autoremove` or if no package given it works like `paru -c`.
+- If you try to install a package that has been updated in the repository,
+  `pacrs` will inform you that you need to update your system first.
+- `pacrs autoremove` works like `pacman -Rs` or `apt autoremove`. If no
+  package is specified, it  behaves like `paru -c`.
 - `pacrs ps` command which works like `zypper ps`.
-- `pacman -Si` and `pacman -Qi` was merged into `pacrs info` command.
-- `pacman -F` and `pacman -Ql` was merged into `pacrs files` command.
+- `pacman -Si` and `pacman -Qi` were merged into `pacrs info` command.
+- `pacman -F` and `pacman -Ql` were merged into `pacrs files` command.
 - `pacrs list-updates` is implementation of `checkupdates` script from
-  `pacmancontrib` package. It works like if you update index and run
-  `pacman -Qu` but pacrs bot affects your local index for that.
-- `pacrs packages` supports multiple filters which allows you to find, for
-  example AUR packages installed as dependency -
+  `pacmancontrib` package. It works as if you updated the index and ran
+  `pacman -Qu`, but `pacrs` does not affect your local index.
+- `pacrs packages` supports multiple filters, which allow you to find, for
+  example, AUR packages installed as dependencies -
   `pacrs packages --aur --deps`.
 
 for more info see `pacrs help` command output.
@@ -31,12 +31,12 @@ for more info see `pacrs help` command output.
 ## Pros and cons in relation to `pacman` and `paru`
 
 - `pacrs` has more intuitive and consistent interface.
-- `pacrs` conducts some checks and removes part of handmade.
-  - This makes him more user-friendly.
-  - This makes him slower in some cases.
+- `pacrs` removes some manual work.
+  - This makes it more user-friendly.
+  - This makes it slower in some cases.
 - `pacrs` does not set a goal to be a complete replacement for `pacman`
-  and `paru` and not provide some advanced features which they does. For
-  cases when you need this features you can use `pacman` or `paru`
+  and `paru` and does not provide some advanced features they have. For
+  cases where you need these features you can use `pacman` or `paru`
   directly (or open the issue with feature request).
 
 ## Installation
@@ -57,9 +57,9 @@ makepkg -si
 
 ## From source
 
-For build from source you need
+To build from source you need
 [rust toolchain](https://www.rust-lang.org/tools/install). For
-installation you need [just](https://github.com/casey/just).
+installation, you need [just](https://github.com/casey/just).
 
 ```
 git clone git@github.com:5121f/pacrs.git
@@ -68,7 +68,7 @@ cargo build --release
 just install
 ```
 
-for uninstall use `just uninstall`.
+for uninstall, use `just uninstall`.
 
 ## License
 

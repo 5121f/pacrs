@@ -79,7 +79,7 @@ fn process_has_deleted_files(pid: Pid) -> anyhow::Result<BTreeSet<String>> {
     let file = match File::open(path) {
         Ok(value) => value,
         Err(err) => {
-            log::warn!("{err}");
+            log::error!("{err}");
             return Ok(result);
         }
     };

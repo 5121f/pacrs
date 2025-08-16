@@ -46,7 +46,7 @@ pub trait JoinError<T> {
 impl<T> JoinError<T> for JoinHandle<T> {
     fn join_err_map(self) -> anyhow::Result<T> {
         self.join()
-            .map_err(|err| anyhow!("thread paniced: {err:?}"))
+            .map_err(|err| anyhow!("thread panicked: {err:?}"))
     }
 }
 

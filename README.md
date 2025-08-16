@@ -3,7 +3,7 @@
 **pacrs** - `pacman` and `paru` wrapper (yes, wrapper above wrapper), with
 frendly CLI inspired by zypper and apt.
 
-paru is optional dependencie needed for AUR support.
+paru is optional dependency needed for AUR support.
 
 Some features and peculiarities:
 
@@ -22,7 +22,7 @@ Some features and peculiarities:
   `pacmancontrib` package. It works like if you update index and run
   `pacman -Qu` but pacrs bot affects your local index for that.
 - `pacrs packages` supports multiple filters which allows you to find, for
-  example AUR packages installed as dependencie -
+  example AUR packages installed as dependency -
   `pacrs packages --aur --deps`.
 
 for more info see `pacrs help` command output.

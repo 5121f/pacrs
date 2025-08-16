@@ -44,7 +44,7 @@ pub enum Args {
         /// Display list of explicit installed packages
         #[clap(long, short)]
         explicit: bool,
-        /// Display list of packages installed as dependencie
+        /// Display list of packages installed as dependency
         #[clap(long, short)]
         deps: bool,
         /// Display list of orphaned packages
@@ -152,7 +152,7 @@ pub struct MarkGroup {
     /// Mark packages as installed explicit
     #[clap(long, short)]
     pub explicit: bool,
-    /// Mark packages as dependencie (non-explicit installed)
+    /// Mark packages as dependency (non-explicit installed)
     #[clap(long, short)]
-    pub dependencie: bool,
+    pub dependency: bool,
 }

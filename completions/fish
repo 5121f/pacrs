@@ -3,7 +3,7 @@
 set -l progname pacrs
 
 function listall
-    if which paru &> /dev/null
+    if which paru &>/dev/null
         paru -Pc | string replace ' ' \t
     else
         __fish_print_pacman_packages
@@ -29,19 +29,19 @@ complete -c $progname -e # Erase old completion
 complete -c $progname -f # Disable file completions for entire command
 
 # Primary operations
-complete -c $progname -a 'install' -d 'Install packages'
-complete -c $progname -a 'remove' -d 'Remove (uninstall) packages'
-complete -c $progname -a 'autoremove' -d 'Remove unneeded packages'
-complete -c $progname -a 'update' -d 'Update installed packages with newer versions'
-complete -c $progname -a 'packages' -d 'Display list of all available packages'
-complete -c $progname -a 'info' -d 'Display detailed information about the specified packages'
-complete -c $progname -a 'search' -d 'Search for packages matching any of the given search strings'
-complete -c $progname -a 'list-updates' -d 'List available updates'
-complete -c $progname -a 'files' -d 'Query the file database'
-complete -c $progname -a 'clean' -d 'Clean pacman cache. By default cleans the entire cache'
-complete -c $progname -a 'mark' -d 'Mark packages'
-complete -c $progname -a 'ps' -d 'Display processes which use deleted files and needed to restart'
-complete -c $progname -a 'help' -d 'Print this message or the help of the given subcommand(s)'
+complete -c $progname -a install -d 'Install packages'
+complete -c $progname -a remove -d 'Remove (uninstall) packages'
+complete -c $progname -a autoremove -d 'Remove unneeded packages'
+complete -c $progname -a update -d 'Update installed packages with newer versions'
+complete -c $progname -a packages -d 'Display list of all available packages'
+complete -c $progname -a info -d 'Display detailed information about the specified packages'
+complete -c $progname -a search -d 'Search for packages matching any of the given search strings'
+complete -c $progname -a list-updates -d 'List available updates'
+complete -c $progname -a files -d 'Query the file database'
+complete -c $progname -a clean -d 'Clean pacman cache. By default cleans the entire cache'
+complete -c $progname -a mark -d 'Mark packages'
+complete -c $progname -a ps -d 'Display processes which use deleted files and needed to restart'
+complete -c $progname -a help -d 'Print this message or the help of the given subcommand(s)'
 
 # General options
 complete -c $progname -s h -l help -d 'Print help'
@@ -56,7 +56,7 @@ complete -c $progname -n $remove -s u -l clean-deps -d 'Automatically remove dep
 # Packages options
 complete -c $progname -n $packages -s s -l search -d 'Search for given string in installed packages'
 complete -c $progname -n $packages -s e -l explicit -d 'Display list of explicit installed packages'
-complete -c $progname -n $packages -s d -l deps -d 'Display list of packages installed as dependencie'
+complete -c $progname -n $packages -s d -l deps -d 'Display list of packages installed as dependency'
 complete -c $progname -n $packages -s o -l orphaned -d 'Print list of orphaned packages'
 complete -c $progname -n $packages -s a -l aur -d 'Display list of packages which not found in databases. In most cases it\'s AUR packages'
 
@@ -76,7 +76,7 @@ complete -c $progname -n $clean -s s -l show_remove_candidates -d 'Only show rem
 
 # Mark options
 complete -c $progname -n $mark -s e -l explicit -d 'Mark packages as installed explicit'
-complete -c $progname -n $mark -s d -l dependencie -d 'Mark packages as dependencie'
+complete -c $progname -n $mark -s d -l dependency -d 'Mark packages as dependency'
 
 # ps options
 complete -c $progname -n $ps -s s -l sort-by -d 'Sort output by given field'

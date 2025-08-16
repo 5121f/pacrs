@@ -15,7 +15,7 @@ pub fn sudo_pacman() -> Cmd {
     if is_root() {
         return pacman();
     }
-    log::info!("User is not root. Runing pacman with sudo.");
+    log::info!("User is not root. Running pacman with sudo.");
     sudo().arg(PACMAN_BIN)
 }
 

@@ -68,9 +68,9 @@ fn main() -> anyhow::Result<()> {
             mark_group:
                 MarkGroup {
                     explicit,
-                    dependencie,
+                    dependency,
                 },
-        } => mark(&packages, explicit, dependencie)?,
+        } => mark(&packages, explicit, dependency)?,
         Args::Ps {
             sort_by,
             shorter,
@@ -202,11 +202,11 @@ fn package_list(orphaned: bool, aur: bool, explicit: bool, deps: bool) -> anyhow
     Ok(())
 }
 
-fn mark(packages: &[String], explicit: bool, dependencie: bool) -> anyhow::Result<()> {
+fn mark(packages: &[String], explicit: bool, dependency: bool) -> anyhow::Result<()> {
     if explicit {
         return pacrs::mark_as_explicit(packages);
     }
-    if dependencie {
+    if dependency {
         return pacrs::mark_as_dep(packages);
     }
     bail!("no one parameter specified"); // Unreachable

@@ -444,7 +444,7 @@ _pacrs() {
             return 0
             ;;
         pacrs__mark)
-            opts="-e -d -h --explicit --dependencie --help <PACKAGES>..."
+            opts="-e -d -h --explicit --dependency --help <PACKAGES>..."
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

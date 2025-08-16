@@ -5,16 +5,16 @@
 - `clean`
   - added `keep` flag for preserve some packets in cache instead of
     deleting them all
-  - added `show-remove-candidates` which now dosen't work with
+  - added `show-remove-candidates` which now dose't work with
     `uninstalled` flag
   - request root password if needed (not with `keep` flag)
 - `info`: added `recursive-deps` flag
 - `autoremove`
   - changled short alias from `arm` to `ar`
-  - added oportunity to convey packages
+  - added opportunity to convey packages
 - `install`: fix outdated check
 - `packages`: added `search` key for search in installed packages
-- added loggin with `RUST_LOG` environment variable (how to use it see
+- added logging with `RUST_LOG` environment variable (how to use it see
   [here](https://docs.rs/env_logger/latest/env_logger/#enabling-logging))
 - added basic completions for `bash` and `zsh`
 - actualized fish completions

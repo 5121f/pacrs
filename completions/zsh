@@ -98,8 +98,8 @@ _arguments "${_arguments_options[@]}" : \
 '(-e --explicit -d --deps -o --orphaned -a --aur)--search=[Search for given string in installed packages]:REGEX:_default' \
 '-e[Display list of explicit installed packages]' \
 '--explicit[Display list of explicit installed packages]' \
-'-d[Display list of packages installed as dependencie]' \
-'--deps[Display list of packages installed as dependencie]' \
+'-d[Display list of packages installed as dependency]' \
+'--deps[Display list of packages installed as dependency]' \
 '-o[Display list of orphaned packages (packages which not installed explicitly and on which no package depends)]' \
 '--orphaned[Display list of orphaned packages (packages which not installed explicitly and on which no package depends)]' \
 '-a[Display list of packages which not found in databases. In most cases it'\''s AUR packages]' \
@@ -114,8 +114,8 @@ _arguments "${_arguments_options[@]}" : \
 '(-e --explicit -d --deps -o --orphaned -a --aur)--search=[Search for given string in installed packages]:REGEX:_default' \
 '-e[Display list of explicit installed packages]' \
 '--explicit[Display list of explicit installed packages]' \
-'-d[Display list of packages installed as dependencie]' \
-'--deps[Display list of packages installed as dependencie]' \
+'-d[Display list of packages installed as dependency]' \
+'--deps[Display list of packages installed as dependency]' \
 '-o[Display list of orphaned packages (packages which not installed explicitly and on which no package depends)]' \
 '--orphaned[Display list of orphaned packages (packages which not installed explicitly and on which no package depends)]' \
 '-a[Display list of packages which not found in databases. In most cases it'\''s AUR packages]' \
@@ -226,8 +226,8 @@ _arguments "${_arguments_options[@]}" : \
 _arguments "${_arguments_options[@]}" : \
 '-e[Mark packages as installed explicit]' \
 '--explicit[Mark packages as installed explicit]' \
-'-d[Mark packages as dependencie (non-explicit installed)]' \
-'--dependencie[Mark packages as dependencie (non-explicit installed)]' \
+'-d[Mark packages as dependency (non-explicit installed)]' \
+'--dependency[Mark packages as dependency (non-explicit installed)]' \
 '-h[Print help]' \
 '--help[Print help]' \
 '*::packages:_default' \
@@ -237,8 +237,8 @@ _arguments "${_arguments_options[@]}" : \
 _arguments "${_arguments_options[@]}" : \
 '-e[Mark packages as installed explicit]' \
 '--explicit[Mark packages as installed explicit]' \
-'-d[Mark packages as dependencie (non-explicit installed)]' \
-'--dependencie[Mark packages as dependencie (non-explicit installed)]' \
+'-d[Mark packages as dependency (non-explicit installed)]' \
+'--dependency[Mark packages as dependency (non-explicit installed)]' \
 '-h[Print help]' \
 '--help[Print help]' \
 '*::packages:_default' \

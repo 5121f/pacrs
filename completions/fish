@@ -60,6 +60,9 @@ complete -c $progname -n $packages -s d -l deps -d 'Display list of packages ins
 complete -c $progname -n $packages -s o -l orphaned -d 'Print list of orphaned packages'
 complete -c $progname -n $packages -s a -l aur -d 'Display list of packages which not found in databases. In most cases it\'s AUR packages'
 
+# Info options
+complete -c $progname -n $info -s r -l recursive-deps -d 'Display list of recursive dependencies'
+
 # Files options
 complete -c $progname -n $files -xa "(listall)"
 complete -c $progname -n $files -s f -l find -d 'Find specific file among all packages'

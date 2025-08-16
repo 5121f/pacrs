@@ -8,6 +8,7 @@
   - added `show-remove-candidates` which now dosen't work with
     `uninstalled` flag
   - request root password if needed (not with `keep` flag)
+- `info`: added `recursive-deps` flag
 - `autoremove`
   - changled short alias from `arm` to `ar`
   - added oportunity to convey packages

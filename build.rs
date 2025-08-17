@@ -13,7 +13,7 @@ fn main() {
         let content = generate(&mut args, shell);
         let path = Path::new("completions").join(shell_name);
         let mut file = File::create(path).expect("Failed to create file");
-        file.write_all(&content).unwrap();
+        file.write_all(&content).expect("Failed to write in file");
     }
 }
 

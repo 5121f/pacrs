@@ -8,7 +8,7 @@ use derive_more::Deref;
 use crate::temp_db::TempAlpm;
 
 pub fn pacmanconf() -> anyhow::Result<pacmanconf::Config> {
-    pacmanconf::Config::new().context("failed to read pacmanconf")
+    pacmanconf::Config::new().context("failed to read pacman.conf")
 }
 
 #[derive(Deref)]

@@ -19,6 +19,7 @@ use alpm::PacrsAlpm;
 use args::Args;
 use command::Cmd;
 use files::{find_file, package_files};
+use owo_colors::OwoColorize;
 use pacrs::package_search;
 use ps::ps;
 
@@ -92,15 +93,17 @@ fn autoremove(packages: &[String]) -> anyhow::Result<()> {
 fn update(packages: &[String], quiet: bool) {
     match pacrs::update(packages) {
         Ok(()) if !quiet => eprintln!(
-            "Reminder: if update system was aborted or error ends, \
-            you need to finish the update before installing packages"
+            "{}: if update system was aborted or error ends, \
+            you need to finish the update before installing packages",
+            "Reminder".bright_blue()
         ),
         Ok(()) => {}
         Err(error) => {
             eprintln!("{error}");
             eprintln!(
-                "Warning: The update ended with an error. \
-                You need to finish update before installing packages."
+                "{}: The update ended with an error. \
+                You need to finish update before installing packages.",
+                "Warning".red(),
             );
             std::process::exit(1);
         }

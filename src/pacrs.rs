@@ -8,6 +8,7 @@ use crate::{pacman, temp_db};
 
 use anyhow::bail;
 use fs_err as fs;
+use owo_colors::OwoColorize;
 
 pub fn installed_pkgs() -> anyhow::Result<()> {
     pacman::installed_packages().execute()?;
@@ -154,7 +155,10 @@ pub fn update_files_index(quiet: bool) -> anyhow::Result<()> {
     if is_root() {
         pacman().arg("-Fy").execute()?;
     } else if !quiet {
-        eprintln!("Running without root privileges. Files index wouldn't be updated.");
+        eprintln!(
+            "{}: Running without root privileges. Files index wouldn't be updated.",
+            "Warning".yellow()
+        );
     }
     Ok(())
 }

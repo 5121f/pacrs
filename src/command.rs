@@ -73,7 +73,7 @@ impl Cmd {
             .execute_and_grub_output()?
             .split('\n')
             .map(ToOwned::to_owned)
-            .collect::<Vec<_>>())
+            .collect())
     }
 }
 

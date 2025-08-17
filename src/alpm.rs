@@ -64,6 +64,7 @@ impl PacrsAlpm {
     }
 
     pub fn dependencies<'a>(&'a self, package: &str) -> anyhow::Result<Vec<&'a Package>> {
+        // TODO: AUR support
         let pkg = self.syncdbs().pkg(package);
         if let Ok(pkg) = pkg {
             return self.pkg_deps(pkg);
@@ -74,17 +75,22 @@ impl PacrsAlpm {
         bail!("{package}: failed to define package type");
     }
 
-    pub fn recursive_dependencies<'a>(&'a self, package: &str) -> anyhow::Result<Vec<&'a Package>> {
-        let mut scan = self.dependencies(package)?;
+    pub fn recursive_dependencies<'a>(&'a self, package: &str) -> Vec<&'a Package> {
+        // We now doesn't support dependencies finding for aur packages so we just ignore errors
+        let Ok(mut scan) = self.dependencies(package) else {
+            return Vec::new();
+        };
         let mut deps: Vec<&Package> = Vec::new();
         while let Some(dep) = scan.pop() {
             if deps.iter().any(|d| d.name() == dep.name()) {
                 continue;
             }
-            scan.extend(self.pkg_deps(dep)?);
+            if let Ok(deps) = self.pkg_deps(dep) {
+                scan.extend(deps);
+            }
             deps.push(dep);
         }
-        Ok(deps)
+        deps
     }
 
     fn pkg_deps(&self, pkg: &Package) -> anyhow::Result<Vec<&Package>> {

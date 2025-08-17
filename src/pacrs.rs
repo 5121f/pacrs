@@ -22,7 +22,7 @@ pub fn package_search(regex: &str) -> anyhow::Result<()> {
 pub fn info(package: &str, recursive_deps: bool) -> anyhow::Result<()> {
     let alpm = PacrsAlpm::new()?;
     if recursive_deps {
-        let deps = alpm.recursive_dependencies(package)?;
+        let deps = alpm.recursive_dependencies(package);
         for dep in deps {
             println!("{}", dep.name());
         }
@@ -73,7 +73,7 @@ pub fn install(packages: Vec<String>) -> anyhow::Result<()> {
     let mut recursive_pkgs = packages.clone();
     for package in &packages {
         let deps = alpm
-            .recursive_dependencies(package)?
+            .recursive_dependencies(package)
             .into_iter()
             .map(|d| d.name().to_owned())
             .collect();

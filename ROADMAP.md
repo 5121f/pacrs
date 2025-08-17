@@ -1,5 +1,6 @@
 # pacrs roadmap
 
+- `pacrs info --recursive-deps`: AUR packages support
 - `pacrs install --from-cache` command which should check cache and if the
   packages are contained in it, reinstall these packages without check.
 - Extended clean cache functionality.

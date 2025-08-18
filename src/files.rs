@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
+use std::path::Path;
+
 use crate::cmds::pacman;
 use crate::pacrs::update_files_index;
 use crate::{command, pacman};
@@ -35,8 +37,10 @@ pub fn package_files(name: &str, update_index: bool, quiet: bool) -> anyhow::Res
         Err(err) => return Err(err.into()),
     };
 
-    for line in files {
-        println!("{line}");
+    for line in &files {
+        if Path::new(line).is_file() {
+            println!("{line}");
+        }
     }
 
     Ok(())

@@ -14,6 +14,7 @@
   - added opportunity to convey packages
 - `install`: fix outdated check
 - `packages`: added `search` key for search in installed packages
+- `files`: don't print directories
 - added logging with `RUST_LOG` environment variable (how to use it see
   [here](https://docs.rs/env_logger/latest/env_logger/#enabling-logging))
 - added basic completions for `bash` and `zsh`

@@ -26,7 +26,7 @@ pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
         .join("paru"))
 }
 
-pub fn sure(message: impl Display) -> anyhow::Result<bool> {
+pub fn confirm_from_user(message: impl Display) -> anyhow::Result<bool> {
     print!("{message} [y/N] ");
     io::stdout().flush().context("failed to flush stdout")?;
     let mut buf = String::new();

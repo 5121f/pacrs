@@ -2,7 +2,7 @@
 
 use crate::cmds::{pacman, paru_if_present, paru_or_pacman, paru_or_sudo_pacman, sudo_pacman};
 use crate::temp_db::TempAlpm;
-use crate::utils::{is_root, paru_cache_dir, sure};
+use crate::utils::{confirm_from_user, is_root, paru_cache_dir};
 use crate::{PacrsAlpm, clean};
 use crate::{pacman, temp_db};
 
@@ -177,7 +177,7 @@ pub fn mark_as_dep(packages: &[String]) -> anyhow::Result<()> {
 }
 
 pub fn clean_paru_cache() -> anyhow::Result<()> {
-    if !sure("You really wont to delete AUR (paru) cache?")? {
+    if !confirm_from_user("You really wont to delete AUR (paru) cache?")? {
         return Ok(());
     }
     let cache_dir = paru_cache_dir()?;

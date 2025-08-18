@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-use std::fmt::Display;
-use std::io::{self, Write};
 use std::path::PathBuf;
 use std::thread::JoinHandle;
 
@@ -24,17 +22,6 @@ pub fn paru_cache_dir() -> anyhow::Result<PathBuf> {
         .context("failed to find paru cache dir")?
         .cache_dir()
         .join("paru"))
-}
-
-pub fn confirm_from_user(message: impl Display) -> anyhow::Result<bool> {
-    print!("{message} [y/N] ");
-    io::stdout().flush().context("failed to flush stdout")?;
-    let mut buf = String::new();
-    io::stdin()
-        .read_line(&mut buf)
-        .context("failed to read user input")?;
-    let answer = buf.trim().to_lowercase();
-    Ok(answer == "y" || answer == "yes")
 }
 
 pub trait JoinError<T> {

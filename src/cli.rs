@@ -17,7 +17,7 @@ impl Cli {
         }
     }
 
-    pub fn sure(
+    pub fn confirm(
         &mut self,
         question: impl fmt::Display,
         default_ansver: Answer,
@@ -31,7 +31,7 @@ impl Cli {
         let mut buf = String::new();
         self.stdin.read_line(&mut buf)?;
         Ok(match buf.to_lowercase().trim() {
-            "y" => Answer::Yes,
+            "y" | "yes" => Answer::Yes,
             "" => default_ansver,
             _ => Answer::No,
         })

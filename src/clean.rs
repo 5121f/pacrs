@@ -34,7 +34,7 @@ pub fn clean(keep: u8) -> anyhow::Result<()> {
     }
     show_cache(&remove_candidates, true)?;
     let mut cli = Cli::new();
-    let answer = cli.sure("Remove?", Answer::Yes)?;
+    let answer = cli.confirm("Remove?", Answer::Yes)?;
     if answer.is_no() {
         return Ok(());
     }

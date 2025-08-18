@@ -100,11 +100,11 @@ pub fn remove_candidates(keep: u8) -> anyhow::Result<Vec<CacheEntry>> {
             break;
         }
         let base = i;
-        for y in keeped..cache.len() {
-            if cache[base].pkg_name != cache[y].pkg_name {
+        loop {
+            if cache[base].pkg_name != cache[i].pkg_name {
                 break;
             }
-            remove_candidates.push(cache[y].clone());
+            remove_candidates.push(cache[i].clone());
             i += 1;
         }
         i += 1;

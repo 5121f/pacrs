@@ -115,9 +115,10 @@ fn read_cache() -> anyhow::Result<Vec<CacheEntry>> {
     let mut cache = Vec::new();
     for entry in fs::read_dir(PACMAN_CACHE_PATH)? {
         let entry = entry?;
-        match entry.path().extension() {
-            Some(ext) if ext == "sig" => continue,
-            _ => {}
+        if let Some(ext) = entry.path().extension()
+            && ext == "sig"
+        {
+            continue;
         }
         let file_name = entry.file_name().to_string_lossy().to_string();
         let cache_entry = parse_file_name(&file_name, &regex)

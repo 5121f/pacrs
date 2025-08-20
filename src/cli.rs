@@ -3,6 +3,7 @@
 use std::fmt;
 use std::io;
 use std::io::{Stdin, Stdout, Write};
+use std::ops::Deref;
 
 pub struct Cli {
     stdout: Stdout,
@@ -43,8 +44,13 @@ pub enum Answer {
     No,
 }
 
-impl Answer {
-    pub fn is_no(&self) -> bool {
-        matches!(self, Answer::No)
+impl Deref for Answer {
+    type Target = bool;
+
+    fn deref(&self) -> &Self::Target {
+        match self {
+            Self::Yes => &true,
+            Self::No => &false,
+        }
     }
 }

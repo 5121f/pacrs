@@ -123,7 +123,7 @@ fn read_cache() -> anyhow::Result<Vec<CacheEntry>> {
         let file_name = entry.file_name();
         let file_name = file_name.to_string_lossy();
         let cache_entry = parse_file_name(file_name.as_ref(), &regex)
-            .context(format!("failedt to parse file name '{file_name}'"))?;
+            .context(format!("failed to parse file name '{file_name}'"))?;
         cache.push(cache_entry);
     }
     Ok(cache)

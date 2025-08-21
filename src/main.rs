@@ -19,6 +19,7 @@ use alpm::PacrsAlpm;
 use args::Args;
 use command::Cmd;
 use files::{find_file, package_files};
+use log::LevelFilter;
 use owo_colors::OwoColorize;
 use pacrs::package_search;
 use ps::ps;
@@ -28,7 +29,7 @@ use args::MarkGroup;
 use clap::Parser;
 
 fn main() -> anyhow::Result<()> {
-    env_logger::init();
+    env_logger::builder().filter_level(LevelFilter::Off).build();
 
     let args = Args::parse();
     match args {

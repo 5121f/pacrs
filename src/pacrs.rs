@@ -178,7 +178,9 @@ pub fn mark_as_dep(packages: &[String]) -> anyhow::Result<()> {
 }
 
 pub fn clean_paru_cache() -> anyhow::Result<()> {
-    if !*Cli::new().confirm("You really wont to delete AUR (paru) cache?", Answer::No)? {
+    let mut cli = Cli::new();
+    let answer = cli.confirm("You really wont to delete AUR (paru) cache?", Answer::No)?;
+    if !answer.as_bool() {
         return Ok(());
     }
     let cache_dir = paru_cache_dir()?;

@@ -5,6 +5,7 @@ use clap_complete::{Generator, Shell};
 
 include!("src/args.rs");
 
+const BIN_NAME: &str = "pacrs";
 const SHELLS: [(Shell, &str); 2] = [(Shell::Bash, "bash"), (Shell::Zsh, "zsh")];
 
 fn main() {
@@ -19,6 +20,6 @@ fn main() {
 
 fn generate(cmd: &mut Command, generator: impl Generator) -> Vec<u8> {
     let mut buf = Vec::new();
-    clap_complete::generate(generator, cmd, "pacrs", &mut buf);
+    clap_complete::generate(generator, cmd, BIN_NAME, &mut buf);
     buf
 }

@@ -28,14 +28,19 @@ impl Cli {
             Answer::No => print!("[y/N] "),
         }
         self.stdout.flush()?;
-        let mut buf = String::new();
-        self.stdin.read_line(&mut buf)?;
+        let mut buf = self.read_single_line()?;
         buf.make_ascii_lowercase();
         Ok(match buf.trim() {
             "y" | "yes" => Answer::Yes,
             "" => default_ansver,
             _ => Answer::No,
         })
+    }
+
+    pub fn read_single_line(&mut self) -> io::Result<String> {
+        let mut buf = String::new();
+        self.stdin.read_line(&mut buf)?;
+        Ok(buf)
     }
 }
 

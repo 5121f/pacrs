@@ -114,9 +114,9 @@ pub fn update(packages: &[String]) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn list_updates() -> anyhow::Result<()> {
+pub fn list_updates(verbose: bool) -> anyhow::Result<()> {
     let temp_db_path = temp_db::path()?;
-    temp_db::init(&temp_db_path)?;
+    temp_db::init(&temp_db_path, verbose)?;
     paru_or_pacman()
         .args(["-Qu", "--dbpath", &temp_db_path.to_string_lossy()])
         .execute()?;

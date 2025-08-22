@@ -158,12 +158,16 @@ _arguments "${_arguments_options[@]}" : \
 ;;
 (list-updates)
 _arguments "${_arguments_options[@]}" : \
+'-v[]' \
+'--verbose[]' \
 '-h[Print help]' \
 '--help[Print help]' \
 && ret=0
 ;;
 (lu)
 _arguments "${_arguments_options[@]}" : \
+'-v[]' \
+'--verbose[]' \
 '-h[Print help]' \
 '--help[Print help]' \
 && ret=0

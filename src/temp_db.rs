@@ -28,7 +28,7 @@ impl TempAlpm {
         let mut alpm = Alpm::new(&*conf.root_dir, &path.to_string_lossy())
             .context("failed to initialize alpm connection")?;
         alpm_utils::configure_alpm(&mut alpm, &conf).context("failed to configure alpm")?;
-        init(path)?;
+        init(path, false)?;
         Ok(Self(PacrsAlpm::with_alpm(alpm)))
     }
 
@@ -39,7 +39,7 @@ impl TempAlpm {
     }
 }
 
-pub fn init(path: impl AsRef<Path>) -> anyhow::Result<()> {
+pub fn init(path: impl AsRef<Path>, show_output: bool) -> anyhow::Result<()> {
     let temp_db_path = path.as_ref();
     fs::create_dir_all(temp_db_path)?;
     let conf = pacmanconf()?;
@@ -48,13 +48,14 @@ pub fn init(path: impl AsRef<Path>) -> anyhow::Result<()> {
         let local_db = Path::new(&conf.db_path).join("local");
         fs::os::unix::fs::symlink(local_db, temp_local_db)?;
     }
-    update(temp_db_path.to_string_lossy())
+    update(temp_db_path.to_string_lossy(), show_output)
 }
 
-pub fn update(path: impl AsRef<str>) -> anyhow::Result<()> {
-    Cmd::new("fakeroot")
-        .args(["--", PACMAN_BIN, "-Sy", "--dbpath", path.as_ref()])
-        .hide_output()
-        .execute()?;
+pub fn update(path: impl AsRef<str>, show_output: bool) -> anyhow::Result<()> {
+    let mut cmd = Cmd::new("fakeroot").args(["--", PACMAN_BIN, "-Sy", "--dbpath", path.as_ref()]);
+    if !show_output {
+        cmd = cmd.hide_output();
+    }
+    cmd.execute()?;
     Ok(())
 }

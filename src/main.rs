@@ -52,7 +52,7 @@ fn main() -> anyhow::Result<()> {
             recursive_deps,
         } => pacrs::info(&package, recursive_deps)?,
         Args::Search { package } => pacrs::search(&package)?,
-        Args::ListUpdates => pacrs::list_updates()?,
+        Args::ListUpdates { verbose } => pacrs::list_updates(verbose)?,
         Args::Files {
             package,
             find: file,

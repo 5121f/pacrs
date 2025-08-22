@@ -52,3 +52,4 @@ panic = "abort"
 
 [lints.clippy]
 pedantic = "warn"
+nursery = "warn"

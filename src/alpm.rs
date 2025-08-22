@@ -22,7 +22,7 @@ impl PacrsAlpm {
         Ok(Self(alpm))
     }
 
-    pub fn with_alpm(alpm: Alpm) -> Self {
+    pub const fn with_alpm(alpm: Alpm) -> Self {
         Self(alpm)
     }
 

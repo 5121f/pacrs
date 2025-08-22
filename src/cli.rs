@@ -11,7 +11,7 @@ pub struct Cli {
 
 impl Cli {
     pub fn new() -> Self {
-        Cli {
+        Self {
             stdout: io::stdout(),
             stdin: io::stdin(),
         }
@@ -37,7 +37,7 @@ impl Cli {
         })
     }
 
-    pub fn read_single_line(&mut self) -> io::Result<String> {
+    pub fn read_single_line(&self) -> io::Result<String> {
         let mut buf = String::new();
         self.stdin.read_line(&mut buf)?;
         Ok(buf)
@@ -50,7 +50,7 @@ pub enum Answer {
 }
 
 impl Answer {
-    pub fn as_bool(&self) -> bool {
+    pub const fn as_bool(&self) -> bool {
         match self {
             Self::Yes => true,
             Self::No => false,

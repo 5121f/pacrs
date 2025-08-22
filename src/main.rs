@@ -164,10 +164,10 @@ fn packages(
     explicit: bool,
     deps: bool,
 ) -> anyhow::Result<()> {
-    match search_regex {
-        Some(search_regex) => package_search(&search_regex),
-        None => package_list(orphaned, aur, explicit, deps),
-    }
+    search_regex.map_or_else(
+        || package_list(orphaned, aur, explicit, deps),
+        |search_regex| package_search(&search_regex),
+    )
 }
 
 #[allow(clippy::fn_params_excessive_bools)]

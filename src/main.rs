@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
-#![warn(clippy::pedantic)]
-
 mod alpm;
 mod args;
 mod clean;

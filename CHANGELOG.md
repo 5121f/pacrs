@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Breaking changes
+
+- `autoremove`: changled short alias from `arm` to `ar`
+
+### Other changes
+
 - `clean`
   - added `keep` flag for preserve some packets in cache instead of
     deleting them all
@@ -9,9 +15,7 @@
     `uninstalled` flag
   - request root password if needed (not with `keep` flag)
 - `info`: added `recursive-deps` flag
-- `autoremove`
-  - changled short alias from `arm` to `ar`
-  - added opportunity to convey packages
+- `autoremove`: added opportunity to pass packages
 - `install`: fix outdated check
 - `packages`: added `search` key for search in installed packages
 - `files`: don't print directories

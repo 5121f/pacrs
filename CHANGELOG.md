@@ -4,6 +4,7 @@
 
 ### Breaking changes
 
+- rename subcommand `list-updates` to `listupdates`
 - `autoremove`: changled short alias from `arm` to `ar`
 
 ### Other changes

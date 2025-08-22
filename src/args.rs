@@ -72,7 +72,7 @@ pub enum Args {
     },
     /// Display list available updates
     #[clap(visible_alias = "lu")]
-    ListUpdates {
+    Listupdates {
         /// Verbose output
         #[clap(long, short = 'V')]
         verbose: bool,

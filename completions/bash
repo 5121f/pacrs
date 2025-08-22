@@ -49,11 +49,11 @@ _pacrs() {
             pacrs,install)
                 cmd="pacrs__install"
                 ;;
-            pacrs,list-updates)
-                cmd="pacrs__list__updates"
+            pacrs,listupdates)
+                cmd="pacrs__listupdates"
                 ;;
             pacrs,lu)
-                cmd="pacrs__list__updates"
+                cmd="pacrs__listupdates"
                 ;;
             pacrs,mark)
                 cmd="pacrs__mark"
@@ -106,8 +106,8 @@ _pacrs() {
             pacrs__help,install)
                 cmd="pacrs__help__install"
                 ;;
-            pacrs__help,list-updates)
-                cmd="pacrs__help__list__updates"
+            pacrs__help,listupdates)
+                cmd="pacrs__help__listupdates"
                 ;;
             pacrs__help,mark)
                 cmd="pacrs__help__mark"
@@ -134,7 +134,7 @@ _pacrs() {
 
     case "${cmd}" in
         pacrs)
-            opts="-h -V --help --version install in remove rm autoremove ar update up packages pa search se info if list-updates lu files fl clean cc mark mr ps help"
+            opts="-h -V --help --version install in remove rm autoremove ar update up packages pa search se info if listupdates lu files fl clean cc mark mr ps help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -206,7 +206,7 @@ _pacrs() {
             return 0
             ;;
         pacrs__help)
-            opts="install remove autoremove update packages search info list-updates files clean mark ps help"
+            opts="install remove autoremove update packages search info listupdates files clean mark ps help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -303,7 +303,7 @@ _pacrs() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        pacrs__help__list__updates)
+        pacrs__help__listupdates)
             opts=""
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
@@ -429,7 +429,7 @@ _pacrs() {
             COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
             return 0
             ;;
-        pacrs__list__updates)
+        pacrs__listupdates)
             opts="-V -h --verbose --help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )

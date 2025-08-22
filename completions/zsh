@@ -156,7 +156,7 @@ _arguments "${_arguments_options[@]}" : \
 ':package:_default' \
 && ret=0
 ;;
-(list-updates)
+(listupdates)
 _arguments "${_arguments_options[@]}" : \
 '-V[Verbose output]' \
 '--verbose[Verbose output]' \
@@ -302,7 +302,7 @@ _arguments "${_arguments_options[@]}" : \
 _arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
-(list-updates)
+(listupdates)
 _arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
@@ -352,7 +352,7 @@ _pacrs_commands() {
 'se:Search for packages matching any of the given search strings' \
 'info:Display detailed information about the specified packages' \
 'if:Display detailed information about the specified packages' \
-'list-updates:Display list available updates' \
+'listupdates:Display list available updates' \
 'lu:Display list available updates' \
 'files:Query the file database' \
 'fl:Query the file database' \
@@ -390,7 +390,7 @@ _pacrs__help_commands() {
 'packages:Display list of all available packages' \
 'search:Search for packages matching any of the given search strings' \
 'info:Display detailed information about the specified packages' \
-'list-updates:Display list available updates' \
+'listupdates:Display list available updates' \
 'files:Query the file database' \
 'clean:Clean pacman cache. By default cleans the entire cache' \
 'mark:Mark packages' \
@@ -429,10 +429,10 @@ _pacrs__help__install_commands() {
     local commands; commands=()
     _describe -t commands 'pacrs help install commands' commands "$@"
 }
-(( $+functions[_pacrs__help__list-updates_commands] )) ||
-_pacrs__help__list-updates_commands() {
+(( $+functions[_pacrs__help__listupdates_commands] )) ||
+_pacrs__help__listupdates_commands() {
     local commands; commands=()
-    _describe -t commands 'pacrs help list-updates commands' commands "$@"
+    _describe -t commands 'pacrs help listupdates commands' commands "$@"
 }
 (( $+functions[_pacrs__help__mark_commands] )) ||
 _pacrs__help__mark_commands() {
@@ -474,10 +474,10 @@ _pacrs__install_commands() {
     local commands; commands=()
     _describe -t commands 'pacrs install commands' commands "$@"
 }
-(( $+functions[_pacrs__list-updates_commands] )) ||
-_pacrs__list-updates_commands() {
+(( $+functions[_pacrs__listupdates_commands] )) ||
+_pacrs__listupdates_commands() {
     local commands; commands=()
-    _describe -t commands 'pacrs list-updates commands' commands "$@"
+    _describe -t commands 'pacrs listupdates commands' commands "$@"
 }
 (( $+functions[_pacrs__mark_commands] )) ||
 _pacrs__mark_commands() {

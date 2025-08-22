@@ -20,6 +20,7 @@ set -l update '__fish_seen_subcommand_from up update'
 set -l packages '__fish_seen_subcommand_from pa packages'
 set -l search '__fish_seen_subcommand_from se search'
 set -l info '__fish_seen_subcommand_from if info'
+set -l listupdates '__fish_seen_subcommand_from lu list-updates'
 set -l files '__fish_seen_subcommand_from fl files'
 set -l clean '__fish_seen_subcommand_from cc clean'
 set -l mark '__fish_seen_subcommand_from mr mark'
@@ -62,6 +63,9 @@ complete -c $progname -n $packages -s a -l aur -d 'Display list of packages whic
 
 # Info options
 complete -c $progname -n $info -s r -l recursive-deps -d 'Display list of recursive dependencies'
+
+# List updates
+complete -c $progname -n $listupdates -s V -l verbose -d 'Verbose output'
 
 # Files options
 complete -c $progname -n $files -xa "(listall)"

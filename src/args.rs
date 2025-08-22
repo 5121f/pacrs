@@ -73,7 +73,8 @@ pub enum Args {
     /// Display list available updates
     #[clap(visible_alias = "lu")]
     ListUpdates {
-        #[clap(long, short)]
+        /// Verbose output
+        #[clap(long, short = 'V')]
         verbose: bool,
     },
     /// Query the file database

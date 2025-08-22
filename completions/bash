@@ -430,7 +430,7 @@ _pacrs() {
             return 0
             ;;
         pacrs__list__updates)
-            opts="-v -h --verbose --help"
+            opts="-V -h --verbose --help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

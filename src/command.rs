@@ -58,12 +58,12 @@ impl Cmd {
             .output()
             .map_err(|source| Error::execute(&self.cmd, source))?;
 
-        let string =
-            str::from_utf8(&output.stdout).map_err(|source| Error::parse(&self.cmd, source))?;
-
         if !output.status.success() {
             return Err(Error::ended_with_non_zero(&self.cmd, output.status));
         }
+
+        let string =
+            str::from_utf8(&output.stdout).map_err(|source| Error::parse(&self.cmd, source))?;
 
         Ok(string.trim().to_owned())
     }

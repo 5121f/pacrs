@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-3.0-only
+
 _pacrs() {
     local i cur prev opts cmd
     COMPREPLY=()

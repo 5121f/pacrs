@@ -6,6 +6,7 @@ use clap_complete::{Generator, Shell};
 include!("src/args.rs");
 
 const BIN_NAME: &str = "pacrs";
+const LICENSE_MESSAGE: &str = "# SPDX-License-Identifier: GPL-3.0-only\n\n";
 const SHELLS: [(Shell, &str); 2] = [(Shell::Bash, "bash"), (Shell::Zsh, "zsh")];
 
 fn main() {
@@ -14,6 +15,8 @@ fn main() {
         let content = generate(&mut args, shell);
         let path = Path::new("completions").join(shell_name);
         let mut file = File::create(path).expect("Failed to create file");
+        file.write_all(LICENSE_MESSAGE.as_bytes())
+            .expect("Failed to write in file");
         file.write_all(&content).expect("Failed to write in file");
     }
 }
